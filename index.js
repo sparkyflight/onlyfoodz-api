@@ -27,6 +27,33 @@ const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
 // Middleware
 app.use(cookieParser());
 
+// API Endpoints
+app.all(`/api/:category/:endpoint`, async (req, res) => {
+	const endpoint = `${req.params.category}/${req.params.endpoint}`;
+	const data = apiEndpoints.get(endpoint);
+
+	if (data) {
+		if (data.method != req.method)
+			return res.status(405).json({
+				error: `Method "${data.method}" is not allowed for endpoint "${endpoint}"`,
+			});
+
+		try {
+			await data.execute(req, res, fetch, database, Spotify);
+		} catch (error) {
+			res.status(500).json({
+				error: "Internal Server Error",
+				message: "An error occurred while processing your request.",
+			});
+
+			logger.error(`API (${endpoint})`, error);
+		}
+	} else
+		return res.status(404).json({
+			error: "This endpoint does not exist.",
+		});
+});
+
 // Spotify Authentication Endpoints
 app.get("/auth/spotify", async (req, res) => {
 	const url = Spotify.createAuthorizeURL(scopes, state);
