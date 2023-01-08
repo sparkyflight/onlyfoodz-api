@@ -5,11 +5,9 @@ module.exports = {
 		client.Spotify.getMyCurrentPlayingTrack().then(
 			async (data) => {
 				if (!data.body.item)
-					return res
-						.status(502)
-						.json({
-							error: "It looks like that user is listening to music, at this time.",
-						});
+					return res.status(502).json({
+						error: "It looks like that user is listening to music, at this time.",
+					});
 				else res.status(200).json(data);
 			},
 			async (err) => {
