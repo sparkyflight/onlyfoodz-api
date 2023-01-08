@@ -39,7 +39,7 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 			});
 
 		try {
-			await data.execute(req, res, fetch, database, Spotify);
+			await data.execute(req, res, database, Spotify);
 		} catch (error) {
 			res.status(500).json({
 				error: "Internal Server Error",

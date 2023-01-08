@@ -1,12 +1,14 @@
 module.exports = {
-	name: "spotify/playing",
+	name: "spotify/recent",
 	method: "GET",
 	execute: async (req, res, database, Spotify) => {
-		Spotify.getMyCurrentPlayingTrack().then(
+		Spotify.getMyRecentlyPlayedTracks({
+			limit: 20,
+		}).then(
 			async (data) => {
-				if (!data.body.item)
+				if (!data.body.items)
 					return res.status(500).json({
-						error: "Hmm, it looks like Select isn't listening to music at the moment. Please try again later!",
+						error: "Unable to fetch recently played tracks.",
 					});
 				else res.status(200).json(data.body);
 			},
