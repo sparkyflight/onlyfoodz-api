@@ -27,6 +27,17 @@ const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
 // Middleware
 app.use(cookieParser());
 
+// API Endpoints Map
+const apiEndpoints = new Map();
+const apiEndpointsFiles = fs
+	.readdirSync("./endpoints")
+	.filter((file) => file.endsWith(".js"));
+
+for (const file of apiEndpointsFiles) {
+	const endpoint = require(`./endpoints/${file}`);
+	apiEndpoints.set(endpoint.name, endpoint);
+}
+
 // API Endpoints
 app.all(`/api/:category/:endpoint`, async (req, res) => {
 	const endpoint = `${req.params.category}/${req.params.endpoint}`;
