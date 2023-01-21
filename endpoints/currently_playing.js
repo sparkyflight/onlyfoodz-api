@@ -13,7 +13,7 @@ module.exports = {
 				else {
                                         allData = data.body;
 
-                                        Spotify.getArtist(data.item.artists[0].id).then(async (i) => {
+                                        Spotify.getArtist(data.body.item.artists[0].id).then(async (i) => {
 				             if (!i.body) return allData.item.artistData = {
 						error: "Unable to fetch artist information.",
 					     };
@@ -24,7 +24,7 @@ module.exports = {
                                             allData.item.artistData = { error: err };
                                         });
 
-                                        res.status(200).json(allData.body); 
+                                        res.status(200).json(allData); 
                                 }
 			},
 			async (err) => {
