@@ -2,7 +2,7 @@ module.exports = {
 	name: "spotify/playing",
 	method: "GET",
 	execute: async (req, res, database, Spotify) => {
-                let allData:
+                let allData;
 
 		Spotify.getMyCurrentPlayingTrack().then(
 			async (data) => {
