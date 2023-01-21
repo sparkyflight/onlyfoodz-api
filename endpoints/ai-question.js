@@ -18,7 +18,7 @@ module.exports = {
                  "batchSize": 1
               }
 
-              const output = await banana.run(process.env.BANANA_KEY, "gptj", modelParameters);
+              const output = await banana.run(process.env.BANANA_TOKEN, "gptj", modelParameters);
               if (output) return res.json(output);
               else return res.json({ error: "A unknown error occured while rendering your request" });
           }
