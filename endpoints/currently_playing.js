@@ -15,11 +15,9 @@ module.exports = {
 					     });
 				             else data.body.item.artistData = i.body;
 			                }, async (err) => {
-                                             res.status(500).json({
-					         error: `${err}`,
-				             });
+                                             data.body.item.artistData = { error: err };
 			                }).catch(async (err) => {
-                                            return res.status(500).json(err);
+                                            data.body.item.artistData = { error: err };
                                         });
 
                                         res.status(200).json(data.body); 
