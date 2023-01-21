@@ -14,17 +14,19 @@ module.exports = {
                                         allData = data.body;
 
                                         Spotify.getArtist(data.body.item.artists[0].id).then(async (i) => {
-				             if (!i.body) return allData.item.artistData = {
+				             if (!i.body) allData.item.artistData = {
 						error: "Unable to fetch artist information.",
 					     };
 				             else allData.item.artistData = i.body;
+
+                                             res.status(200).json(allData); 
 			                }, async (err) => {
                                              allData.item.artistData = { error: err };
+                                             res.status(200).json(allData); 
 			                }).catch(async (err) => {
                                             allData.item.artistData = { error: err };
+                                            res.status(200).json(allData); 
                                         });
-
-                                        res.status(200).json(allData); 
                                 }
 			},
 			async (err) => {
