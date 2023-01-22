@@ -12,8 +12,7 @@ module.exports = {
 					});
 				else {
                                     let allData = data.body;
-
-                                    console.log(data.body);
+                                    allData.items = [];
 
                                     data.body.items.forEach((item) => {
                                         let i = item;
@@ -26,7 +25,7 @@ module.exports = {
 			                }, async (err) => {
                                              i["artistData"] = { error: err };
 			                }).catch(async (err) => {
-                                            i["artistData"] = { error: err };
+                                             i["artistData"] = { error: err };
                                         });
 
                                         allData["items"].push(i);
