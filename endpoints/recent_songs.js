@@ -5,7 +5,7 @@ module.exports = {
 	        let allData;
 
                 Spotify.getMyRecentlyPlayedTracks({
-		    limit: 20,
+		    limit: 10,
 		}).then(
 			async (data) => {
 				if (!data.body.items)
