@@ -30,6 +30,7 @@ module.exports = {
                                             i["artistData"] = { error: err };
                                         });
 
+                                        console.log(allData);
                                         allData["items"].push(i);
                                     });
 
