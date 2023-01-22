@@ -16,6 +16,8 @@ module.exports = {
                                     allData = data.body;
                                     allData["items"] = [];
 
+                                    console.log(data.body);
+
                                     data.body.items.forEach((item) => {
                                         let i = item;
 
@@ -30,7 +32,6 @@ module.exports = {
                                             i["artistData"] = { error: err };
                                         });
 
-                                        console.log(item);
                                         allData["items"].push(i);
                                     });
 
