@@ -34,6 +34,7 @@ module.exports = {
                                     });
 
                                     setTimeout(() => { res.status(200).json(allData); }, 3000);
+                                    setTimeout(() => { console.log(allData); }, 8000);
                                 }
 			},
 			async (err) => {
