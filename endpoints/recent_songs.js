@@ -2,8 +2,6 @@ module.exports = {
 	name: "spotify/recent",
 	method: "GET",
 	execute: async (req, res, database, Spotify) => {
-	        let allData;
-
                 Spotify.getMyRecentlyPlayedTracks({
 		    limit: 10,
 		}).then(
@@ -13,8 +11,7 @@ module.exports = {
 						error: "Unable to fetch recently played tracks.",
 					});
 				else {
-                                    allData = data.body;
-                                    allData["items"] = [];
+                                    let allData = data.body;
 
                                     console.log(data.body);
 
@@ -36,7 +33,6 @@ module.exports = {
                                     });
 
                                     setTimeout(() => { res.status(200).json(allData); }, 3000);
-                                    setTimeout(() => { console.log(allData); }, 8000);
                                 }
 			},
 			async (err) => {
