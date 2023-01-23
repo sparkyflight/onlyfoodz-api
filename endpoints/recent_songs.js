@@ -17,7 +17,7 @@ module.exports = {
                                     data.body.items.forEach((item) => {
                                         let i = item;
 
-                                        /*Spotify.getArtist(item.artists[0].id).then(async (i) => {
+                                        Spotify.getArtist(item.track.artists[0].id).then(async (i) => {
 				             if (!i.body) i["artistData"] = {
 						error: "Unable to fetch artist information.",
 					     };
@@ -26,7 +26,7 @@ module.exports = {
                                              i["artistData"] = { error: err };
 			                }).catch(async (err) => {
                                              i["artistData"] = { error: err };
-                                        });*/
+                                        });
 
                                         allData["items"].push(i);
                                     });
