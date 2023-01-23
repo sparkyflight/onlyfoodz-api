@@ -11,27 +11,28 @@ module.exports = {
 						error: "Unable to fetch recently played tracks.",
 					});
 				else {
-                                    let allData = data.body;
-                                    allData.items = [];
+                                    let allData;
+                                    allData = data.body;
+                                    allData["items"] = [];
 
                                     data.body.items.forEach((item) => {
-                                        let i = item;
+                                        let p = item;
 
                                         Spotify.getArtist(item.track.artists[0].id).then(async (i) => {
-				             if (!i.body) i["artistData"] = {
+				             if (!i.body) p["artistData"] = {
 						error: "Unable to fetch artist information.",
 					     };
-				             else i["artistData"] = i.body;
+				             else p["artistData"] = i.body;
 			                }, async (err) => {
-                                             i["artistData"] = { error: err };
+                                             p["artistData"] = { error: err };
 			                }).catch(async (err) => {
-                                             i["artistData"] = { error: err };
+                                             p["artistData"] = { error: err };
                                         });
 
-                                        allData["items"].push(i);
+                                        allData["items"].push(p);
                                     });
 
-                                    setTimeout(() => { res.status(200).json(allData); }, 3000);
+                                    res.status(200).json(allData);
                                 }
 			},
 			async (err) => {
