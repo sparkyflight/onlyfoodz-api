@@ -11,8 +11,7 @@ module.exports = {
 						error: "Unable to fetch recently played tracks.",
 					});
 				else {
-                                    let allData;
-                                    allData = data.body;
+                                    let allData = data.body;
                                     allData["items"] = [];
 
                                     data.body.items.forEach((item) => {
@@ -32,7 +31,7 @@ module.exports = {
                                         allData["items"].push(p);
                                     });
 
-                                    res.status(200).json(allData);
+                                    setTimeout(() => { res.status(200).json(allData); }, 3000);
                                 }
 			},
 			async (err) => {
