@@ -11,11 +11,19 @@ module.exports = {
 						error: "Unable to fetch recently played tracks.",
 					});
 				else {
-                                    let allData;
-                                    allData["items"] = [];
+                                    let allData = {
+                                        items: []
+                                    };
+
+                                    console.log(data.body);
 
                                     data.body.items.forEach((item) => {
-                                        let p = item;
+                                        console.log(item);
+
+                                        let p = {
+                                            song: item,
+                                            artistData: {}
+                                        };
 
                                         Spotify.getArtist(item.track.artists[0].id).then(async (i) => {
 				             if (!i.body) p["artistData"] = {
