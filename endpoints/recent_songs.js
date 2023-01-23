@@ -15,11 +15,7 @@ module.exports = {
                                         items: []
                                     };
 
-                                    console.log(data.body);
-
                                     data.body.items.forEach((item) => {
-                                        console.log(item);
-
                                         let p = {
                                             song: item,
                                             artistData: {}
@@ -39,7 +35,7 @@ module.exports = {
                                         allData["items"].push(p);
                                     });
 
-                                    setTimeout(() => { res.status(200).json(allData); }, 3000);
+                                    res.status(200).json(allData);
                                 }
 			},
 			async (err) => {
