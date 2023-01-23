@@ -13,7 +13,8 @@ module.exports = {
 				else {
                                     let allData = data.body;
                                     allData["items"] = [];
-                                    console.log(data.body.items);
+                                    console.log(data.body);
+
                                     data.body.items.forEach((item) => {
                                         let p = item;
 
