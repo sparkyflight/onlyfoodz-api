@@ -35,7 +35,7 @@ module.exports = {
                                         allData["items"].push(p);
                                     });
 
-                                    res.status(200).json(allData);
+                                    setTimeout(() => res.status(200).json(allData); }, 2000);
                                 }
 			},
 			async (err) => {
