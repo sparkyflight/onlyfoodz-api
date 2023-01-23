@@ -11,9 +11,8 @@ module.exports = {
 						error: "Unable to fetch recently played tracks.",
 					});
 				else {
-                                    let allData = data.body;
+                                    let allData;
                                     allData["items"] = [];
-                                    console.log(data.body);
 
                                     data.body.items.forEach((item) => {
                                         let p = item;
