@@ -3,7 +3,7 @@ module.exports = {
 	method: "GET",
 	execute: async (req, res, database, Spotify) => {
                 Spotify.getMyRecentlyPlayedTracks({
-		    limit: 10,
+		    limit: 15,
 		}).then(
 			async (data) => {
 				if (!data.body.items)
