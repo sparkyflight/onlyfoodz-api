@@ -13,8 +13,8 @@ module.exports = {
 
               const modelParameters = {
                  "text": question,
-                 "length":250,
-                 "temperature": 0.9,
+                 "length":100,
+                 "temperature": 0.5,
                  "batchSize": 1
               }
 
