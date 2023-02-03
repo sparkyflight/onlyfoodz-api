@@ -10,18 +10,17 @@
 		"format": "prettier --write --plugin-search-dir=. ."
 	},
 	"dependencies": {
-                "@banana-dev/banana-dev": "^3.0.0",
+		"@banana-dev/banana-dev": "^3.0.0",
 		"colors": "^1.4.0",
 		"cookie-parser": "^1.4.6",
 		"dotenv": "^16.0.3",
 		"express": "^4.18.2",
 		"fs": "^0.0.1-security",
+		"mongoose": "^6.9.0",
 		"node-fetch": "^2.6.7",
-		"pg": "^8.8.0",
 		"prettier": "^2.7.1",
 		"querystring": "^0.2.1",
 		"request": "^2.88.2",
-		"sequelize": "^6.28.0",
 		"spotify-web-api-node": "^5.0.2"
 	}
 }
