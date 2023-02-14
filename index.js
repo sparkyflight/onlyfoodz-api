@@ -8,13 +8,11 @@ const database = require("./database/handler");
 require("dotenv").config();
 
 // Initalize Spotify
-const spotifyCredientials = {
-	clientId: process.env.SPOTIFY_CLIENT_ID,
+const Spotify = new SpotifyWebApi({
+    clientId: process.env.SPOTIFY_CLIENT_ID,
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 	redirectUri: process.env.SPOTIFY_REDIRECT_URI,
-};
-
-const Spotify = new SpotifyWebApi(spotifyCredientials);
+});
 
 const scopes = [
 	"user-read-private",
@@ -84,7 +82,7 @@ app.get("/auth/spotify/callback", async (req, res) => {
 				Spotify.setAccessToken(data.body["access_token"]);
 				Spotify.setRefreshToken(data.body["refresh_token"]);
 
-				res.redirect("/");
+				res.redirect("https://nightmarebot.tk/");
 			},
 			(err) => {
 				res.json({
