@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
-const auth = require("./auth");
+const auth = require("./auth")(database);
 require("dotenv").config();
 
 // Initalize Spotify
