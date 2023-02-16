@@ -5,11 +5,12 @@ const fs = require("node:fs");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
+const auth = require("./auth");
 require("dotenv").config();
 
 // Initalize Spotify
 const Spotify = new SpotifyWebApi({
-    clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientId: process.env.SPOTIFY_CLIENT_ID,
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 	redirectUri: process.env.SPOTIFY_REDIRECT_URI,
 });
@@ -64,7 +65,7 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 });
 
 // Authentication Endpoints
-app.all("/auth/login", async (req, res) => {
+app.all("/auth/discord/login", async (req, res) => {
 	// Check if origin is allowed.
 	const allowedOrigins = [
 		"https://nightmarebot.tk",
@@ -78,7 +79,7 @@ app.all("/auth/login", async (req, res) => {
 
 	// If allowed, send client to Discord
 	const url = await auth.discord.getAuthURL(
-		`${req.get("origin")}/auth/callback`
+		`${req.get("origin")}/auth/discord/callback`
 	);
 
 	res.status(200).json({
@@ -87,7 +88,7 @@ app.all("/auth/login", async (req, res) => {
 	});
 });
 
-app.all("/auth/callback", async (req, res) => {
+app.all("/auth/discord/callback", async (req, res) => {
 	let response = null;
 
 	if (!req.query.code || req.query.code === "") {
