@@ -25,6 +25,7 @@ const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
 
 // Middleware
 app.use(cookieParser());
+app.use(require("cors")());
 
 // API Endpoints Map
 const apiEndpoints = new Map();
