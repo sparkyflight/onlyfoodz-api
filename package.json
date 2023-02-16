@@ -21,7 +21,7 @@
 		"prettier": "^2.7.1",
 		"querystring": "^0.2.1",
 		"request": "^2.88.2",
-                "discord-oauth2": "^2.10.0",
+		"discord-oauth2": "^2.10.0",
 		"node-2fa": "^2.0.3",
 		"spotify-web-api-node": "^5.0.2"
 	}

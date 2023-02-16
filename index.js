@@ -6,11 +6,12 @@ const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
 const auth = require("./auth")(database);
+const crypto = require("node:crypto");
 require("dotenv").config();
 
 // Initalize Spotify
 const Spotify = new SpotifyWebApi({
-        clientId: process.env.SPOTIFY_CLIENT_ID,
+	clientId: process.env.SPOTIFY_CLIENT_ID,
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 	redirectUri: process.env.SPOTIFY_REDIRECT_URI,
 });
@@ -122,12 +123,12 @@ app.all("/auth/discord/callback", async (req, res) => {
 		const token = crypto.randomUUID();
 
 		await database.Users.create({
-                        Username: userInfo.username,
+			Username: userInfo.username,
 			UserID: userInfo.id,
 			Bio: null,
 			Avatar: userInfo.avatar,
 			CreatedAt: new Date(),
-                        Connections: []
+			Connections: [],
 		});
 
 		await database.Tokens.create(userInfo.id, "Discord");

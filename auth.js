@@ -1,5 +1,5 @@
 // Packages
-const crypto = require("crypto");
+const crypto = require("node:crypto");
 const Discord = require("discord-oauth2");
 const mfa = require("node-2fa");
 require("dotenv").config();
