@@ -110,39 +110,27 @@ app.all("/auth/discord/callback", async (req, res) => {
 	const discord = await auth.discord.getAccessToken(req.query.code, true);
 	const userInfo = await auth.discord.getUserInfo(discord.access_token);
 
-	const dbUser = await database.User.getUser(userInfo.id);
+	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
 	if (dbUser) {
 		const token = crypto.randomUUID();
 
-		await database.Tokens.add(token, "user", dbUser.id, new Date());
-
-		await database.User.updateUser(
-			dbUser.id,
-			userInfo.username,
-			dbUser.bio,
-			userInfo.avatar,
-			dbUser.roles,
-			dbUser.flags,
-			dbUser.badges,
-			dbUser.onboarding
-		);
+		await database.Tokens.create(userInfo.id, "Discord");
 
 		response = token;
 	} else {
 		const token = crypto.randomUUID();
 
-		await database.User.createUser(
-			userInfo.id,
-			userInfo.username,
-			"None",
-			userInfo.avatar,
-			[],
-			[],
-			[]
-		);
+		await database.Users.create({
+                        Username: userInfo.username,
+			UserID: userInfo.id,
+			Bio: null,
+			Avatar: userInfo.avatar,
+			CreatedAt: new Date(),
+                        Connections: []
+		});
 
-		await database.Tokens.add(token, "user", userInfo.id, new Date());
+		await database.Tokens.create(userInfo.id, "Discord");
 
 		response = token;
 	}
