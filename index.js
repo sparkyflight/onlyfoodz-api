@@ -6,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
 const auth = require("./auth")(database);
-const crypto = require("node:crypto");
 require("dotenv").config();
 
 // Initalize Spotify
@@ -114,14 +113,10 @@ app.all("/auth/discord/callback", async (req, res) => {
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
 	if (dbUser) {
-		const token = crypto.randomUUID();
-
 		await database.Tokens.create(userInfo.id, "Discord");
 
 		response = token;
 	} else {
-		const token = crypto.randomUUID();
-
 		await database.Users.create({
 			Username: userInfo.username,
 			UserID: userInfo.id,
