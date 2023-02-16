@@ -63,6 +63,99 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 		});
 });
 
+// Authentication Endpoints
+app.all("/auth/login", async (req, res) => {
+	// Check if origin is allowed.
+	const allowedOrigins = [
+		"https://nightmarebot.tk",
+		"https://onlyfoodz.nightmarebot.tk",
+	];
+
+	if (!allowedOrigins.includes(req.get("origin")))
+		return res.status(403).json({
+			error: `\`${req.get("origin")}\` is not a allowed origin.`,
+		});
+
+	// If allowed, send client to Discord
+	const url = await auth.discord.getAuthURL(
+		`${req.get("origin")}/auth/callback`
+	);
+
+	res.status(200).json({
+		url: url,
+		verification_passed: true,
+	});
+});
+
+app.all("/auth/callback", async (req, res) => {
+	let response = null;
+
+	if (!req.query.code || req.query.code === "") {
+		if (!req.query.state || req.query.state === "")
+			return res.status(400).json({
+				message:
+					"There was no code, and state provided with this request.",
+				error: true,
+				status: 400,
+			});
+		else {
+			const data = JSON.parse(req.query.state);
+			const domain = new URL(data.redirect);
+
+			return res.redirect(`https://${domain.hostname}/`);
+		}
+	}
+
+	const discord = await auth.discord.getAccessToken(req.query.code, true);
+	const userInfo = await auth.discord.getUserInfo(discord.access_token);
+
+	const dbUser = await database.User.getUser(userInfo.id);
+
+	if (dbUser) {
+		const token = crypto.randomUUID();
+
+		await database.Tokens.add(token, "user", dbUser.id, new Date());
+
+		await database.User.updateUser(
+			dbUser.id,
+			userInfo.username,
+			dbUser.bio,
+			userInfo.avatar,
+			dbUser.roles,
+			dbUser.flags,
+			dbUser.badges,
+			dbUser.onboarding
+		);
+
+		response = token;
+	} else {
+		const token = crypto.randomUUID();
+
+		await database.User.createUser(
+			userInfo.id,
+			userInfo.username,
+			"None",
+			userInfo.avatar,
+			[],
+			[],
+			[]
+		);
+
+		await database.Tokens.add(token, "user", userInfo.id, new Date());
+
+		response = token;
+	}
+
+	const extraData = JSON.parse(req.query.state);
+
+	let url = extraData.redirect;
+	url += "?token=" + encodeURIComponent(response);
+
+	setTimeout(() => {
+		res.redirect(url);
+	}, 1000);
+});
+
 // Spotify Authentication Endpoints
 app.get("/auth/spotify", async (req, res) => {
 	const url = Spotify.createAuthorizeURL(scopes, state);
