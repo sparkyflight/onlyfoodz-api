@@ -24,6 +24,6 @@
 		"discord-oauth2": "^2.10.0",
 		"node-2fa": "^2.0.3",
 		"spotify-web-api-node": "^5.0.2",
-                "cors": "^2.8.5"
+		"cors": "^2.8.5"
 	}
 }
