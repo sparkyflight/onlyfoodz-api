@@ -6,28 +6,18 @@ module.exports = {
 		let posts;
 
 		if (type || type != "") {
-			switch (posts) {
-				/*
-                1 = Onlyfoodz
-                2 = Regular
-            */
+                   /*
+                      1 = Onlyfoodz
+                      2 = Regular
+                   */
 
-				case "1":
-					posts = await database.Posts.listAllPosts(1);
-					break;
+                   if (type === "1") await database.Posts.listAllPosts(1);
+                   else if (type === "2") await database.Posts.listAllPosts(2);
+                   else posts = {
+			error: "The provided type is invalid",
+		   };
 
-				case "2":
-					posts = await database.Posts.listAllPosts(2);
-					break;
-
-				default:
-					posts = {
-						error: "The provided type is invalid",
-					};
-					break;
-			}
-
-			return res.json(posts);
+		   return res.json(posts);
 		} else
 			res.status(404).json({
 				error: "There was no post type specified with the request.",
