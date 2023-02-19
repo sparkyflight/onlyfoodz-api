@@ -18,7 +18,7 @@ module.exports = {
 					error: "The provided type is invalid",
 				};
 
-			setTimeout(() => res.json(posts), 3000);
+			return res.json(posts);
 		} else
 			res.status(404).json({
 				error: "There was no post type specified with the request.",
