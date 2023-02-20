@@ -6,7 +6,7 @@ module.exports = {
 		const type = req.query.type;
 		let posts;
 
-		if (userid || type != "") {
+		if (userid || userid != "") {
 			if (type || type != "") {
 			/*
                       1 = Onlyfoodz
