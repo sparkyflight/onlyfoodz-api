@@ -1,7 +1,7 @@
 module.exports = {
 	name: "users/get",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database, Spotify, cloudinary) => {
 		const userid = req.query.id;
 		const user = await database.Users.get({ UserID: userid });
 
