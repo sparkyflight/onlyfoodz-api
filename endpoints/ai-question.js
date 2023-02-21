@@ -4,7 +4,7 @@ require("dotenv").config();
 module.exports = {
 	name: "ai/question",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database, Spotify, cloudinary) => {
 		const question = req.query.question;
 
 		if (!question || question === "")
