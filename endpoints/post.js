@@ -21,7 +21,7 @@ module.exports = {
               }).catch((i) => { response["image_uri"] = null; });
            } else response["image_uri"] = null;
 
-           await database.Posts.create(data["user"], data["caption"], data["image"], [], 1);
+           await database.Posts.create(data["user"], data["caption"], response["image_uri"], [], 1);
 
            return res.json(response);
         }
