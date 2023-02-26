@@ -3,7 +3,9 @@ module.exports = {
 	method: "GET",
 	execute: async (req, res, database, Spotify, cloudinary) => {
 		const userid = req.query.id;
-		const user = await database.Users.get({ UserID: userid });
+		const user =
+			(await database.Users.get({ UserID: userid })) ||
+			(await database.Teams.get({ UserID: userid }));
 
 		if (user) res.send(user);
 		else
