@@ -7,8 +7,10 @@ module.exports = {
            const data = req.body;
            let response = {};
 
+           if (!data["user"]) return res.json({ error: "Oops, it seems that you are not logged in." });
            if (!data["caption"] || data["caption"].error) return res.json({ error: "Sorry, a caption must be provided." });
-           else if (data["image"]) {
+           
+           if (data["image"]) {
               const imageString = `data:image/jpeg;base64,${data["image"]}`;
               const image = cloudinary.uploader.upload(imageString, {
                   public_id: crypto.randomUUID()
