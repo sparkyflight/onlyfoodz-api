@@ -12,7 +12,7 @@ module.exports = {
 
               image.then((i) => {
                  response["image_uri"] = i.secure_url;
-              }).catch(console.error);
+              }).catch((i) => { console.log("Error occurred uploading image"); });
            } else response["image_uri"] = null;
 
            response["caption"] = data["caption"];
