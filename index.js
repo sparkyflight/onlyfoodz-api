@@ -35,6 +35,7 @@ cloudinary.config({
 // Middleware
 app.use(cookieParser());
 app.use(require("cors")());
+app.use(express.json());
 
 // API Endpoints Map
 const apiEndpoints = new Map();
