@@ -7,7 +7,8 @@ module.exports = {
            const data = req.body;
            let response = {};
 
-           if (data["image"]) {
+           if (!data["caption"] || data["caption"].error) return res.json({ error: "Sorry, a caption must be provided." });
+           else if (data["image"]) {
               const imageString = `data:image/jpeg;base64,${data["image"]}`;
               const image = cloudinary.uploader.upload(imageString, {
                   public_id: crypto.randomUUID()
@@ -15,10 +16,8 @@ module.exports = {
 
               image.then((i) => {
                  response["image_uri"] = i.secure_url;
-              }).catch((i) => { console.log("Error occurred uploading image"); });
+              }).catch((i) => { response["image_uri"] = null; });
            } else response["image_uri"] = null;
-
-           response["caption"] = data["caption"];
 
            return res.json(response);
         }
