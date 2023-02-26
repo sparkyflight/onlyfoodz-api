@@ -8,7 +8,10 @@ module.exports = {
            let response = {};
 
            if (data["image"]) {
-              const image = cloudinary.uploader.upload(data["image"], {public_id: crypto.randomUUID()})
+              const imageString = `data:image/jpeg;base64,${data["image"]}`;
+              const image = cloudinary.uploader.upload(imageString, {
+                  public_id: crypto.randomUUID()
+              });
 
               image.then((i) => {
                  response["image_uri"] = i.secure_url;
