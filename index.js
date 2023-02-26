@@ -1,5 +1,6 @@
 // Packages
-const app = require("express")();
+const express = require("express");
+const app = express();
 const logger = require("./logger");
 const fs = require("node:fs");
 const cookieParser = require("cookie-parser");
