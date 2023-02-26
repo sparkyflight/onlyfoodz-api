@@ -1,3 +1,5 @@
+const crypto = require("node:crypto");
+
 module.exports = {
 	name: "posts/post",
 	method: "POST",
@@ -6,9 +8,9 @@ module.exports = {
            let response = {};
 
            if (data["image"]) {
-              const image = cloudinary.uploader.upload(data["image"], {public_id: "posts"})
+              const image = cloudinary.uploader.upload(data["image"], {public_id: crypto.randomUUID()})
 
-              res.then((i) => {
+              image.then((i) => {
                  response["image_uri"] = i.secure_url;
               }).catch(console.error);
            } else response["image_uri"] = null;
