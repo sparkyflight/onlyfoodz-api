@@ -17,12 +17,12 @@ module.exports = {
               });
 
               image.then((i) => {
-                 response["image_uri"] = i.secure_url;
+                 await database.Posts.create(data["user"], data["caption"], i.secure_url, [], 1);
+                 return res.json({ success: true });
               }).catch((i) => { response["image_uri"] = null; });
-           } else response["image_uri"] = null;
-
-           await database.Posts.create(data["user"], data["caption"], response["image_uri"], [], 1);
-
-           return res.json(response);
+           } else {
+               await database.Posts.create(data["user"], data["caption"], null, [], 1);
+               return res.json({ success: true });
+           };
         }
 };
