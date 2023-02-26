@@ -16,13 +16,16 @@ module.exports = {
                   public_id: crypto.randomUUID()
               });
 
-              image.then((i) => {
+              image.then(async (i) => {
                  await database.Posts.create(data["user"], data["caption"], i.secure_url, [], 1);
                  return res.json({ success: true });
-              }).catch((i) => { response["image_uri"] = null; });
+              }).catch(async (i) => {
+                  await database.Posts.create(data["user"], data["caption"], null, [], 1);
+                  return res.json({ success: true });
+              });
            } else {
-               await database.Posts.create(data["user"], data["caption"], null, [], 1);
-               return res.json({ success: true });
+                await database.Posts.create(data["user"], data["caption"], null, [], 1);
+                return res.json({ success: true });
            };
         }
 };
