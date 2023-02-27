@@ -13,7 +13,7 @@ module.exports = {
 			});
 		else {
 			const user =
-				(await database.Tokens.get({ UserID: data["user"] })) ||
+				(await database.Tokens.get(data["user"])) ||
 				(await database.Teams.get({ UserID: data["user"] }));
 
 			if (user) {
