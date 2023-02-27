@@ -12,9 +12,8 @@ module.exports = {
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			const user =
-				(await database.Tokens.get(data["user"])) ||
-				(await database.Teams.get({ UserID: data["user"] }));
+			let user = await database.Tokens.get(data["user"]);
+                        if (!user || user.error) user = await database.Teams.get({ UserID: data["user"] });
 
 			if (user) {
 				if (!data["caption"] || data["caption"].error)
