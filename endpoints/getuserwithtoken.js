@@ -1,7 +1,7 @@
 module.exports = {
 	name: "users/getwithtoken",
 	method: "GET",
-	execute: async (req, res, database, Spotify, cloudinary) => {
+	execute: async (req, res, database, Spotify) => {
 		const token = req.query.token;
 		const user = await database.Tokens.get(token);
 

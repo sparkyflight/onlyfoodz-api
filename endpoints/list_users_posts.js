@@ -1,7 +1,7 @@
 module.exports = {
 	name: "posts/list_user",
 	method: "GET",
-	execute: async (req, res, database, Spotify, cloudinary) => {
+	execute: async (req, res, database, Spotify) => {
 		const userid = req.query.user_id;
 		const type = req.query.type;
 		let posts;

@@ -8,7 +8,6 @@ const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
 const auth = require("./auth")(database);
 const crypto = require("node:crypto");
-const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 
 // Initalize Spotify
@@ -25,13 +24,6 @@ const scopes = [
 ];
 
 const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
-
-// Initialize Cloudinary
-cloudinary.config({
-	cloud_name: "dh30c3f52",
-	api_key: "276832668476137",
-	api_secret: process.env.CLOUDINARY_SECRET,
-});
 
 // Middleware
 app.use(cookieParser());
@@ -61,7 +53,7 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 			});
 
 		try {
-			await data.execute(req, res, database, Spotify, cloudinary);
+			await data.execute(req, res, database, Spotify);
 		} catch (error) {
 			res.status(500).json({
 				error: "Internal Server Error",
@@ -128,7 +120,7 @@ app.all("/auth/discord/callback", async (req, res) => {
 		const token = crypto.randomUUID();
 
 		await database.Users.update(userInfo.id, {
-			Username: userInfo.username
+			Username: userInfo.username,
 		});
 
 		await database.Tokens.create(userInfo.id, token, "Discord");

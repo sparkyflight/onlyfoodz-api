@@ -1,7 +1,7 @@
 module.exports = {
 	name: "spotify/recent",
 	method: "GET",
-	execute: async (req, res, database, Spotify, cloudinary) => {
+	execute: async (req, res, database, Spotify) => {
 		Spotify.getMyRecentlyPlayedTracks({
 			limit: 15,
 		})

@@ -1,7 +1,7 @@
 module.exports = {
 	name: "posts/get",
 	method: "GET",
-	execute: async (req, res, database, Spotify, cloudinary) => {
+	execute: async (req, res, database, Spotify) => {
 		const postid = req.query.post_id;
 
 		if (postid || postid != "") {

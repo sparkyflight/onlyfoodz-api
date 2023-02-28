@@ -1,7 +1,7 @@
 module.exports = {
 	name: "spotify/playing",
 	method: "GET",
-	execute: async (req, res, database, Spotify, cloudinary) => {
+	execute: async (req, res, database, Spotify) => {
 		let allData;
 
 		Spotify.getMyCurrentPlayingTrack()
