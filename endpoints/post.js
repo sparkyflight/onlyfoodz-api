@@ -12,9 +12,24 @@ module.exports = {
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			let user = await database.Tokens.get(data["user"]);
-			if (!user || user.error)
-				user = await database.Teams.get({ UserID: data["user"] });
+			let user;
+
+			if (data["user"].team) {
+				const team = await database.Teams.get({
+					UserID: data["user"].user,
+				});
+				const poster = await database.Teams.get(
+					data["user"].user_token
+				);
+
+				if (poster || !poster.error) {
+					if (i || !i.error) {
+						if (team.Members.find((i) => i.ID === poster.UserID))
+							user = team;
+						else user = null;
+					} else user = null;
+				} else user = null;
+			} else user = await database.Tokens.get(data["user"].user_token);
 
 			if (user) {
 				if (!data["caption"] || data["caption"].error)
@@ -23,22 +38,13 @@ module.exports = {
 						error: "Sorry, a caption must be provided.",
 					});
 
-				if (data["image"])
-					await database.Posts.create(
-						user.UserID,
-						data["caption"],
-						data["image"],
-						[],
-						1
-					);
-				else
-					await database.Posts.create(
-						user.UserID,
-						data["caption"],
-						null,
-						[],
-						1
-					);
+				await database.Posts.create(
+					user.UserID,
+					data["caption"],
+					data["image"],
+					[],
+					1
+				);
 			} else {
 				return res.json({
 					success: false,

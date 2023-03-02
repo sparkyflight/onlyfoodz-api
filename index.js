@@ -113,16 +113,10 @@ app.all("/auth/discord/callback", async (req, res) => {
 
 	const discord = await auth.discord.getAccessToken(req.query.code, true);
 	const userInfo = await auth.discord.getUserInfo(discord.access_token);
-
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
 	if (dbUser) {
 		const token = crypto.randomUUID();
-
-		await database.Users.update(userInfo.id, {
-			Username: userInfo.username,
-		});
-
 		await database.Tokens.create(userInfo.id, token, "Discord");
 
 		response = token;
@@ -138,7 +132,6 @@ app.all("/auth/discord/callback", async (req, res) => {
 		);
 
 		const token = crypto.randomUUID();
-
 		await database.Tokens.create(userInfo.id, token, "Discord");
 
 		response = token;

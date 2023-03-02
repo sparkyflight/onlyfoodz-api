@@ -5,12 +5,12 @@ module.exports = {
 		const userid = req.query.id;
 		let user = await database.Users.get({ UserID: userid });
 
-        user["team"] = false;
-        
+		user["team"] = false;
+
 		if (!user || user.error) {
 			user = await database.Teams.get({ UserID: userid });
-            if (user || !user.error) user["team"] = true;
-        }
+			if (user || !user.error) user["team"] = true;
+		}
 
 		if (user || !user.error) res.send(user);
 		else
