@@ -23,7 +23,7 @@ module.exports = {
 				);
 
 				if (poster || !poster.error) {
-					if (i || !i.error) {
+					if (team || team.error) {
 						if (team.Members.find((i) => i.ID === poster.UserID))
 							user = team;
 						else user = null;
