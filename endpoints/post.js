@@ -18,7 +18,7 @@ module.exports = {
 				const team = await database.Teams.get({
 					UserID: data["user"].user,
 				});
-				const poster = await database.Teams.get(
+				const poster = await database.Tokens.get(
 					data["user"].user_token
 				);
 
