@@ -3,6 +3,7 @@
 
 <head>
     <title>Login</title>
+    <meta charset="utf-8" />
     <meta property="og:title" content="Login" />
     <meta property="og:site_name" content="Nightmare Project" />
     <meta property="og:type" content="website" />
@@ -10,7 +11,7 @@
     <meta property="og:image" content="https://nightmarebot.tk/logo.png" />
     <meta property="og:description" content="Login to all Nightmare Project services!" />
     <meta property="theme-color" content="#3c3c3c" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -23,10 +24,10 @@
 </head>
 
 <body class="bg-slate-900 mt-4">
-    <div class="block max-w-sm p-3 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+    <div class="block max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
         <img
             class="h-8 w-8 rounded-md"
-            src="<%= websiteData.logo %>"
+            src="<%= websiteData.image %>"
             alt="Logo"
         />
 

@@ -94,8 +94,7 @@ app.all("/auth/login", async (req, res) => {
 			name: "Test Build",
 			image: "https://nightmarebot.tk/logo.png",
 			verified: true,
-			description:
-				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
+			description: "Official test build for The Nightmare Project.",
 		},
 	];
 
