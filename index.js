@@ -103,11 +103,20 @@ app.all("/auth/login", async (req, res) => {
 			error: `\`${req.get("origin")}\` is not a allowed origin.`,
 		});
 
-	/*const url = await auth.discord.getAuthURL(
-		`${req.get("origin")}/auth/callback`
-	);*/
+    // Check request to see if there is a "method" query.
+    const method = req.query.method;
 
-	res.render("pages/login", {
+    if (method || method != "") {
+        if (method === "discord") {
+            const url = await auth.discord.getAuthURL(
+                `${req.get("origin")}/auth/callback`
+            );
+
+            return res.redirect(url);
+        }
+    }
+
+	return res.render("pages/login", {
 		page: req.query.page,
 		websiteData: allowedOrigins.find((e) => e.url === req.get("origin")),
 	});
