@@ -8,8 +8,7 @@ module.exports = {
 		if (team || !team.error) res.send(team);
 		else
 			res.status(404).send({
-				error:
-					"We couldn't fetch any information about this team in our database"
+				error: "We couldn't fetch any information about this team in our database",
 			});
 	},
 };

@@ -29,6 +29,8 @@ const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
 app.use(cookieParser());
 app.use(require("cors")());
 app.use(express.json());
+app.use(express.static(`${__dirname}/static`));
+app.set("view engine", "ejs");
 
 // API Endpoints Map
 const apiEndpoints = new Map();
@@ -69,30 +71,43 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 });
 
 // Authentication Endpoints
-app.all("/auth/discord/login", async (req, res) => {
+app.all("/auth/login", async (req, res) => {
 	// Check if origin is allowed.
 	const allowedOrigins = [
-		"https://nightmarebot.tk",
-		"https://onlyfoodz.nightmarebot.tk",
+		{
+			url: "https://nightmarebot.tk",
+			name: "Nightmare Project",
+			image: "https://nightmarebot.tk/logo.png",
+			verified: true,
+			description:
+				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+		},
+		{
+			url: "https://onlyfoodz.nightmarebot.tk",
+			name: "Onlyfoodz",
+			image: "https://onlyfoodz.nightmarebot.tk/logo.png",
+			verified: true,
+			description:
+				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
+		},
 	];
 
-	if (!allowedOrigins.includes(req.get("origin")))
+	if (!allowedOrigins.find((e) => e.url === req.get("origin")))
 		return res.status(403).json({
 			error: `\`${req.get("origin")}\` is not a allowed origin.`,
 		});
 
-	// If allowed, send client to Discord
-	const url = await auth.discord.getAuthURL(
+	/*const url = await auth.discord.getAuthURL(
 		`${req.get("origin")}/auth/callback`
-	);
+	);*/
 
-	res.status(200).json({
-		url: url,
-		verification_passed: true,
+	res.render("pages/login", {
+		page: req.query.page,
+		websiteData: allowedOrigins.find((e) => e.url === req.get("origin")),
 	});
 });
 
-app.all("/auth/discord/callback", async (req, res) => {
+app.all("/auth/callback", async (req, res) => {
 	let response = null;
 
 	if (!req.query.code || req.query.code === "") {
