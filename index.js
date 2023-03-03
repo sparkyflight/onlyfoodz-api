@@ -29,7 +29,6 @@ const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
 app.use(cookieParser());
 app.use(require("cors")());
 app.use(express.json());
-app.use(express.static(`${__dirname}/static`));
 app.set("view engine", "ejs");
 
 // API Endpoints Map
@@ -80,12 +79,20 @@ app.all("/auth/login", async (req, res) => {
 			image: "https://nightmarebot.tk/logo.png",
 			verified: true,
 			description:
-				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
 		},
 		{
 			url: "https://onlyfoodz.nightmarebot.tk",
 			name: "Onlyfoodz",
 			image: "https://onlyfoodz.nightmarebot.tk/logo.png",
+			verified: true,
+			description:
+				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+		},
+		{
+			url: undefined,
+			name: "Test Build",
+			image: "https://nightmarebot.tk/logo.png",
 			verified: true,
 			description:
 				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",

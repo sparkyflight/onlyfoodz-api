@@ -7,8 +7,7 @@
 	"keywords": [],
 	"scripts": {
 		"start": "node index",
-		"format": "prettier --write --plugin-search-dir=. .",
-		"build:css": "postcss static/stylesheets/tailwind.css -o static/stylesheets/style.css"
+		"format": "prettier --write --plugin-search-dir=. ."
 	},
 	"dependencies": {
 		"@banana-dev/banana-dev": "^3.0.0",
@@ -21,12 +20,10 @@
 		"express": "^4.18.2",
 		"fs": "^0.0.1-security",
 		"mongoose": "^6.9.0",
-		"node-2fa": "^2.0.3",
 		"node-fetch": "^2.6.7",
 		"prettier": "^2.7.1",
 		"querystring": "^0.2.1",
 		"request": "^2.88.2",
-		"spotify-web-api-node": "^5.0.2",
-		"tailwindcss": "^3.2.7"
+		"spotify-web-api-node": "^5.0.2"
 	}
 }
