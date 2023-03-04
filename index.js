@@ -114,12 +114,12 @@ app.all("/auth/login", async (req, res) => {
 
 			return res.redirect(url);
 		} else if (method === "github") {
-            const url = await auth.github.getAuthURL(
-                `${req.get("origin")}/auth/callback`
-            );
+			const url = await auth.github.getAuthURL(
+				`${req.get("origin")}/auth/callback`
+			);
 
-            return res.redirect(url);
-        }
+			return res.redirect(url);
+		}
 	}
 
 	return res.render("pages/login", {
