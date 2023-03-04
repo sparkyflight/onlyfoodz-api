@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
-const auth = require("./auth")(database);
+const auth = require("./auth")();
 const crypto = require("node:crypto");
 require("dotenv").config();
 
@@ -103,18 +103,24 @@ app.all("/auth/login", async (req, res) => {
 			error: `\`${req.get("origin")}\` is not a allowed origin.`,
 		});
 
-    // Check request to see if there is a "method" query.
-    const method = req.query.method;
+	// Check request to see if there is a "method" query.
+	const method = req.query.method;
 
-    if (method || method != "") {
-        if (method === "discord") {
-            const url = await auth.discord.getAuthURL(
+	if (method || method != "") {
+		if (method === "discord") {
+			const url = await auth.discord.getAuthURL(
+				`${req.get("origin")}/auth/callback`
+			);
+
+			return res.redirect(url);
+		} else if (method === "github") {
+            const url = await auth.github.getAuthURL(
                 `${req.get("origin")}/auth/callback`
             );
 
             return res.redirect(url);
         }
-    }
+	}
 
 	return res.render("pages/login", {
 		page: req.query.page,
