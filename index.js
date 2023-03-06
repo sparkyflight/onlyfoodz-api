@@ -126,7 +126,7 @@ app.all("/auth/login", async (req, res) => {
 
 	return res.render("pages/login", {
 		page: req.query.page,
-		websiteData: allowedOrigins.find((e) => e.url === req.get("origin")),
+		websiteData: allowedOrigins.find((e) => e.client_id === req.query.client_id),
 	});
 });
 
