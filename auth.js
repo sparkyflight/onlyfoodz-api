@@ -104,24 +104,25 @@ class GithubAuth {
 	}
 
 	static async getAccessToken(code) {
-        const body = JSON.stringify({
-            client_id: process.env.GITHUB_CLIENT_ID,
-            client_secret: process.env.GITHUB_CLIENT_SECRET,
-            code: code,
-            redirect_uri: "https://api.nightmarebot.tk/auth/github/callback"
-        });
+		const body = JSON.stringify({
+			client_id: process.env.GITHUB_CLIENT_ID,
+			client_secret: process.env.GITHUB_CLIENT_SECRET,
+			code: code,
+			redirect_uri: "https://api.nightmarebot.tk/auth/github/callback",
+		});
 
 		const token = await fetch(
 			"https://github.com/login/oauth/access_token",
 			{
-                method: "POST",
-				body: body
-            }
+				method: "POST",
+				body: body,
+                headers: {
+                    Accept: "application/json",
+				}
+			}
 		).then((res) => res.json());
 
-        console.log(body);
-        console.log(token);
-		return token;
+        return token;
 	}
 
 	static async getUserInfo(token) {
@@ -132,9 +133,6 @@ class GithubAuth {
 				"X-Github-Api-Version": "2022-11-28",
 			},
 		}).then((res) => res.json());
-
-        console.log(token);
-        console.log(data);
 
         return data;
 	}
