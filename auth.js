@@ -104,23 +104,25 @@ class GithubAuth {
 	}
 
 	static async getAccessToken(code) {
+        const body = JSON.stringify({
+            client_id: process.env.GITHUB_CLIENT_ID,
+            client_secret: process.env.GITHUB_CLIENT_SECRET,
+            code: code,
+            redirect_uri: "https://api.nightmarebot.tk/auth/github/callback"
+        });
+
 		const token = await fetch(
 			"https://github.com/login/oauth/access_token",
 			{
                 method: "POST",
-				body: JSON.stringify({
-					client_id: process.env.GITHUB_CLIENT_ID,
-					client_secret: process.env.GITHUB_CLIENT_SECRET,
-					code: code,
-                    redirect_uri: "https://api.nightmarebot.tk/auth/github/callback"
-				}),
+				body: body,
 				headers: {
                     Accept: "application/json",
 				}
 			}
-		).then((res) => res);
+		).then((res) => res.json());
 
-        console.log(code);
+        console.log(body);
         console.log(token);
 		return token;
 	}
