@@ -118,7 +118,7 @@ class GithubAuth {
                     Accept: "application/json",
 				}
 			}
-		).then((res) => res.text());
+		).then((res) => res);
 
         console.log(code);
         console.log(token);
