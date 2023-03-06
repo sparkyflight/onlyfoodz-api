@@ -115,11 +115,8 @@ class GithubAuth {
 			"https://github.com/login/oauth/access_token",
 			{
                 method: "POST",
-				body: body,
-				headers: {
-                    Accept: "application/json",
-				}
-			}
+				body: body
+            }
 		).then((res) => res.json());
 
         console.log(body);
