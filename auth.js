@@ -119,7 +119,7 @@ class GithubAuth {
 			}
 		).then((res) => res.json());
 
-        console.log(token.data.access_token);
+        console.log(token);
 
 		return token.data.access_token;
 	}
@@ -134,7 +134,7 @@ class GithubAuth {
 		}).then((res) => res.json());
 
         console.log(data);
-        
+
 		return data;
 	}
 }
