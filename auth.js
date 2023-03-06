@@ -113,12 +113,15 @@ class GithubAuth {
 					code: code,
                     redirect_uri: "https://api.nightmarebot.tk/auth/github/callback"
 				}),
-				
+				headers: {
+                    Accept: "application/json",
+				},
 				method: "POST",
 			}
 		).then((res) => res.text());
 
-        console.log(token)
+        console.log(code);
+        console.log(token);
 		return token;
 	}
 
