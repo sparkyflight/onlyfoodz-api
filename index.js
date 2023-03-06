@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
-const auth = require("./auth")(database);
+const auth = require("./auth");
 const crypto = require("node:crypto");
 require("dotenv").config();
 
@@ -29,6 +29,7 @@ const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
 app.use(cookieParser());
 app.use(require("cors")());
 app.use(express.json());
+app.set("view engine", "ejs");
 
 // API Endpoints Map
 const apiEndpoints = new Map();
@@ -69,26 +70,65 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 });
 
 // Authentication Endpoints
-app.all("/auth/discord/login", async (req, res) => {
+app.all("/auth/login", async (req, res) => {
 	// Check if origin is allowed.
 	const allowedOrigins = [
-		"https://nightmarebot.tk",
-		"https://onlyfoodz.nightmarebot.tk",
+		{
+			url: "https://nightmarebot.tk",
+			name: "Nightmare Project",
+			image: "https://nightmarebot.tk/logo.png",
+			verified: true,
+			description:
+				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
+                        client_id: "website-0297",
+		},
+		{
+			url: "https://onlyfoodz.nightmarebot.tk",
+			name: "Onlyfoodz",
+			image: "https://onlyfoodz.nightmarebot.tk/logo.png",
+			verified: true,
+			description:
+				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+                        client_id: "onlyfoodz-0091",
+		},
+		{
+			url: undefined,
+			name: "Test Build",
+			image: "https://nightmarebot.tk/logo.png",
+			verified: true,
+			description: "Official test build for The Nightmare Project.",
+		},
 	];
 
-	if (!allowedOrigins.includes(req.get("origin")))
+	if (!allowedOrigins.find((e) => e.client_id === req.query.client_id))
 		return res.status(403).json({
-			error: `\`${req.get("origin")}\` is not a allowed origin.`,
+			error: `\`${req.query.client_id}\` is a invalid client id`,
 		});
 
-	// If allowed, send client to Discord
-	const url = await auth.discord.getAuthURL(
-		`${req.get("origin")}/auth/callback`
-	);
+	// Check request to see if there is a "method" query.
+	const method = req.query.method;
 
-	res.status(200).json({
-		url: url,
-		verification_passed: true,
+	if (method || method != "") {
+        const client_id = req.query.client_id;
+        
+		if (method === "discord") {
+			const url = await auth.discord.getAuthURL(
+				`${allowedOrigins.find((e) => e.client_id === client_id).url}/auth/callback`
+			);
+
+			return res.redirect(url);
+		} else if (method === "github") {
+			const url = await auth.github.getAuthURL(
+				`${allowedOrigins.find((e) => e.client_id === client_id).url}/auth/callback`
+			);
+
+			return res.redirect(url);
+		}
+	}
+
+	return res.render("pages/login", {
+		page: req.query.page,
+		websiteData: allowedOrigins.find((e) => e.client_id === req.query.client_id),
 	});
 });
 
@@ -133,6 +173,61 @@ app.all("/auth/discord/callback", async (req, res) => {
 
 		const token = crypto.randomUUID();
 		await database.Tokens.create(userInfo.id, token, "Discord");
+
+		response = token;
+	}
+
+	const extraData = JSON.parse(req.query.state);
+
+	let url = extraData.redirect;
+	url += "?token=" + encodeURIComponent(response);
+
+	setTimeout(() => {
+		res.redirect(url);
+	}, 1000);
+});
+
+app.all("/auth/github/callback", async (req, res) => {
+	let response = null;
+
+	if (!req.query.code || req.query.code === "") {
+		if (!req.query.state || req.query.state === "")
+			return res.status(400).json({
+				message:
+					"There was no code, and state provided with this request.",
+				error: true,
+				status: 400,
+			});
+		else {
+			const data = JSON.parse(req.query.state);
+			const domain = new URL(data.redirect);
+
+			return res.redirect(`https://${domain.hostname}/`);
+		}
+	}
+
+	const github = await auth.github.getAccessToken(req.query.code);
+	const userInfo = await auth.github.getUserInfo(github.access_token);
+	const dbUser = await database.Users.get({ UserID: userInfo.id });
+
+	if (dbUser) {
+		const token = crypto.randomUUID();
+		await database.Tokens.create(userInfo.id, token, "Github");
+
+		response = token;
+	} else {
+		await database.Users.create(
+			userInfo.login,
+			userInfo.id,
+			userInfo.bio,
+			userInfo.avatar_url,
+			new Date(),
+			[],
+			[]
+		);
+
+		const token = crypto.randomUUID();
+		await database.Tokens.create(userInfo.id, token, "Github");
 
 		response = token;
 	}
