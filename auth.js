@@ -107,6 +107,7 @@ class GithubAuth {
 		const token = await fetch(
 			"https://github.com/login/oauth/access_token",
 			{
+                method: "POST",
 				body: JSON.stringify({
 					client_id: process.env.GITHUB_CLIENT_ID,
 					client_secret: process.env.GITHUB_CLIENT_SECRET,
@@ -115,8 +116,7 @@ class GithubAuth {
 				}),
 				headers: {
                     Accept: "application/json",
-				},
-				method: "POST",
+				}
 			}
 		).then((res) => res.text());
 
