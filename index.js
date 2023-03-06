@@ -109,13 +109,13 @@ app.all("/auth/login", async (req, res) => {
 	if (method || method != "") {
 		if (method === "discord") {
 			const url = await auth.discord.getAuthURL(
-				`${req.get("origin")}/auth/callback`
+				`${req.get("origin")}/auth/discord/callback`
 			);
 
 			return res.redirect(url);
 		} else if (method === "github") {
 			const url = await auth.github.getAuthURL(
-				`${req.get("origin")}/auth/callback`
+				`${req.get("origin")}/auth/github/callback`
 			);
 
 			return res.redirect(url);
@@ -128,7 +128,7 @@ app.all("/auth/login", async (req, res) => {
 	});
 });
 
-app.all("/auth/callback", async (req, res) => {
+app.all("/auth/discord/callback", async (req, res) => {
 	let response = null;
 
 	if (!req.query.code || req.query.code === "") {
@@ -181,6 +181,10 @@ app.all("/auth/callback", async (req, res) => {
 	setTimeout(() => {
 		res.redirect(url);
 	}, 1000);
+});
+
+app.all("/auth/github/callback", async (req, res) => {
+    
 });
 
 // Spotify Authentication Endpoints
