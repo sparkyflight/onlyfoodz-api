@@ -203,7 +203,7 @@ app.all("/auth/github/callback", async (req, res) => {
 	}
 
 	const github = await auth.github.getAccessToken(req.query.code);
-	const userInfo = await auth.github.getUserInfo(github);
+	const userInfo = await auth.github.getUserInfo(github.access_token);
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
 	if (dbUser) {

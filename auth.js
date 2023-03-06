@@ -100,7 +100,7 @@ class GithubAuth {
 			uuid: crypto.randomUUID(),
 		});
 
-		return `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${state}`;
+		return `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=user&state=${state}`;
 	}
 
 	static async getAccessToken(code) {
@@ -111,6 +111,7 @@ class GithubAuth {
 					client_id: process.env.GITHUB_CLIENT_ID,
 					client_secret: process.env.GITHUB_CLIENT_SECRET,
 					code: code,
+                    redirect_uri: "https://api.nightmarebot.tk/auth/github/callback"
 				}),
 				headers: {
                     Accept: "application/json",
@@ -119,9 +120,7 @@ class GithubAuth {
 			}
 		).then((res) => res.json());
 
-        console.log(token);
-
-		return token.data.access_token;
+		return token;
 	}
 
 	static async getUserInfo(token) {
