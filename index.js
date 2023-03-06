@@ -111,13 +111,13 @@ app.all("/auth/login", async (req, res) => {
 	if (method || method != "") {
 		if (method === "discord") {
 			const url = await auth.discord.getAuthURL(
-				`${allowedOrigins.find((e) => e.client_id === req.query.client_id).url}/auth/discord/callback`
+				`/auth/discord/callback`
 			);
 
 			return res.redirect(url);
 		} else if (method === "github") {
 			const url = await auth.github.getAuthURL(
-				`${allowedOrigins.find((e) => e.client_id === req.query.client_id).url}/auth/github/callback`
+				`/auth/github/callback`
 			);
 
 			return res.redirect(url);
