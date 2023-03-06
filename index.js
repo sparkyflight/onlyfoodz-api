@@ -80,6 +80,7 @@ app.all("/auth/login", async (req, res) => {
 			verified: true,
 			description:
 				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
+                        client_id: "website-0297",
 		},
 		{
 			url: "https://onlyfoodz.nightmarebot.tk",
@@ -88,6 +89,7 @@ app.all("/auth/login", async (req, res) => {
 			verified: true,
 			description:
 				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+                        client_id: "onlyfoodz-0091",
 		},
 		{
 			url: undefined,
@@ -98,9 +100,9 @@ app.all("/auth/login", async (req, res) => {
 		},
 	];
 
-	if (!allowedOrigins.find((e) => e.url === req.get("origin")))
+	if (!allowedOrigins.find((e) => e.client_id === req.query.client_id))
 		return res.status(403).json({
-			error: `\`${req.get("origin")}\` is not a allowed origin.`,
+			error: `\`${req.query.client_id}\` is a invalid client id`,
 		});
 
 	// Check request to see if there is a "method" query.
@@ -109,13 +111,13 @@ app.all("/auth/login", async (req, res) => {
 	if (method || method != "") {
 		if (method === "discord") {
 			const url = await auth.discord.getAuthURL(
-				`${req.get("origin")}/auth/discord/callback`
+				`${allowedOrigins.find((e) => e.client_id === req.query.client_id).url}/auth/discord/callback`
 			);
 
 			return res.redirect(url);
 		} else if (method === "github") {
 			const url = await auth.github.getAuthURL(
-				`${req.get("origin")}/auth/github/callback`
+				`${allowedOrigins.find((e) => e.client_id === req.query.client_id).url}/auth/github/callback`
 			);
 
 			return res.redirect(url);
