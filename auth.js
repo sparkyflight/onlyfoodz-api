@@ -132,9 +132,10 @@ class GithubAuth {
 			},
 		}).then((res) => res.json());
 
+        console.log(token);
         console.log(data);
 
-		return data;
+        return data;
 	}
 }
 
