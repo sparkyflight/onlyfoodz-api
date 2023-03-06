@@ -113,13 +113,15 @@ class GithubAuth {
 					code: code,
 				}),
 				headers: {
-					"Content-Type": "application/json",
+                    Accept: "application/json",
 				},
 				method: "POST",
 			}
 		).then((res) => res.json());
 
-		return token;
+        console.log(token.data.access_token);
+
+		return token.data.access_token;
 	}
 
 	static async getUserInfo(token) {
@@ -131,6 +133,8 @@ class GithubAuth {
 			},
 		}).then((res) => res.json());
 
+        console.log(data);
+        
 		return data;
 	}
 }

@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
-const auth = require("./auth")();
+const auth = require("./auth");
 const crypto = require("node:crypto");
 require("dotenv").config();
 
@@ -203,7 +203,7 @@ app.all("/auth/github/callback", async (req, res) => {
 	}
 
 	const github = await auth.github.getAccessToken(req.query.code);
-	const userInfo = await auth.github.getUserInfo(github.data.access_token);
+	const userInfo = await auth.github.getUserInfo(github);
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
 	if (dbUser) {
