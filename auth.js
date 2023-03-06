@@ -116,13 +116,13 @@ class GithubAuth {
 			{
 				method: "POST",
 				body: body,
-                headers: {
-                    Accept: "application/json",
-				}
+				headers: {
+					Accept: "application/json",
+				},
 			}
 		).then((res) => res.json());
 
-        return token;
+		return token;
 	}
 
 	static async getUserInfo(token) {
@@ -134,7 +134,7 @@ class GithubAuth {
 			},
 		}).then((res) => res.json());
 
-        return data;
+		return data;
 	}
 }
 

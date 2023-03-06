@@ -80,7 +80,7 @@ app.all("/auth/login", async (req, res) => {
 			verified: true,
 			description:
 				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
-                        client_id: "website-0297",
+			client_id: "website-0297",
 		},
 		{
 			url: "https://onlyfoodz.nightmarebot.tk",
@@ -89,7 +89,7 @@ app.all("/auth/login", async (req, res) => {
 			verified: true,
 			description:
 				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
-                        client_id: "onlyfoodz-0091",
+			client_id: "onlyfoodz-0091",
 		},
 		{
 			url: undefined,
@@ -109,17 +109,21 @@ app.all("/auth/login", async (req, res) => {
 	const method = req.query.method;
 
 	if (method || method != "") {
-        const client_id = req.query.client_id;
-        
+		const client_id = req.query.client_id;
+
 		if (method === "discord") {
 			const url = await auth.discord.getAuthURL(
-				`${allowedOrigins.find((e) => e.client_id === client_id).url}/auth/callback`
+				`${
+					allowedOrigins.find((e) => e.client_id === client_id).url
+				}/auth/callback`
 			);
 
 			return res.redirect(url);
 		} else if (method === "github") {
 			const url = await auth.github.getAuthURL(
-				`${allowedOrigins.find((e) => e.client_id === client_id).url}/auth/callback`
+				`${
+					allowedOrigins.find((e) => e.client_id === client_id).url
+				}/auth/callback`
 			);
 
 			return res.redirect(url);
@@ -128,7 +132,9 @@ app.all("/auth/login", async (req, res) => {
 
 	return res.render("pages/login", {
 		page: req.query.page,
-		websiteData: allowedOrigins.find((e) => e.client_id === req.query.client_id),
+		websiteData: allowedOrigins.find(
+			(e) => e.client_id === req.query.client_id
+		),
 	});
 });
 
