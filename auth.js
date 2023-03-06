@@ -89,7 +89,7 @@ class DiscordAuth {
 		});
 
 		return user;
-    }
+	}
 }
 
 // Github
@@ -115,24 +115,24 @@ class GithubAuth {
 				headers: {
 					"Content-Type": "application/json",
 				},
-                method: "POST"
+				method: "POST",
 			}
 		).then((res) => res.json());
 
-        return token;
-	};
+		return token;
+	}
 
-    static async getUserInfo(token) {
-        const data = await fetch("https://api.github.com/user", {
-            headers: {
-                Accept: "application/vnd.github+json",
-                Authorization: `Bearer ${token}`,
-                "X-Github-Api-Version": "2022-11-28"
-            },
-        }).then((res) => res.json());
+	static async getUserInfo(token) {
+		const data = await fetch("https://api.github.com/user", {
+			headers: {
+				Accept: "application/vnd.github+json",
+				Authorization: `Bearer ${token}`,
+				"X-Github-Api-Version": "2022-11-28",
+			},
+		}).then((res) => res.json());
 
-        return data;
-    };
+		return data;
+	}
 }
 
 // Expose Classes
