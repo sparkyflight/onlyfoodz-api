@@ -120,6 +120,7 @@ class GithubAuth {
 			}
 		).then((res) => res.json());
 
+        console.log(token)
 		return token;
 	}
 
