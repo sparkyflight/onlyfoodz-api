@@ -11,8 +11,14 @@ module.exports = {
                       2 = Regular
                    */
 
-			if (type === "1") posts = await database.Posts.listAllPosts(1).reverse();
-			else if (type === "2") posts = await database.Posts.listAllPosts(2).reverse();
+			if (type === "1") {
+                            posts = await database.Posts.listAllPosts(1);
+                            posts.reverse();
+                        }
+			else if (type === "2") {
+                            posts = await database.Posts.listAllPosts(2);
+                            posts.reverse();
+                        }
 			else
 				posts = {
 					error: "The provided type is invalid",
