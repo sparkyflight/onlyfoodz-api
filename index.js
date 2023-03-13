@@ -92,11 +92,13 @@ app.all("/auth/login", async (req, res) => {
 			client_id: "onlyfoodz-0091",
 		},
 		{
-			url: undefined,
-			name: "Test Build",
-			image: "https://nightmarebot.tk/logo.png",
+			url: "https://nightmarebot.tk/onlyfoodz",
+			name: "Onlyfoodz (Discord)",
+			image: "https://onlyfoodz.nightmarebot.tk/logo.png",
 			verified: true,
-			description: "Official test build for The Nightmare Project.",
+			description:
+				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+			client_id: "onlyfoodzdc-7798321",
 		},
 	];
 

@@ -15,13 +15,11 @@ module.exports = {
 
 				if (type === "1") {
 					posts = await database.Posts.getAllUserPosts(userid, 1);
-                                        posts.reverse();
-				}
-                                else if (type === "2") {
+					posts.reverse();
+				} else if (type === "2") {
 					posts = await database.Posts.getAllUserPosts(userid, 2);
-                                        posts.reverse();
-                                }
-				else
+					posts.reverse();
+				} else
 					posts = {
 						error: "The provided type is invalid",
 					};
