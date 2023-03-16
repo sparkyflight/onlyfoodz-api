@@ -173,7 +173,7 @@ app.all("/auth/discord/callback", async (req, res) => {
 			userInfo.username,
 			userInfo.id,
 			null,
-			userInfo.avatar,
+			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`,
 			new Date(),
 			[],
 			[]
