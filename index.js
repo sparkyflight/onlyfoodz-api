@@ -83,9 +83,9 @@ app.all("/auth/login", async (req, res) => {
 			client_id: "website-0297",
 		},
 		{
-			url: "https://onlyfoodz.nightmarebot.tk",
+			url: "https://onlyfoodz.xyz",
 			name: "Onlyfoodz",
-			image: "https://onlyfoodz.nightmarebot.tk/logo.png",
+			image: "https://onlyfoodz.xyz/logo.png",
 			verified: true,
 			description:
 				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
