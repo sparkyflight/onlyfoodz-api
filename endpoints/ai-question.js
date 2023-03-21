@@ -15,10 +15,10 @@ module.exports = {
 			const banana = require("@banana-dev/banana-dev");
 
 			const modelParameters = {
-				text: question,
-				length: 200,
-				temperature: 0.5,
-				batchSize: 1,
+			      "text": question,
+                              "length":250,
+                              "temperature": 0.9,
+                              "batchSize": 1
 			};
 
 			const output = await banana.run(
@@ -26,6 +26,7 @@ module.exports = {
 				"gptj",
 				modelParameters
 			);
+
 			if (output) return res.json(output);
 			else
 				return res.json({
