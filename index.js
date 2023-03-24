@@ -262,8 +262,8 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		response = token;
 	}
 
-        spotifyUsers.resetAccessToken();
-        spotifyUsers.resetRefreshToken();
+        SpotifyUsers.resetAccessToken();
+        SpotifyUsers.resetRefreshToken();
 
 	const extraData = JSON.parse(req.query.state);
 
