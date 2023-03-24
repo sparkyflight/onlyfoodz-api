@@ -216,6 +216,65 @@ app.all("/auth/discord/callback", async (req, res) => {
 	}, 1000);
 });
 
+app.all("/auth/spotify/callback", async (req, res) => {
+	let response = null;
+
+	if (!req.query.code || req.query.code === "") {
+		if (!req.query.state || req.query.state === "")
+			return res.status(400).json({
+				message:
+					"There was no code, and state provided with this request.",
+				error: true,
+				status: 400,
+			});
+		else {
+			const data = JSON.parse(req.query.state);
+			const domain = new URL(data.redirect);
+
+			return res.redirect(`https://${domain.hostname}/`);
+		}
+	}
+
+	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(req.query.code);
+        SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
+	const userInfo = await SpotifyUsers.getMe();
+	const dbUser = await database.Users.get({ UserID: userInfo.id });
+
+	if (dbUser) {
+		const token = crypto.randomUUID();
+		await database.Tokens.create(userInfo.id, token, "Spotify");
+
+		response = token;
+	} else {
+		await database.Users.create(
+			userInfo.display_name.replaceAll(" ", ""),
+			userInfo.id,
+			null,
+			userInfo.images[0].url,
+			new Date(),
+			[],
+			[]
+		);
+
+		const token = crypto.randomUUID();
+		await database.Tokens.create(userInfo.id, token, "Discord");
+
+		response = token;
+	}
+
+        spotifyUsers.resetAccessToken();
+        spotifyUsers.resetRefreshToken();
+
+	const extraData = JSON.parse(req.query.state);
+
+	let url = extraData.redirect;
+	url += "?token=" + encodeURIComponent(response);
+
+	setTimeout(() => {
+		res.redirect(url);
+	}, 1000);
+});
+
 app.all("/auth/github/callback", async (req, res) => {
 	let response = null;
 
