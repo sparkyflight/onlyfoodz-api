@@ -131,7 +131,14 @@ app.all("/auth/login", async (req, res) => {
 		} 
 
                 if (method === "spotify") {
-                       const url = SpotifyUsers.createAuthorizeURL(scopes, state);
+                       const client = JSON.stringify({
+                           redirect: `${
+					allowedOrigins.find((e) => e.client_id === client_id).url
+				}/auth/callback`,
+                           uuid: crypto.randomUUID()
+                       });
+
+                       const url = SpotifyUsers.createAuthorizeURL(scopes, client);
 	               res.redirect(url);
                 }
 
