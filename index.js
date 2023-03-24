@@ -237,7 +237,8 @@ app.all("/auth/spotify/callback", async (req, res) => {
 
 	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(req.query.code);
         SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
-	const userInfo = await SpotifyUsers.getMe();
+	const user = await SpotifyUsers.getMe();
+        const userInfo = user["body"];
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
 	if (dbUser) {
@@ -247,7 +248,7 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		response = token;
 	} else {
 		await database.Users.create(
-			userInfo.display_name,
+			userInfo.display_name.replaceAll(" ", ""),
 			userInfo.id,
 			null,
 			userInfo.images[0].url,
