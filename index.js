@@ -14,7 +14,14 @@ require("dotenv").config();
 const Spotify = new SpotifyWebApi({
 	clientId: process.env.SPOTIFY_CLIENT_ID,
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	redirectUri: process.env.SPOTIFY_REDIRECT_URI,
+	redirectUri: "https://api.nightmarebot.tk/spotify/callback",
+});
+
+// Initalize Spotify (for Users)
+const SpotifyUsers = new SpotifyWebApi({
+	clientId: process.env.SPOTIFY_CLIENT_ID,
+	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+	redirectUri: "https://api.nightmarebot.tk/auth/spotify/callback",
 });
 
 const scopes = [
@@ -121,7 +128,14 @@ app.all("/auth/login", async (req, res) => {
 			);
 
 			return res.redirect(url);
-		} else if (method === "github") {
+		} 
+
+                if (method === "spotify") {
+                       const url = SpotifyUsers.createAuthorizeURL(scopes, state);
+	               res.redirect(url);
+                }
+
+                if (method === "github") {
 			const url = await auth.github.getAuthURL(
 				`${
 					allowedOrigins.find((e) => e.client_id === client_id).url
@@ -251,12 +265,12 @@ app.all("/auth/github/callback", async (req, res) => {
 });
 
 // Spotify Authentication Endpoints
-app.get("/auth/spotify", async (req, res) => {
+app.get("/spotify", async (req, res) => {
 	const url = Spotify.createAuthorizeURL(scopes, state);
 	res.redirect(url);
 });
 
-app.get("/auth/spotify/callback", async (req, res) => {
+app.get("/spotify/callback", async (req, res) => {
 	const code = req.query.code;
 
 	if (!code || code === "")
