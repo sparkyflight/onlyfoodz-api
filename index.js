@@ -247,7 +247,7 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		response = token;
 	} else {
 		await database.Users.create(
-			userInfo.display_name.replaceAll(" ", ""),
+			userInfo.display_name,
 			userInfo.id,
 			null,
 			userInfo.images[0].url,
