@@ -42,7 +42,7 @@ module.exports = {
 					user.UserID,
 					data["caption"],
 					data["image"],
-					[],
+					data["plugins"],
 					1
 				);
 
