@@ -362,6 +362,6 @@ app.get("/spotify/callback", async (req, res) => {
 });
 
 // Start Server
-app.listen(5590, async () => {
-	logger.success("Express", "Hosting web server on port 5590.");
+app.listen(process.env.PORT, async () => {
+	logger.success("Express", `Hosting web server on port ${process.env.PORT}.`);
 });
