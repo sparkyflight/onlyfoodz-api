@@ -7,10 +7,10 @@
 	"keywords": [],
 	"scripts": {
 		"start": "node index",
-		"format": "prettier --write --plugin-search-dir=. ."
+		"format": "prettier --write --plugin-search-dir=. .",
+        "db:migrate": "node database/migrate"
 	},
 	"dependencies": {
-		"@banana-dev/banana-dev": "^3.0.0",
 		"colors": "^1.4.0",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
