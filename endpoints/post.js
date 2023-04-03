@@ -46,7 +46,7 @@ module.exports = {
 					1
 				);
 
-                                return res.json({ success: true });
+				return res.json({ success: true });
 			} else {
 				return res.json({
 					success: false,
