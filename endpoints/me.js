@@ -11,7 +11,7 @@ module.exports = {
 				message:
 					"We couldn't fetch any information about you in our database",
 				token: token,
-				error: true
+				error: true,
 			});
 	},
 };

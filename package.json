@@ -8,7 +8,7 @@
 	"scripts": {
 		"start": "node index",
 		"format": "prettier --write --plugin-search-dir=. .",
-        "db:migrate": "node database/migrate"
+		"db:migrate": "node database/migrate"
 	},
 	"dependencies": {
 		"colors": "^1.4.0",
