@@ -5,9 +5,6 @@ module.exports = {
 		let data = req.body;
 		const user = await database.Tokens.get(data["token"]);
 
-                console.log(data);
-                console.log(user);
-
 		if (user) {
 			if (!data["username"] || data["username"] === "")
 				return res.json({
