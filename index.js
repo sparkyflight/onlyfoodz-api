@@ -46,12 +46,12 @@ const apiEndpointsFiles = fs
 
 for (const file of apiEndpointsFiles) {
 	const endpoint = require(`./endpoints/${file}`);
-	apiEndpoints.set(endpoint.name, endpoint);
+	apiEndpoints.set(`${endpoint.name}:${endpoint.method.toLowerCase()}`, endpoint);
 }
 
 // API Endpoints
 app.all(`/api/:category/:endpoint`, async (req, res) => {
-	const endpoint = `${req.params.category}/${req.params.endpoint}`;
+	const endpoint = `${req.params.category}/${req.params.endpoint}:${req.method.toLowerCase()}`;
 	const data = apiEndpoints.get(endpoint);
 
 	if (data) {
