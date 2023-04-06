@@ -82,7 +82,7 @@ app.all("/auth/login", async (req, res) => {
 	const allowedOrigins = [
 		{
 			url: "https://nightmarebot.tk",
-			name: "Nightmare Project",
+			name: "Azidoazide",
 			image: "https://nightmarebot.tk/logo.png",
 			verified: true,
 			description:
@@ -95,7 +95,7 @@ app.all("/auth/login", async (req, res) => {
 			image: "https://onlyfoodz.xyz/logo.png",
 			verified: true,
 			description:
-				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 			client_id: "onlyfoodz-0091",
 		},
 		{
@@ -104,7 +104,7 @@ app.all("/auth/login", async (req, res) => {
 			image: "https://onlyfoodz.xyz/logo.png",
 			verified: true,
 			description:
-				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 			client_id: "onlyfoodzdc-7798321",
 		},
 	];

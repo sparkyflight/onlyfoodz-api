@@ -1,5 +1,3 @@
-const crypto = require("node:crypto");
-
 module.exports = {
 	name: "posts/post",
 	method: "POST",
