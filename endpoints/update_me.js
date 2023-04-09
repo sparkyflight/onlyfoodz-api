@@ -14,17 +14,17 @@ module.exports = {
 				return res.json({
 					error: "A avatar is required.",
 				});
-			
-                        if (!data["bio"] || data["bio"] === "") data["bio"] = null;
-			    await database.Users.update(user.UserID, {
+
+			if (!data["bio"] || data["bio"] === "") data["bio"] = null;
+			await database.Users.update(user.UserID, {
 				Username: data["username"],
 				Avatar: data["avatar"],
 				Bio: data["bio"] || null,
-			    });
+			});
 
-			    return res.json({
+			return res.json({
 				success: true,
-			    });
+			});
 		} else
 			res.status(404).send({
 				message:
