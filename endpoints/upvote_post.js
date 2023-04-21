@@ -8,8 +8,8 @@ module.exports = {
 		if (user) {
 			if (post) {
 				if (
-					post.Upvotes.includes(user.UserID) ||
-					post.Downvotes.includes(user.UserID)
+					post.Upvotes.contains(user.UserID) ||
+					post.Downvotes.contains(user.UserID)
 				)
 					return res.json({
 						error: "You cannot update your vote, for this post.",
