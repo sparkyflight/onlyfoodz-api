@@ -46,12 +46,17 @@ const apiEndpointsFiles = fs
 
 for (const file of apiEndpointsFiles) {
 	const endpoint = require(`./endpoints/${file}`);
-	apiEndpoints.set(endpoint.name, endpoint);
+	apiEndpoints.set(
+		`${endpoint.name}:${endpoint.method.toLowerCase()}`,
+		endpoint
+	);
 }
 
 // API Endpoints
 app.all(`/api/:category/:endpoint`, async (req, res) => {
-	const endpoint = `${req.params.category}/${req.params.endpoint}`;
+	const endpoint = `${req.params.category}/${
+		req.params.endpoint
+	}:${req.method.toLowerCase()}`;
 	const data = apiEndpoints.get(endpoint);
 
 	if (data) {
@@ -82,7 +87,7 @@ app.all("/auth/login", async (req, res) => {
 	const allowedOrigins = [
 		{
 			url: "https://nightmarebot.tk",
-			name: "Nightmare Project",
+			name: "Azidoazide",
 			image: "https://nightmarebot.tk/logo.png",
 			verified: true,
 			description:
@@ -95,16 +100,16 @@ app.all("/auth/login", async (req, res) => {
 			image: "https://onlyfoodz.xyz/logo.png",
 			verified: true,
 			description:
-				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 			client_id: "onlyfoodz-0091",
 		},
 		{
 			url: "https://nightmarebot.tk/onlyfoodz",
 			name: "Onlyfoodz (Discord)",
-			image: "https://onlyfoodz.nightmarebot.tk/logo.png",
+			image: "https://onlyfoodz.xyz/logo.png",
 			verified: true,
 			description:
-				"Onlyfoodz is a social media platform where people share pictures and small videos of food.",
+				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 			client_id: "onlyfoodzdc-7798321",
 		},
 	];
@@ -128,21 +133,21 @@ app.all("/auth/login", async (req, res) => {
 			);
 
 			return res.redirect(url);
-		} 
+		}
 
-                if (method === "spotify") {
-                       const client = JSON.stringify({
-                           redirect: `${
+		if (method === "spotify") {
+			const client = JSON.stringify({
+				redirect: `${
 					allowedOrigins.find((e) => e.client_id === client_id).url
 				}/auth/callback`,
-                           uuid: crypto.randomUUID()
-                       });
+				uuid: crypto.randomUUID(),
+			});
 
-                       const url = SpotifyUsers.createAuthorizeURL(scopes, client);
-	               res.redirect(url);
-                }
+			const url = SpotifyUsers.createAuthorizeURL(scopes, client);
+			res.redirect(url);
+		}
 
-                if (method === "github") {
+		if (method === "github") {
 			const url = await auth.github.getAuthURL(
 				`${
 					allowedOrigins.find((e) => e.client_id === client_id).url
@@ -195,9 +200,7 @@ app.all("/auth/discord/callback", async (req, res) => {
 			userInfo.id,
 			null,
 			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`,
-			new Date(),
-			[],
-			[]
+			new Date()
 		);
 
 		const token = crypto.randomUUID();
@@ -235,10 +238,13 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		}
 	}
 
-	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(req.query.code);
-        SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
+	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(
+		req.query.code
+	);
+	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
+
 	const user = await SpotifyUsers.getMe();
-        const userInfo = user["body"];
+	const userInfo = user["body"];
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
 	if (dbUser) {
@@ -252,9 +258,7 @@ app.all("/auth/spotify/callback", async (req, res) => {
 			userInfo.id,
 			null,
 			userInfo.images[0].url,
-			new Date(),
-			[],
-			[]
+			new Date()
 		);
 
 		const token = crypto.randomUUID();
@@ -263,8 +267,8 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		response = token;
 	}
 
-        SpotifyUsers.resetAccessToken();
-        SpotifyUsers.resetRefreshToken();
+	SpotifyUsers.resetAccessToken();
+	SpotifyUsers.resetRefreshToken();
 
 	const extraData = JSON.parse(req.query.state);
 
@@ -310,9 +314,7 @@ app.all("/auth/github/callback", async (req, res) => {
 			userInfo.id,
 			userInfo.bio,
 			userInfo.avatar_url,
-			new Date(),
-			[],
-			[]
+			new Date()
 		);
 
 		const token = crypto.randomUUID();
@@ -363,5 +365,8 @@ app.get("/spotify/callback", async (req, res) => {
 
 // Start Server
 app.listen(process.env.PORT, async () => {
-	logger.success("Express", `Hosting web server on port ${process.env.PORT}.`);
+	logger.success(
+		"Express",
+		`Hosting web server on port ${process.env.PORT}.`
+	);
 });
