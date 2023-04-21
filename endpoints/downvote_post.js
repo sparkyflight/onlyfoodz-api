@@ -3,20 +3,39 @@ module.exports = {
 	method: "PUT",
 	execute: async (req, res, database, Spotify) => {
 		const user = await database.Tokens.get(req.query.token);
+		const post = await database.Posts.get(req.query.PostID);
 
 		if (user) {
-                    const update = await database.Posts.downvote(req.query.PostID, user.UserID);
+			if (post) {
+				if (
+					post.Upvotes.includes(user.UserID) ||
+					post.Downvotes.includes(user.UserID)
+				)
+					return res.json({
+						error: "You cannot update your vote, for this post.",
+					});
+				else {
+					const update = await database.Posts.downvote(
+						req.query.PostID,
+						user.UserID
+					);
 
-                    if (update || !update.error) return res.json({
-                       success: true
-                    });
-                    else return res.json({
-                       success: false
-                    });
-                }
-		else return res.json({
-                   error: "The provided user token is invalid, or the user does not exist.",
-                   success: false
-                });
+					if (update)
+						return res.json({
+							success: true,
+						});
+					else
+						return res.json({
+							error: "An unexpected error has occured while trying to complete your request.",
+						});
+				}
+			} else
+				return res.json({
+					error: "The provided post id is invalid.",
+				});
+		} else
+			return res.json({
+				error: "The provided user token is invalid, or the user does not exist.",
+			});
 	},
 };
