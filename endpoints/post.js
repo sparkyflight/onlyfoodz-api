@@ -1,5 +1,3 @@
-const crypto = require("node:crypto");
-
 module.exports = {
 	name: "posts/post",
 	method: "POST",
@@ -42,9 +40,11 @@ module.exports = {
 					user.UserID,
 					data["caption"],
 					data["image"],
-					[],
+					data["plugins"],
 					1
 				);
+
+				return res.json({ success: true });
 			} else {
 				return res.json({
 					success: false,
