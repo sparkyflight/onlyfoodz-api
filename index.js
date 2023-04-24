@@ -7,6 +7,10 @@ const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
 const auth = require("./auth");
+const http = require("http");
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 const crypto = require("node:crypto");
 require("dotenv").config();
 
@@ -363,10 +367,12 @@ app.get("/spotify/callback", async (req, res) => {
 	}
 });
 
+// Socket Events
+io.on("connection", (socket) => {
+	logger.debug("WS", "A new connection has been initalized.");
+});
+
 // Start Server
-app.listen(process.env.PORT, async () => {
-	logger.success(
-		"Express",
-		`Hosting web server on port ${process.env.PORT}.`
-	);
+server.listen(process.env.PORT, async () => {
+	logger.success("Server", `Hosting web server on port ${process.env.PORT}.`);
 });
