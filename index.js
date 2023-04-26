@@ -116,6 +116,15 @@ app.all("/auth/login", async (req, res) => {
 				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 			client_id: "onlyfoodzdc-7798321",
 		},
+                {
+			url: "https://dj.azidoazide.xyz",
+			name: "AzidoDJ",
+			image: "https://dj.azidoazide.xyz/logo.png",
+			verified: true,
+			description:
+				"AzidoDJ is a Artificial Intelligence based DJ experience that allows you to always be in the moment, with similar music you already listen to!",
+			client_id: "azidodj-2294753900445",
+		}
 	];
 
 	if (!allowedOrigins.find((e) => e.client_id === req.query.client_id))
