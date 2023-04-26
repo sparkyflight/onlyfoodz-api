@@ -213,7 +213,8 @@ app.all("/auth/discord/callback", async (req, res) => {
 			userInfo.id,
 			null,
 			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`,
-			new Date()
+			new Date(),
+                        "Discord"
 		);
 
 		const token = crypto.randomUUID();
@@ -271,7 +272,8 @@ app.all("/auth/spotify/callback", async (req, res) => {
 			userInfo.id,
 			null,
 			userInfo.images[0].url,
-			new Date()
+			new Date(),
+                        "Spotify"
 		);
 
 		const token = crypto.randomUUID();
@@ -327,7 +329,8 @@ app.all("/auth/github/callback", async (req, res) => {
 			userInfo.id,
 			userInfo.bio,
 			userInfo.avatar_url,
-			new Date()
+			new Date(),
+                        "GitHub"
 		);
 
 		const token = crypto.randomUUID();
