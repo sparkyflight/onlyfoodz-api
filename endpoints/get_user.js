@@ -6,10 +6,15 @@ module.exports = {
 		let user = await database.Users.get({ UserID: userid });
 
 		user["team"] = false;
+                user["Connections"] = [];
 
 		if (!user || user.error) {
 			user = await database.Teams.get({ UserID: userid });
-			if (user || !user.error) user["team"] = true;
+
+			if (user || !user.error) {
+                            user["team"] = true;
+                            user["Connections"] = [];
+                        }
 		}
 
 		if (user || !user.error) res.send(user);
