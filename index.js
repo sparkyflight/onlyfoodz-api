@@ -268,7 +268,7 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		await database.Tokens.create(userInfo.id, token, "Spotify");
 
                 let Connections = dbUser.Connections;
-                console.log(Connections.find((e) => e.method === "Spotify"));
+                console.log(Connections);
                 /*Connections[Connections.findIndex((e) => e.method === "Spotify")].accessToken = SpotifyUsers.getAccessToken();
                 Connections[Connections.findIndex((e) => e.method === "Spotify")].refreshToken = SpotifyUsers.getRefreshToken();
 
