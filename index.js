@@ -32,6 +32,8 @@ const scopes = [
 	"user-read-private",
 	"user-read-currently-playing",
 	"user-read-recently-played",
+        "user-modify-playback-state",
+        "user-read-playback-state"
 ];
 
 const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
@@ -264,6 +266,14 @@ app.all("/auth/spotify/callback", async (req, res) => {
 	if (dbUser) {
 		const token = crypto.randomUUID();
 		await database.Tokens.create(userInfo.id, token, "Spotify");
+
+                let Connections = dbUser.Connections;
+                Connections.find((e) => e.method === "Spotify").accessToken = SpotifyUsers.getAccessToken();
+                Connections.find((e) => e.method === "Spotify").refreshToken = SpotifyUsers.getRefreshToken();
+
+                await database.Users.update(userInfo.id, {
+                   Connections: Connections
+                });
 
 		response = token;
 	} else {
