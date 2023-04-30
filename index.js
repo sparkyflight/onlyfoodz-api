@@ -33,7 +33,10 @@ const scopes = [
 	"user-read-currently-playing",
 	"user-read-recently-played",
         "user-modify-playback-state",
-        "user-read-playback-state"
+        "user-read-playback-state",
+        "streaming",
+        "user-read-private",
+        "user-read-email"
 ];
 
 const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
