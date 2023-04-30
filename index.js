@@ -395,7 +395,7 @@ app.get("/spotify/callback", async (req, res) => {
 // Socket Events
 io.on("connection", (socket) => {
 	logger.debug("WS", "A new connection has been initalized.");
-        socket.emit("tts_say", "Hello there! Welcome to your personalized DJ experience. My name is DJ Azido, and i am glad to serve you the best music!");
+        setTimeout(() => { socket.emit("tts_say", "Hello there! Welcome to your personalized DJ experience. My name is DJ Azido, and i am glad to serve you the best music!"); }, 3000);
 });
 
 // Start Server
