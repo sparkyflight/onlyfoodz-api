@@ -271,15 +271,19 @@ app.all("/auth/spotify/callback", async (req, res) => {
 	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
 	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
 
-	const musData = {
-		artists: await SpotifyUsers.getMyTopArtists({
-			limit: 20,
-		}).body.items,
-		songs: await SpotifyUsers.getMyTopTracks({ limit: 20 }).body.items,
-	};
+    const artists = await SpotifyUsers.getMyTopArtists({
+        limit: 20
+    });
 
-    console.log(musData);
+    const songs = await SpotifyUsers.getMyTopTracks({
+        limit: 20
+    });
     
+    console.log({
+        Artists: artists,
+        Tracks: songs
+    });
+
 	const user = await SpotifyUsers.getMe();
 	const userInfo = user["body"];
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
