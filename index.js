@@ -264,8 +264,7 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		}
 	}
 
-	const spotifyToken = SpotifyUsers.authorizationCodeGrant(req.query.code);
-    console.log(spotifyToken)
+	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(req.query.code);
 	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
 	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
 
