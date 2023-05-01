@@ -280,8 +280,8 @@ app.all("/auth/spotify/callback", async (req, res) => {
     });
     
     console.log({
-        Artists: artists,
-        Tracks: songs
+        Artists: artists.body.items,
+        Tracks: songs.body.items
     });
 
 	const user = await SpotifyUsers.getMe();
