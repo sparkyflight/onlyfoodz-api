@@ -268,10 +268,10 @@ app.all("/auth/spotify/callback", async (req, res) => {
 	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
 	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
 
-	const art = await SpotifyUsers.getMyTopArtists();
+	/*const art = await SpotifyUsers.getMyTopArtists();
 	const tra = await SpotifyUsers.getMyTopTracks();
 	console.log(art);
-	console.log(tra);
+	console.log(tra);*/
 
 	const user = await SpotifyUsers.getMe();
 	const userInfo = user["body"];
