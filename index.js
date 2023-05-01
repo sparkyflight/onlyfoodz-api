@@ -32,6 +32,11 @@ const scopes = [
 	"user-read-private",
 	"user-read-currently-playing",
 	"user-read-recently-played",
+	"user-modify-playback-state",
+	"user-read-playback-state",
+	"streaming",
+	"user-read-private",
+	"user-read-email",
 ];
 
 const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
@@ -115,6 +120,15 @@ app.all("/auth/login", async (req, res) => {
 			description:
 				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 			client_id: "onlyfoodzdc-7798321",
+		},
+		{
+			url: "https://dj.azidoazide.xyz",
+			name: "AzidoDJ",
+			image: "https://dj.azidoazide.xyz/logo.png",
+			verified: true,
+			description:
+				"AzidoDJ is a Artificial Intelligence based DJ experience that allows you to always be in the moment, with similar music you already listen to!",
+			client_id: "azidodj-2294753900445",
 		},
 	];
 
@@ -254,10 +268,10 @@ app.all("/auth/spotify/callback", async (req, res) => {
 	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
 	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
 
-    const art = await SpotifyUsers.getMyTopArtists();
-    const tra = await SpotifyUsers.getMyTopTracks();
-    console.log(art);
-    console.log(tra);
+	const art = await SpotifyUsers.getMyTopArtists();
+	const tra = await SpotifyUsers.getMyTopTracks();
+	console.log(art);
+	console.log(tra);
 
 	const user = await SpotifyUsers.getMe();
 	const userInfo = user["body"];
@@ -406,7 +420,13 @@ app.get("/spotify/callback", async (req, res) => {
 // Socket Events
 io.on("connection", (socket) => {
 	logger.debug("WS", "A new connection has been initalized.");
-        setTimeout(() => { socket.emit("tts_say", "Hello there! Welcome to your personalized DJ experience. My name is DJ Azido, and i am glad to serve you the best music!"); }, 3000);
+
+    setTimeout(() => {
+		socket.emit(
+			"tts_say",
+			"Hello there! Welcome to your personalized DJ experience. My name is DJ Azido, and i am glad to serve you the best music!"
+		);
+	}, 3000);
 });
 
 // Start Server
