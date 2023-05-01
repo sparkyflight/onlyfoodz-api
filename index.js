@@ -34,7 +34,7 @@ const scopes = [
 	"user-read-recently-played",
 	"user-modify-playback-state",
 	"user-read-playback-state",
-    "user-top-read",
+	"user-top-read",
 	"streaming",
 	"user-read-private",
 	"user-read-email",
@@ -265,13 +265,21 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		}
 	}
 
-	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(req.query.code);
+	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(
+		req.query.code
+	);
 	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
 	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
 
-    const art = await SpotifyUsers.getMyTopArtists();
-    console.log(art.body.items);
+	const musData = {
+		artists: await SpotifyUsers.getMyTopArtists({
+			limit: 20,
+		}).body.items,
+		songs: await SpotifyUsers.getMyTopTracks({ limit: 20 }).body.items,
+	};
 
+    console.log(musData);
+    
 	const user = await SpotifyUsers.getMe();
 	const userInfo = user["body"];
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
@@ -420,7 +428,7 @@ app.get("/spotify/callback", async (req, res) => {
 io.on("connection", (socket) => {
 	logger.debug("WS", "A new connection has been initalized.");
 
-    setTimeout(() => {
+	setTimeout(() => {
 		socket.emit(
 			"tts_say",
 			"Hello there! Welcome to your personalized DJ experience. My name is DJ Azido, and i am glad to serve you the best music!"
