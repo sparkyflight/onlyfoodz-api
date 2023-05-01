@@ -32,11 +32,6 @@ const scopes = [
 	"user-read-private",
 	"user-read-currently-playing",
 	"user-read-recently-played",
-        "user-modify-playback-state",
-        "user-read-playback-state",
-        "streaming",
-        "user-read-private",
-        "user-read-email"
 ];
 
 const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
@@ -121,15 +116,6 @@ app.all("/auth/login", async (req, res) => {
 				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 			client_id: "onlyfoodzdc-7798321",
 		},
-                {
-			url: "https://dj.azidoazide.xyz",
-			name: "AzidoDJ",
-			image: "https://dj.azidoazide.xyz/logo.png",
-			verified: true,
-			description:
-				"AzidoDJ is a Artificial Intelligence based DJ experience that allows you to always be in the moment, with similar music you already listen to!",
-			client_id: "azidodj-2294753900445",
-		}
 	];
 
 	if (!allowedOrigins.find((e) => e.client_id === req.query.client_id))
@@ -219,7 +205,14 @@ app.all("/auth/discord/callback", async (req, res) => {
 			null,
 			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`,
 			new Date(),
-                        "Discord"
+			[
+				{
+					service: "Discord",
+					id: userInfo.id,
+					accessToken: null,
+					refreshToken: null,
+				},
+			]
 		);
 
 		const token = crypto.randomUUID();
@@ -257,10 +250,14 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		}
 	}
 
-	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(
-		req.query.code
-	);
+	const spotifyToken = SpotifyUsers.authorizationCodeGrant(req.query.code);
 	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
+	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
+
+    const art = await SpotifyUsers.getMyTopArtists();
+    const tra = await SpotifyUsers.getMyTopTracks();
+    console.log(art);
+    console.log(tra);
 
 	const user = await SpotifyUsers.getMe();
 	const userInfo = user["body"];
@@ -270,13 +267,21 @@ app.all("/auth/spotify/callback", async (req, res) => {
 		const token = crypto.randomUUID();
 		await database.Tokens.create(userInfo.id, token, "Spotify");
 
-                let Connections = dbUser.Connections;
-                Connections[Connections.findIndex((e) => e.service === "Spotify")].accessToken = SpotifyUsers.getAccessToken();
-                Connections[Connections.findIndex((e) => e.service === "Spotify")].refreshToken = SpotifyUsers.getRefreshToken();
+		const connections = dbUser.Connections;
 
-                await database.Users.update(userInfo.id, {
-                   Connections: Connections
-                });
+		if (connections.find((e) => e.service === "Spotify")) {
+			connections[
+				connections.findIndex((e) => e.service === "Spotify")
+			].accessToken = SpotifyUsers.getAccessToken();
+
+			connections[
+				connections.findIndex((e) => e.service === "Spotify")
+			].refreshToken = SpotifyUsers.getRefreshToken();
+		}
+
+		await database.Users.update(userInfo.id, {
+			Connections: connections,
+		});
 
 		response = token;
 	} else {
@@ -286,7 +291,14 @@ app.all("/auth/spotify/callback", async (req, res) => {
 			null,
 			userInfo.images[0].url,
 			new Date(),
-                        "Spotify"
+			[
+				{
+					service: "Spotify",
+					id: userInfo.id,
+					accessToken: SpotifyUsers.getAccessToken(),
+					refreshToken: SpotifyUsers.getRefreshToken(),
+				},
+			]
 		);
 
 		const token = crypto.randomUUID();
@@ -342,8 +354,7 @@ app.all("/auth/github/callback", async (req, res) => {
 			userInfo.id,
 			userInfo.bio,
 			userInfo.avatar_url,
-			new Date(),
-                        "GitHub"
+			new Date()
 		);
 
 		const token = crypto.randomUUID();
@@ -395,7 +406,6 @@ app.get("/spotify/callback", async (req, res) => {
 // Socket Events
 io.on("connection", (socket) => {
 	logger.debug("WS", "A new connection has been initalized.");
-        socket.emit("tts_say", "Hello there! Welcome to your personalized DJ experience. My name is DJ Azido, and i am glad to serve you the best music!");
 });
 
 // Start Server
