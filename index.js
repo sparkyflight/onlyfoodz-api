@@ -270,7 +270,7 @@ app.all("/auth/spotify/callback", async (req, res) => {
 	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
 
     const art = await SpotifyUsers.getMyTopArtists();
-    console.log(art);
+    console.log(art.body.items);
 
 	const user = await SpotifyUsers.getMe();
 	const userInfo = user["body"];
