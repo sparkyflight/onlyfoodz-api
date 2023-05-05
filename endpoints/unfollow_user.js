@@ -7,16 +7,14 @@ module.exports = {
 
 		if (user) {
 			if (target) {
-				if (
-					!target.Followers.includes(user.UserID)
-				)
+				if (!target.Followers.includes(user.UserID))
 					return res.json({
 						error: "You cannot unfollow this user. Reason: You are not following this user.",
 					});
 				else {
 					const update = await database.Users.unfollow(
 						user.UserID,
-                                                target.UserID
+						target.UserID
 					);
 
 					if (update)

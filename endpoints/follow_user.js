@@ -7,16 +7,14 @@ module.exports = {
 
 		if (user) {
 			if (target) {
-				if (
-					target.Followers.includes(user.UserID)
-				)
+				if (target.Followers.includes(user.UserID))
 					return res.json({
 						error: "You cannot follow this user again.",
 					});
 				else {
 					const update = await database.Users.follow(
 						user.UserID,
-                                                target.UserID
+						target.UserID
 					);
 
 					if (update)
