@@ -3,7 +3,7 @@ module.exports = {
 	method: "PUT",
 	execute: async (req, res, database, Spotify) => {
 		const user = await database.Tokens.get(req.query.token);
-		const target = await database.Users.get(req.query.target);
+		const target = await database.Users.get({ UserID: req.query.target });
 
 		if (user) {
 			if (target) {
