@@ -33,7 +33,7 @@ module.exports = {
 						error: "You must provide a Profile Picture.",
 					});
 
-				const sendD = await database.Teams.create(
+				await database.Teams.create(
 					data["Username"],
 					crypto.randomUUID(),
 					data["Bio"],
@@ -41,20 +41,7 @@ module.exports = {
 					user.UserID
 				);
 
-				if (sendD) {
-					if (sendD.error)
-						return res.json({
-							error: sendD.error,
-						});
-					else
-						return res.json({
-							success: true,
-						});
-				} else {
-					return res.json({
-						error: "Something went wrong with fulfilling your request.",
-					});
-				}
+				return res.json({ success: true });
 			}
 		}
 	},
