@@ -1,5 +1,3 @@
-const crypto = require("node:crypto");
-
 module.exports = {
 	name: "teams/update",
 	method: "PATCH",
@@ -39,29 +37,15 @@ module.exports = {
 								error: "You must provide a Profile Picture.",
 							});
 
-						const sendD = await database.Teams.update(
-							data["team"],
-							{
-								Username: data["Username"],
-								Bio: data["Bio"],
-								Avatar: data["Avatar"],
-							}
-						);
+						await database.Teams.update(data["team"], {
+							Username: data["Username"],
+							Bio: data["Bio"],
+							Avatar: data["Avatar"],
+						});
 
-						if (sendD) {
-							if (sendD.error)
-								return res.json({
-									error: sendD.error,
-								});
-							else
-								return res.json({
-									success: true,
-								});
-						} else {
-							return res.json({
-								error: "Something went wrong with fulfilling your request.",
-							});
-						}
+						return res.json({
+							success: true,
+						});
 					} else
 						return res.json({
 							error: "You are not in this team.",
