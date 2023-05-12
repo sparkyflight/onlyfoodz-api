@@ -16,7 +16,7 @@ module.exports = {
                       $regex: query,
                       $options: "i"
                    }
-                 });
+                 }, 1);
 
                  return res.json({ users, posts });
          }, 
