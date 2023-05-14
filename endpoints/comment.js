@@ -8,7 +8,7 @@ module.exports = {
              if (user) { 
                  if (post) {}
                  else return res.json({ 
-                   error: "The provided post id is invalid."
+                   error: "The provided post id is invalid.",
                  }); 
              } else 
                 return res.json({ 
