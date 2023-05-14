@@ -8,7 +8,12 @@ module.exports = {
              const post = await database.Posts.get(req.query.PostID); 
   
              if (user) { 
-                 if (post) {}
+                 if (post) {
+                    const update = await database.Posts.comment(post.PostID, user.UserID, data["Caption"]);
+
+                    if (update) return res.json({ success: true });
+                    else return res.json({ error: "Something went wrong with processing your request." });
+                 }
                  else return res.json({ 
                    error: "The provided post id is invalid.",
                  }); 
