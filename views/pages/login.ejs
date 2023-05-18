@@ -29,7 +29,7 @@
 
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getAuth } from "firebase/auth";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCp8Jhu_s7g2t7nAFISf0VAk08kXqiuTYM",
@@ -42,7 +42,7 @@
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app)
+  const auth = getAuth(app);
 </script>
 </head>
 
