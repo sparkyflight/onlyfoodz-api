@@ -72,10 +72,17 @@
 
         <div class="p-2"></div>
 
-        <div id="methods">
+        <div class="p-4 bg-gray-600 rounded-md border-gray-700">
+           <input type="text" class="p-2 bg-white text-black font-bold text-base" placeholder="Email" />
+           <input type="password" class="p-2 bg-white text-black font-bold text-base" placeholder="Password" />
+        </div>
+
+        <div class="p-2"></div>
+
+        <div class="flex justify-center items-center" id="methods">
             <button
                 type="button"
-                class="md:w-1/2 lg:w-1/2 p-2 bg-blurple text-lg text-white font-bold rounded-md"
+                class="p-2 bg-blurple text-lg text-white font-bold rounded-md"
                 onclick="window.location.href = '/auth/login?method=discord&client_id=<%= websiteData.client_id %>';"
             >Login with Discord</button>
 
@@ -83,7 +90,7 @@
 
             <button
                 type="button"
-                class="md:w-1/2 lg:w-1/2 p-2 bg-spotify text-lg text-white font-bold rounded-md"
+                class="p-2 bg-spotify text-lg text-white font-bold rounded-md"
                 onclick="window.location.href = '/auth/login?method=spotify&client_id=<%= websiteData.client_id %>';"
             >Login with Spotify</button>
         </div>
