@@ -165,16 +165,6 @@ app.all("/auth/login", async (req, res) => {
 			const url = SpotifyUsers.createAuthorizeURL(scopes, client);
 			res.redirect(url);
 		}
-
-		if (method === "github") {
-			const url = await auth.github.getAuthURL(
-				`${
-					allowedOrigins.find((e) => e.client_id === client_id).url
-				}/auth/callback`
-			);
-
-			return res.redirect(url);
-		}
 	}
 
 	return res.render("pages/login", {
@@ -271,19 +261,6 @@ app.all("/auth/spotify/callback", async (req, res) => {
 	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
 	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
 
-	const artists = await SpotifyUsers.getMyTopArtists({
-		limit: 20,
-	});
-
-	const songs = await SpotifyUsers.getMyTopTracks({
-		limit: 20,
-	});
-
-	console.log({
-		Artists: artists.body.items,
-		Tracks: songs.body.items,
-	});
-
 	const user = await SpotifyUsers.getMe();
 	const userInfo = user["body"];
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
@@ -334,59 +311,6 @@ app.all("/auth/spotify/callback", async (req, res) => {
 
 	SpotifyUsers.resetAccessToken();
 	SpotifyUsers.resetRefreshToken();
-
-	const extraData = JSON.parse(req.query.state);
-
-	let url = extraData.redirect;
-	url += "?token=" + encodeURIComponent(response);
-
-	setTimeout(() => {
-		res.redirect(url);
-	}, 1000);
-});
-
-app.all("/auth/github/callback", async (req, res) => {
-	let response = null;
-
-	if (!req.query.code || req.query.code === "") {
-		if (!req.query.state || req.query.state === "")
-			return res.status(400).json({
-				message:
-					"There was no code, and state provided with this request.",
-				error: true,
-				status: 400,
-			});
-		else {
-			const data = JSON.parse(req.query.state);
-			const domain = new URL(data.redirect);
-
-			return res.redirect(`https://${domain.hostname}/`);
-		}
-	}
-
-	const github = await auth.github.getAccessToken(req.query.code);
-	const userInfo = await auth.github.getUserInfo(github.access_token);
-	const dbUser = await database.Users.get({ UserID: userInfo.id });
-
-	if (dbUser) {
-		const token = crypto.randomUUID();
-		await database.Tokens.create(userInfo.id, token, "Github");
-
-		response = token;
-	} else {
-		await database.Users.create(
-			userInfo.login,
-			userInfo.id,
-			userInfo.bio,
-			userInfo.avatar_url,
-			new Date()
-		);
-
-		const token = crypto.randomUUID();
-		await database.Tokens.create(userInfo.id, token, "Github");
-
-		response = token;
-	}
 
 	const extraData = JSON.parse(req.query.state);
 
