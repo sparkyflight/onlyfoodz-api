@@ -18,8 +18,7 @@
 
     <script>
         // Elements
-        const azidoLoginButtons = document.getElementsByClassName("azidologin"); 
-        console.log(azidoLoginButtons);
+        const azidoLoginButtons = document.getElementsByClassName("azidologin");
 
         // Email/Password Auth Type (Login/Register)
         let Type = "login";
@@ -31,13 +30,19 @@
             if (Type === "login") {
                 Type = "register";
 
-                azidoLoginButtons.forEach((pta) => { pta.innerText = "Register"; });
+                for (const pta of azidoLoginButtons) { 
+                  pta.innerText = "Register";
+                };
+
                 noAccount.innerHTML = `Already have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Login</span>`;
                 loginBtn.innerText = "Register";
             } else {
                 Type = "login";
 
-                azidoLoginButtons.forEach((pta) => { pta.innerText = "Login"; });
+                for (const pta of azidoLoginButtons) {
+                  pta.innerText = "Login";
+                };
+
                 noAccount.innerHTML = `Don't have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Create one!</span>`;
                 loginBtn.innerText = "Login";
             }
