@@ -13,7 +13,75 @@
     <meta property="theme-color" content="#3c3c3c" />
     <meta name="viewport" content="width=device-width" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
     <script>
+        let Type = "login";
+
+        const ChangeType = () => {
+            const noAccount = document.getElementById("noAccount");
+            const loginBtn = document.getElementById("loginBtn");
+
+            if (Type === "login") {
+                Type = "register";
+
+                noAccount.innerHTML = `Already have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Login</span>`;
+                loginBtn.innerText = "Register";
+            } else {
+                Type = "login";
+
+                noAccount.innerHTML = `Don't have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Create one!</span>`;
+                loginBtn.innerText = "Login";
+            }
+        };
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCp8Jhu_s7g2t7nAFISf0VAk08kXqiuTYM",
+            authDomain: "azidoazide-ca4f9.firebaseapp.com",
+            projectId: "azidoazide-ca4f9",
+            storageBucket: "azidoazide-ca4f9.appspot.com",
+            messagingSenderId: "1050454956117",
+            appId: "1:1050454956117:web:dca01f135efbf355e8dcdc"
+        };
+
+        // Initialize Firebase 
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // LoginService (Function) 
+        const LoginService = () => {
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
+
+            if (!email.value || email.value === "" || !password.value || password.value === "") throw new Error("Missing Parameter: Email/Password");
+            else {
+                if (Type === "login") {
+                    auth.signInWithEmailAndPassword(email.value, password.value)
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+                            console.log(user);
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            throw new Error(`${errorCode}: ${errorMessage}`);
+                        });
+                } else if (Type === "register") {
+                    auth.createUserWithEmailAndPassword(email.value, password.value)
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+                            console.log(user);
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            throw new Error(`${errorCode}: ${errorMessage}`);
+                        });
+                }
+            }
+        };
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -30,88 +98,73 @@
 
 <body class="bg-slate-900 m-3">
     <center>
-        <img
-            class="rounded-full"
-			src="<%= websiteData.image %>"
-            alt="Logo"
-			height="80px"
-			width="80px"
-        />
+        <img class="rounded-full" src="<%= websiteData.image %>" alt="Logo" height="80px" width="80px" />
 
         <div class="p-1"></div>
 
-        <div class="flex justify-center items-center cursor-pointer" onclick="window.location.href = '<%= websiteData.url %>/';">
-            <h2 class="text-lg font-bold text-white text-center"><%= websiteData.name %></h2>
-        
+        <div class="flex justify-center items-center cursor-pointer"
+            onclick="window.location.href = '<%= websiteData.url %>/';">
+            <h2 class="text-lg font-bold text-white text-center">
+                <%= websiteData.name %>
+            </h2>
+
             <% if (websiteData.verified) { %>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-1 text-red-500" title="This website is verified, by The Azidoazide Team.">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="w-6 h-6 ml-1 text-red-500"
+                    title="This website is verified, by The Azidoazide Team.">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
                 </svg>
-            <% } %>
+                <% } %>
         </div>
 
-        <p class="text-base font-bold text-gray-500 text-center"><%= websiteData.description %></p>
+        <p class="text-base font-bold text-gray-500 text-center">
+            <%= websiteData.description %>
+        </p>
 
         <div class="p-2"></div>
 
         <div class="p-4 bg-gray-600 rounded-md border-gray-700">
-           <input id="email" type="text" class="p-2 bg-white text-black font-bold text-base rounded-md" placeholder="Email" />
+            <input id="email" type="text" class="p-2 bg-white text-black font-bold text-base rounded-md"
+                placeholder="Email" />
 
-           <div class="p-1"></div>
+            <div class="p-1"></div>
 
-           <input id="password" type="password" class="p-2 bg-white text-black font-bold text-base rounded-md" placeholder="Password" />
+            <input id="password" type="password" class="p-2 bg-white text-black font-bold text-base rounded-md"
+                placeholder="Password" />
 
-           <div class="p-2"></div>
+            <div class="p-2"></div>
 
-           <button class="p-2 bg-indigo-600 text-white font-bold text-base rounded-md" onclick="Login();">Login (coming soon)</button>
+            <button id="loginBtn" class="p-2 bg-indigo-600 text-white font-bold text-base rounded-md"
+                onclick="LoginService();">Login</button>
+
+            <p id="noAccount" class="text-sm text-white font-bold">Don't have an Azidoazide account? <span
+                    onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400">Create one!</span></p>
         </div>
 
         <div class="p-2"></div>
 
         <div class="flex justify-center items-center" id="methods">
-            <button
-                type="button"
-                class="p-2 bg-blurple text-lg text-white font-bold rounded-md"
-                onclick="window.location.href = '/auth/login?method=discord&client_id=<%= websiteData.client_id %>';"
-            >Login with Discord</button>
+            <button type="button" class="p-2 bg-blurple text-lg text-white font-bold rounded-md"
+                onclick="window.location.href = '/auth/login?method=discord&client_id=<%= websiteData.client_id %>';">Login
+                with Discord</button>
 
             <div class="p-1"></div>
 
-            <button
-                type="button"
-                class="p-2 bg-spotify text-lg text-white font-bold rounded-md"
-                onclick="window.location.href = '/auth/login?method=spotify&client_id=<%= websiteData.client_id %>';"
-            >Login with Spotify</button>
+            <button type="button" class="p-2 bg-spotify text-lg text-white font-bold rounded-md"
+                onclick="window.location.href = '/auth/login?method=spotify&client_id=<%= websiteData.client_id %>';">Login
+                with Spotify</button>
         </div>
-    </center>
 
-    <script type="module"> 
-   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"; 
-   import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"; 
-  
-   const firebaseConfig = { 
-     apiKey: "AIzaSyCp8Jhu_s7g2t7nAFISf0VAk08kXqiuTYM", 
-     authDomain: "azidoazide-ca4f9.firebaseapp.com", 
-     projectId: "azidoazide-ca4f9", 
-     storageBucket: "azidoazide-ca4f9.appspot.com", 
-     messagingSenderId: "1050454956117", 
-     appId: "1:1050454956117:web:dca01f135efbf355e8dcdc" 
-   }; 
-  
-   // Initialize Firebase 
-   const app = initializeApp(firebaseConfig); 
-   const auth = getAuth(app); 
-  
-   // Login (Function) 
-   const Login = () => { 
-     const email = document.getElementById("email"); 
-     const password = document.getElementById("password"); 
-  
-     if (!email.value || email.value === "" || !password.value || password.value === "") throw new Error("Missing Parameter: Email/Password"); 
-     else { 
-       console.log({ Email: email.value, Pass: password.value }); 
-     } 
-   }; 
- </script>
+        <div class="p-4"></div>
+
+        <span class="text-base font-bold text-white">
+            <a class="text-red-400 hover:underline hover:decoration-solid"
+                href="<%= websiteData.url %>/legal/terms">Terms</a> | <a
+                class="text-red-400 hover:underline hover:decoration-solid"
+                href="<%= websiteData.url %>/legal/privacy">Privacy</a>
+        </span>
+    </center>
 </body>
+
 </html>
