@@ -43,6 +43,17 @@
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+
+  // Login (Function)
+  const Login = () => {
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    if (!email.value || email.value === "" || !password.value || password.value === "") throw new Error("Missing Parameter: Email/Password");
+    else {
+      console.log({ Email: email.value, Pass: password.value });
+    }
+  };
 </script>
 </head>
 
@@ -73,15 +84,15 @@
         <div class="p-2"></div>
 
         <div class="p-4 bg-gray-600 rounded-md border-gray-700">
-           <input type="text" class="p-2 bg-white text-black font-bold text-base rounded-md" placeholder="Email" />
+           <input id="email" type="text" class="p-2 bg-white text-black font-bold text-base rounded-md" placeholder="Email" />
 
            <div class="p-1"></div>
 
-           <input type="password" class="p-2 bg-white text-black font-bold text-base rounded-md" placeholder="Password" />
+           <input id="password" type="password" class="p-2 bg-white text-black font-bold text-base rounded-md" placeholder="Password" />
 
            <div class="p-2"></div>
 
-           <button class="p-2 bg-indigo-600 text-white font-bold text-base rounded-md">Login (coming soon)</button>
+           <button class="p-2 bg-indigo-600 text-white font-bold text-base rounded-md" onclick="Login();">Login (coming soon)</button>
         </div>
 
         <div class="p-2"></div>
