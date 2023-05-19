@@ -25,7 +25,6 @@
 
         const ChangeType = () => {
             const noAccount = document.getElementById("noAccount");
-            const loginBtn = document.getElementById("loginBtn");
             
             if (Type === "login") {
                 Type = "register";
@@ -35,7 +34,6 @@
                 };
 
                 noAccount.innerHTML = `Already have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Login</span>`;
-                loginBtn.innerText = "Register";
             } else {
                 Type = "login";
 
@@ -44,7 +42,6 @@
                 };
 
                 noAccount.innerHTML = `Don't have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Create one!</span>`;
-                loginBtn.innerText = "Login";
             }
         };
 
@@ -161,7 +158,7 @@
 
             <div class="p-2"></div>
 
-            <button id="loginBtn" class="p-2 bg-indigo-600 text-white font-bold text-base rounded-md"
+            <button id="loginBtn" class="p-2 bg-indigo-600 text-white font-bold text-base rounded-md azidologin"
                 onclick="LoginService();">Login</button>
 
             <div class="p-1"></div>
