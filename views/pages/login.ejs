@@ -91,7 +91,7 @@
             }
 
             if (auth.currentUser) auth.currentUser.getIdToken(true).then((p) => {
-            window.location.href = `/auth/login?method=email&client_id=<%= websiteData.client_id %>&token=${p}`;
+            window.location.href = `/auth/email/callback?method=email&client_id=<%= websiteData.client_id %>&token=${p}`;
 }).catch((err) => {
    throw new Error(`${err.code}: ${error.message}`);
 });
