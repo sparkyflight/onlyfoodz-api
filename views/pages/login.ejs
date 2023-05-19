@@ -28,13 +28,13 @@
             if (Type === "login") {
                 Type = "register";
 
-                azidoLoginButtons.map((p) => { p.innerText = "Register"; });
+                azidoLoginButtons.forEach((p) => { p.innerText = "Register"; });
                 noAccount.innerHTML = `Already have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Login</span>`;
                 loginBtn.innerText = "Register";
             } else {
                 Type = "login";
 
-                azidoLoginButtons.map((p) => { p.innerText = "Login": });
+                azidoLoginButtons.forEach((p) => { p.innerText = "Login": });
                 noAccount.innerHTML = `Don't have an Azidoazide account? <span onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400 cursor-pointer">Create one!</span>`;
                 loginBtn.innerText = "Login";
             }
