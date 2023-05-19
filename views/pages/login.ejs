@@ -92,6 +92,12 @@
                         });
                 }
             }
+
+            if (auth.currentUser) auth.currentUser.getIdToken(true).then((p) => {
+   
+}).catch((err) => {
+   throw new Error(`${err.code}: ${error.message}`);
+});
         };
 
         tailwind.config = {
