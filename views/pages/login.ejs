@@ -17,6 +17,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <script>
+        // Email/Password Auth Type (Login/Register)
         let Type = "login";
 
         const ChangeType = () => {
@@ -138,6 +139,8 @@
             <button id="loginBtn" class="p-2 bg-indigo-600 text-white font-bold text-base rounded-md"
                 onclick="LoginService();">Login</button>
 
+            <div class="p-1"></div>
+            
             <p id="noAccount" class="text-sm text-white font-bold">Don't have an Azidoazide account? <span
                     onclick="ChangeType()" class="text-indigo-200 hover:text-indigo-400">Create one!</span></p>
         </div>
