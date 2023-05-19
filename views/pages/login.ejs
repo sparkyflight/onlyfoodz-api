@@ -26,35 +26,6 @@
             plugins: []
         };
     </script>
-
-    <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCp8Jhu_s7g2t7nAFISf0VAk08kXqiuTYM",
-    authDomain: "azidoazide-ca4f9.firebaseapp.com",
-    projectId: "azidoazide-ca4f9",
-    storageBucket: "azidoazide-ca4f9.appspot.com",
-    messagingSenderId: "1050454956117",
-    appId: "1:1050454956117:web:dca01f135efbf355e8dcdc"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // Login (Function)
-  const Login = () => {
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-
-    if (!email.value || email.value === "" || !password.value || password.value === "") throw new Error("Missing Parameter: Email/Password");
-    else {
-      console.log({ Email: email.value, Pass: password.value });
-    }
-  };
-</script>
 </head>
 
 <body class="bg-slate-900 m-3">
@@ -113,5 +84,34 @@
             >Login with Spotify</button>
         </div>
     </center>
+
+    <script type="module"> 
+   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"; 
+   import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"; 
+  
+   const firebaseConfig = { 
+     apiKey: "AIzaSyCp8Jhu_s7g2t7nAFISf0VAk08kXqiuTYM", 
+     authDomain: "azidoazide-ca4f9.firebaseapp.com", 
+     projectId: "azidoazide-ca4f9", 
+     storageBucket: "azidoazide-ca4f9.appspot.com", 
+     messagingSenderId: "1050454956117", 
+     appId: "1:1050454956117:web:dca01f135efbf355e8dcdc" 
+   }; 
+  
+   // Initialize Firebase 
+   const app = initializeApp(firebaseConfig); 
+   const auth = getAuth(app); 
+  
+   // Login (Function) 
+   const Login = () => { 
+     const email = document.getElementById("email"); 
+     const password = document.getElementById("password"); 
+  
+     if (!email.value || email.value === "" || !password.value || password.value === "") throw new Error("Missing Parameter: Email/Password"); 
+     else { 
+       console.log({ Email: email.value, Pass: password.value }); 
+     } 
+   }; 
+ </script>
 </body>
 </html>
