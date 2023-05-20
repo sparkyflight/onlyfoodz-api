@@ -12,6 +12,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const crypto = require("node:crypto");
+const { initializeApp } = require('firebase-admin/app');
 require("dotenv").config();
 
 // Initalize Spotify
@@ -28,6 +29,10 @@ const SpotifyUsers = new SpotifyWebApi({
 	redirectUri: "https://api.nightmarebot.tk/auth/spotify/callback",
 });
 
+// Initialize Firebase Admin SDK
+const firebase = initializeApp();
+
+// Set scopes for Spotify (all) oAuth
 const scopes = [
 	"user-read-private",
 	"user-read-currently-playing",
