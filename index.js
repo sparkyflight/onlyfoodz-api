@@ -12,7 +12,6 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const crypto = require("node:crypto");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 // Initalize Spotify
