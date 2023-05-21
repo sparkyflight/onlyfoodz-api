@@ -27,6 +27,6 @@
 		"request": "^2.88.2",
 		"socket.io": "^4.6.1",
 		"spotify-web-api-node": "^5.0.2",
-  "firebase-admin": "^11.8.0"
+  "firebase-admin": "^11.8.0",
 	}
 }
