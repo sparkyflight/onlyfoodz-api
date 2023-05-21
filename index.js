@@ -221,7 +221,7 @@ app.all("/auth/email/callback", async (req, res) => {
 			response = token;
 		} else {
 			await database.Users.create(
-				`${crypto.randomUUID.split("-")[0]}_${
+				`${crypto.randomUUID().split("-")[0]}_${
 					crypto.randomUUID().split("-")[1]
 				}`,
 				userInfo.uid,
