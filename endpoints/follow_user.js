@@ -3,7 +3,7 @@ module.exports = {
 	method: "PUT",
 	execute: async (req, res, database, Spotify) => {
 		const user = await database.Tokens.get(req.query.token);
-		const target = await database.Users.get({ UserID: req.query.target });
+		const target = await database.Users.get({ Tag: req.query.target });
 
 		if (user) {
 			if (target) {
@@ -28,7 +28,7 @@ module.exports = {
 				}
 			} else
 				return res.json({
-					error: "The provided target user id is invalid.",
+					error: "The provided target user tag is invalid.",
 				});
 		} else
 			return res.json({
