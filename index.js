@@ -30,9 +30,49 @@ const SpotifyUsers = new SpotifyWebApi({
 });
 
 // Initialize Firebase Admin
-firebase.initializeApp({
-  credential: firebase.credential.cert(require("./firebaseService.json"))
+const firebaseService = firebase.initializeApp({
+	credential: firebase.credential.cert(require("./firebaseService.json")),
 });
+
+// Allowed Origins
+const allowedOrigins = [
+	{
+		url: "https://nightmarebot.tk",
+		name: "Azidoazide",
+		image: "https://nightmarebot.tk/logo.png",
+		verified: true,
+		description:
+			"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
+		client_id: "website-0297",
+	},
+	{
+		url: "https://onlyfoodz.xyz",
+		name: "Onlyfoodz",
+		image: "https://onlyfoodz.xyz/logo.png",
+		verified: true,
+		description:
+			"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
+		client_id: "onlyfoodz-0091",
+	},
+	{
+		url: "https://nightmarebot.tk/onlyfoodz",
+		name: "Onlyfoodz (Discord)",
+		image: "https://onlyfoodz.xyz/logo.png",
+		verified: true,
+		description:
+			"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
+		client_id: "onlyfoodzdc-7798321",
+	},
+	{
+		url: "https://dj.azidoazide.xyz",
+		name: "AzidoDJ",
+		image: "https://dj.azidoazide.xyz/logo.png",
+		verified: true,
+		description:
+			"AzidoDJ is a Artificial Intelligence based DJ experience that allows you to always be in the moment, with similar music you already listen to!",
+		client_id: "azidodj-2294753900445",
+	},
+];
 
 // Set scopes for Spotify (all) oAuth
 const scopes = [
@@ -100,46 +140,6 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 
 // Authentication Endpoints
 app.all("/auth/login", async (req, res) => {
-	// Check if origin is allowed.
-	const allowedOrigins = [
-		{
-			url: "https://nightmarebot.tk",
-			name: "Azidoazide",
-			image: "https://nightmarebot.tk/logo.png",
-			verified: true,
-			description:
-				"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
-			client_id: "website-0297",
-		},
-		{
-			url: "https://onlyfoodz.xyz",
-			name: "Onlyfoodz",
-			image: "https://onlyfoodz.xyz/logo.png",
-			verified: true,
-			description:
-				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
-			client_id: "onlyfoodz-0091",
-		},
-		{
-			url: "https://nightmarebot.tk/onlyfoodz",
-			name: "Onlyfoodz (Discord)",
-			image: "https://onlyfoodz.xyz/logo.png",
-			verified: true,
-			description:
-				"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
-			client_id: "onlyfoodzdc-7798321",
-		},
-		{
-			url: "https://dj.azidoazide.xyz",
-			name: "AzidoDJ",
-			image: "https://dj.azidoazide.xyz/logo.png",
-			verified: true,
-			description:
-				"AzidoDJ is a Artificial Intelligence based DJ experience that allows you to always be in the moment, with similar music you already listen to!",
-			client_id: "azidodj-2294753900445",
-		},
-	];
-
 	if (!allowedOrigins.find((e) => e.client_id === req.query.client_id))
 		return res.status(403).json({
 			error: `\`${req.query.client_id}\` is a invalid client id`,
@@ -180,6 +180,77 @@ app.all("/auth/login", async (req, res) => {
 			(e) => e.client_id === req.query.client_id
 		),
 	});
+});
+
+app.all("/auth/email/callback", async (req, res) => {
+	let response = null;
+
+	const client_id = req.query.client_id;
+	const token = req.query.token;
+	const websiteData = allowedOrigins.find((e) => e.client_id === client_id);
+
+	if (!client_id || client_id === "")
+		return res.status(400).json({
+			message: "There was no Client ID specified with this request.",
+			error: true,
+			status: 400,
+		});
+	if (!token || token === "")
+		return res.status(400).json({
+			message:
+				"There was no Authentication Token specified with this request.",
+		});
+
+	if (!websiteData)
+		return res.status(400).json({
+			message: "The provided Client ID is invalid.",
+			error: true,
+			status: 400,
+		});
+	else {
+		const userInfo = await firebaseService
+			.auth()
+			.verifyIdToken(token, true);
+
+		const dbUser = await database.Users.get({ UserID: userInfo.uid });
+
+		if (dbUser) {
+			const token = crypto.randomUUID();
+			await database.Tokens.create(userInfo.uid, token, "Email");
+
+			response = token;
+		} else {
+			await database.Users.create(
+				`${crypto.randomUUID.split("-")[0]}_${
+					crypto.randomUUID().split("-")[1]
+				}`,
+				userInfo.uid,
+				null,
+				"",
+				new Date(),
+				[
+					{
+						service: "Email",
+						id: userInfo.uid,
+						accessToken: null,
+						refreshToken: null,
+					},
+				]
+			);
+
+			const token = crypto.randomUUID();
+			await database.Tokens.create(userInfo.uid, token, "Email");
+
+			response = token;
+		}
+
+		let url = `${websiteData.url}/auth/callback`;
+		url += "?token=" + encodeURIComponent(response);
+
+		setTimeout(() => {
+			res.redirect(url);
+		}, 1000);
+	}
 });
 
 app.all("/auth/discord/callback", async (req, res) => {
