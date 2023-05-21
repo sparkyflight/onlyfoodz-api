@@ -30,7 +30,7 @@ const SpotifyUsers = new SpotifyWebApi({
 });
 
 // Initialize Firebase Admin
-firebase.initalizeApp({
+firebase.initializeApp({
   credential: firebase.credential.cert(require("./firebaseService.json"))
 });
 
