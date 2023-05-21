@@ -2,8 +2,8 @@ module.exports = {
 	name: "teams/get",
 	method: "GET",
 	execute: async (req, res, database, Spotify) => {
-		const userid = req.query.id;
-		let team = await database.Teams.get({ UserID: userid });
+		const tag = req.query.tag;
+		let team = await database.Teams.get({ Tag: tag });
 
 		if (team || !team.error) res.send(team);
 		else
