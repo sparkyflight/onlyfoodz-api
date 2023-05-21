@@ -2,14 +2,14 @@ module.exports = {
 	name: "users/get",
 	method: "GET",
 	execute: async (req, res, database, Spotify) => {
-		const userid = req.query.id;
-		let user = await database.Users.get({ UserID: userid });
+		const tag = req.query.tag;
+		let user = await database.Users.get({ Tag: tag });
 
 		user["team"] = false;
 		user["Connections"] = [];
 
 		if (!user || user.error) {
-			user = await database.Teams.get({ UserID: userid });
+			user = await database.Teams.get({ Tag: tag });
 
 			if (user || !user.error) {
 				user["team"] = true;
