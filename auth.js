@@ -8,7 +8,7 @@ require("dotenv").config();
 const discord = new Discord({
 	clientId: process.env.DISCORD_CLIENT_ID,
 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
-	redirectUri: "https://api.nightmarebot.tk/auth/discord/callback",
+	redirectUri: "https://api.azidoazide.xyz/auth/discord/callback",
 });
 
 // Discord
