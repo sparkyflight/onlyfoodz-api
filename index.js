@@ -19,14 +19,14 @@ require("dotenv").config();
 const Spotify = new SpotifyWebApi({
 	clientId: process.env.SPOTIFY_CLIENT_ID,
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	redirectUri: "https://api.nightmarebot.tk/spotify/callback",
+	redirectUri: "https://api.azidoazide.xyz/spotify/callback",
 });
 
 // Initalize Spotify (for Users)
 const SpotifyUsers = new SpotifyWebApi({
 	clientId: process.env.SPOTIFY_CLIENT_ID,
 	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	redirectUri: "https://api.nightmarebot.tk/auth/spotify/callback",
+	redirectUri: "https://api.azidoazide.xyz/auth/spotify/callback",
 });
 
 // Initialize Firebase Admin
