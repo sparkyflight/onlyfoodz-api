@@ -23,6 +23,11 @@ module.exports = {
 						error: "You must provide a valid username.",
 					});
 
+				if (!data["UserTag"])
+					return res.json({
+						error: "You must provide a valid User Tag.",
+					});
+
 				if (!data["Bio"])
 					return res.json({
 						error: "You must provide a valid Bio/Description.",
@@ -36,6 +41,7 @@ module.exports = {
 				await database.Teams.create(
 					data["Username"],
 					crypto.randomUUID(),
+					data["UserTag"],
 					data["Bio"],
 					data["Avatar"],
 					user.UserID

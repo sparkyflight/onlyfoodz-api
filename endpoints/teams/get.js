@@ -3,7 +3,7 @@ module.exports = {
 	method: "GET",
 	execute: async (req, res, database) => {
 		const tag = req.query.tag;
-		let team = await database.Teams.get({ Tag: tag });
+		let team = await database.Teams.get({ UserTag: tag });
 
 		if (team || !team.error) res.send(team);
 		else

@@ -3,13 +3,13 @@ module.exports = {
 	method: "GET",
 	execute: async (req, res, database) => {
 		const tag = req.query.tag;
-		let user = await database.Users.get({ UserID: tag });
+		let user = await database.Users.get({ UserTag: tag });
 
 		user["team"] = false;
 		user["Connections"] = [];
 
 		if (!user || user.error) {
-			user = await database.Teams.get({ UserID: tag });
+			user = await database.Teams.get({ UserTag: tag });
 
 			if (user || !user.error) {
 				user["team"] = true;

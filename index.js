@@ -311,6 +311,9 @@ app.all("/auth/email/callback", async (req, res) => {
 					"_" +
 					nouns[Math.floor(Math.random() * (nouns.length - 1))],
 				userInfo.uid,
+				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
+					"_" +
+					nouns[Math.floor(Math.random() * (nouns.length - 1))],
 				null,
 				"",
 				new Date(),
@@ -371,6 +374,11 @@ app.all("/auth/discord/callback", async (req, res) => {
 		await database.Users.create(
 			userInfo.username,
 			userInfo.id,
+			userInfo.username +
+				"_" +
+				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
+				"_" +
+				nouns[Math.floor(Math.random() * (nouns.length - 1))],
 			null,
 			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`,
 			new Date(),
