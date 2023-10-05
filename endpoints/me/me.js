@@ -1,7 +1,7 @@
 module.exports = {
 	name: "users/@me",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const token = req.query.token;
 		const user = await database.Tokens.get(token);
 

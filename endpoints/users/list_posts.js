@@ -1,7 +1,7 @@
 module.exports = {
 	name: "posts/list_user",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const userid = req.query.user_id;
 		const type = req.query.type;
 		let posts;

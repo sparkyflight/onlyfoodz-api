@@ -1,7 +1,7 @@
 module.exports = {
 	name: "users/get",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const tag = req.query.tag;
 		let user = await database.Users.get({ Tag: tag });
 

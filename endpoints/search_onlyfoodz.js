@@ -1,7 +1,7 @@
 module.exports = {
 	name: "onlyfoodz/search",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const query = req.query.query;
 
 		const users = await database.Users.find({

@@ -1,7 +1,7 @@
 module.exports = {
 	name: "posts/get",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const postid = req.query.post_id;
 
 		if (postid || postid != "") {

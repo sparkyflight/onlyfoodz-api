@@ -1,7 +1,7 @@
 module.exports = {
 	name: "users/list_teams",
 	method: "GET",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const teams = await database.Teams.listUsersTeams(req.query.id);
 
 		if (teams.length === 0)

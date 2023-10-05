@@ -1,7 +1,7 @@
 module.exports = {
 	name: "teams/update",
 	method: "PATCH",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const data = req.body;
 
 		if (!data["user"])

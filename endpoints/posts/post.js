@@ -1,7 +1,7 @@
 module.exports = {
 	name: "posts/post",
 	method: "POST",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const data = req.body;
 		let response = {};
 

@@ -1,7 +1,7 @@
 module.exports = {
 	name: "users/@me",
 	method: "PATCH",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		let data = req.body;
 		const user = await database.Tokens.get(data["token"]);
 
@@ -16,6 +16,7 @@ module.exports = {
 				});
 
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;
+
 			await database.Users.update(user.UserID, {
 				Username: data["username"],
 				Avatar: data["avatar"],

@@ -1,7 +1,7 @@
 module.exports = {
 	name: "posts/comment",
 	method: "POST",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const data = req.body;
 
 		const user = await database.Tokens.get(req.query.token);

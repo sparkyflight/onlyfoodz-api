@@ -3,7 +3,7 @@ const crypto = require("node:crypto");
 module.exports = {
 	name: "teams/create",
 	method: "POST",
-	execute: async (req, res, database, Spotify) => {
+	execute: async (req, res, database) => {
 		const data = req.body;
 
 		if (!data["user"])

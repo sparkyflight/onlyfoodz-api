@@ -1,33 +1,15 @@
 // Packages
-const express = require("express");
-const app = express();
+const express = require("express"),
+	app = express();
 const logger = require("./logger");
 const fs = require("node:fs");
 const cookieParser = require("cookie-parser");
-const SpotifyWebApi = require("spotify-web-api-node");
 const database = require("./database/handler");
 const auth = require("./auth");
-const http = require("http");
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
 const crypto = require("node:crypto");
 const firebase = require("firebase-admin");
+const path = require("path");
 require("dotenv").config();
-
-// Initalize Spotify
-const Spotify = new SpotifyWebApi({
-	clientId: process.env.SPOTIFY_CLIENT_ID,
-	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	redirectUri: "https://api.azidoazide.xyz/spotify/callback",
-});
-
-// Initalize Spotify (for Users)
-const SpotifyUsers = new SpotifyWebApi({
-	clientId: process.env.SPOTIFY_CLIENT_ID,
-	clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-	redirectUri: "https://api.azidoazide.xyz/auth/spotify/callback",
-});
 
 // Initialize Firebase Admin
 const firebaseService = firebase.initializeApp({
@@ -37,12 +19,12 @@ const firebaseService = firebase.initializeApp({
 // Allowed Origins
 const allowedOrigins = [
 	{
-		url: "https://nightmarebot.tk",
+		url: "https://azidoazide.xyz",
 		name: "Azidoazide",
-		image: "https://nightmarebot.tk/logo.png",
+		image: "https://azidoazide.xyz/logo.png",
 		verified: true,
 		description:
-			"Nightmare Bot is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
+			"Azidoazide is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
 		client_id: "website-0297",
 	},
 	{
@@ -54,40 +36,7 @@ const allowedOrigins = [
 			"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
 		client_id: "onlyfoodz-0091",
 	},
-	{
-		url: "https://nightmarebot.tk/onlyfoodz",
-		name: "Onlyfoodz (Discord)",
-		image: "https://onlyfoodz.xyz/logo.png",
-		verified: true,
-		description:
-			"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
-		client_id: "onlyfoodzdc-7798321",
-	},
-	{
-		url: "https://dj.azidoazide.xyz",
-		name: "AzidoDJ",
-		image: "https://dj.azidoazide.xyz/logo.png",
-		verified: true,
-		description:
-			"AzidoDJ is a Artificial Intelligence based DJ experience that allows you to always be in the moment, with similar music you already listen to!",
-		client_id: "azidodj-2294753900445",
-	},
 ];
-
-// Set scopes for Spotify (all) oAuth
-const scopes = [
-	"user-read-private",
-	"user-read-currently-playing",
-	"user-read-recently-played",
-	"user-modify-playback-state",
-	"user-read-playback-state",
-	"user-top-read",
-	"streaming",
-	"user-read-private",
-	"user-read-email",
-];
-
-const state = "d194dbc0-6745-4937-b99e-54615bca25bd";
 
 // Middleware
 app.use(cookieParser());
@@ -96,13 +45,29 @@ app.use(express.json());
 app.set("view engine", "ejs");
 
 // API Endpoints Map
+const getFilesInDirectory = (dir) => {
+	let files = [];
+	const filesInDir = fs.readdirSync(dir);
+
+	for (const file of filesInDir) {
+		const filePath = path.join(dir, file);
+		const stat = fs.statSync(filePath);
+
+		if (stat.isDirectory())
+			files = files.concat(getFilesInDirectory(filePath));
+		else files.push(filePath);
+	}
+
+	return files;
+};
+
 const apiEndpoints = new Map();
-const apiEndpointsFiles = fs
-	.readdirSync("./endpoints")
-	.filter((file) => file.endsWith(".js"));
+const apiEndpointsFiles = getFilesInDirectory("./endpoints").filter((file) =>
+	file.endsWith(".js")
+);
 
 for (const file of apiEndpointsFiles) {
-	const endpoint = require(`./endpoints/${file}`);
+	const endpoint = require(`./${file}`);
 	apiEndpoints.set(
 		`${endpoint.name}:${endpoint.method.toLowerCase()}`,
 		endpoint
@@ -123,7 +88,7 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 			});
 
 		try {
-			await data.execute(req, res, database, Spotify);
+			await data.execute(req, res, database);
 		} catch (error) {
 			res.status(500).json({
 				error: "Internal Server Error",
@@ -159,18 +124,6 @@ app.all("/auth/login", async (req, res) => {
 			);
 
 			return res.redirect(url);
-		}
-
-		if (method === "spotify") {
-			const client = JSON.stringify({
-				redirect: `${
-					allowedOrigins.find((e) => e.client_id === client_id).url
-				}/auth/callback`,
-				uuid: crypto.randomUUID(),
-			});
-
-			const url = SpotifyUsers.createAuthorizeURL(scopes, client);
-			res.redirect(url);
 		}
 	}
 
@@ -220,10 +173,143 @@ app.all("/auth/email/callback", async (req, res) => {
 
 			response = token;
 		} else {
+			const adjs = [
+					"autumn",
+					"hidden",
+					"bitter",
+					"misty",
+					"silent",
+					"empty",
+					"dry",
+					"dark",
+					"summer",
+					"icy",
+					"delicate",
+					"quiet",
+					"white",
+					"cool",
+					"spring",
+					"winter",
+					"patient",
+					"twilight",
+					"dawn",
+					"crimson",
+					"wispy",
+					"weathered",
+					"blue",
+					"billowing",
+					"broken",
+					"cold",
+					"damp",
+					"falling",
+					"frosty",
+					"green",
+					"long",
+					"late",
+					"lingering",
+					"bold",
+					"little",
+					"morning",
+					"muddy",
+					"old",
+					"red",
+					"rough",
+					"still",
+					"small",
+					"sparkling",
+					"throbbing",
+					"shy",
+					"wandering",
+					"withered",
+					"wild",
+					"black",
+					"young",
+					"holy",
+					"solitary",
+					"fragrant",
+					"aged",
+					"snowy",
+					"proud",
+					"floral",
+					"restless",
+					"divine",
+					"polished",
+					"ancient",
+					"purple",
+					"lively",
+					"nameless",
+				],
+				nouns = [
+					"waterfall",
+					"river",
+					"breeze",
+					"moon",
+					"rain",
+					"wind",
+					"sea",
+					"morning",
+					"snow",
+					"lake",
+					"sunset",
+					"pine",
+					"shadow",
+					"leaf",
+					"dawn",
+					"glitter",
+					"forest",
+					"hill",
+					"cloud",
+					"meadow",
+					"sun",
+					"glade",
+					"bird",
+					"brook",
+					"butterfly",
+					"bush",
+					"dew",
+					"dust",
+					"field",
+					"fire",
+					"flower",
+					"firefly",
+					"feather",
+					"grass",
+					"haze",
+					"mountain",
+					"night",
+					"pond",
+					"darkness",
+					"snowflake",
+					"silence",
+					"sound",
+					"sky",
+					"shape",
+					"surf",
+					"thunder",
+					"violet",
+					"water",
+					"wildflower",
+					"wave",
+					"water",
+					"resonance",
+					"sun",
+					"wood",
+					"dream",
+					"cherry",
+					"tree",
+					"fog",
+					"frost",
+					"voice",
+					"paper",
+					"frog",
+					"smoke",
+					"star",
+				];
+
 			await database.Users.create(
-				`${crypto.randomUUID().split("-")[0]}_${
-					crypto.randomUUID().split("-")[1]
-				}`,
+				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
+					"_" +
+					nouns[Math.floor(Math.random() * (nouns.length - 1))],
 				userInfo.uid,
 				null,
 				"",
@@ -314,135 +400,7 @@ app.all("/auth/discord/callback", async (req, res) => {
 	}, 1000);
 });
 
-app.all("/auth/spotify/callback", async (req, res) => {
-	let response = null;
-
-	if (!req.query.code || req.query.code === "") {
-		if (!req.query.state || req.query.state === "")
-			return res.status(400).json({
-				message:
-					"There was no code, and state provided with this request.",
-				error: true,
-				status: 400,
-			});
-		else {
-			const data = JSON.parse(req.query.state);
-			const domain = new URL(data.redirect);
-
-			return res.redirect(`https://${domain.hostname}/`);
-		}
-	}
-
-	const spotifyToken = await SpotifyUsers.authorizationCodeGrant(
-		req.query.code
-	);
-	SpotifyUsers.setAccessToken(spotifyToken.body["access_token"]);
-	SpotifyUsers.setRefreshToken(spotifyToken.body["refresh_token"]);
-
-	const user = await SpotifyUsers.getMe();
-	const userInfo = user["body"];
-	const dbUser = await database.Users.get({ UserID: userInfo.id });
-
-	if (dbUser) {
-		const token = crypto.randomUUID();
-		await database.Tokens.create(userInfo.id, token, "Spotify");
-
-		const connections = dbUser.Connections;
-
-		if (connections.find((e) => e.service === "Spotify")) {
-			connections[
-				connections.findIndex((e) => e.service === "Spotify")
-			].accessToken = SpotifyUsers.getAccessToken();
-
-			connections[
-				connections.findIndex((e) => e.service === "Spotify")
-			].refreshToken = SpotifyUsers.getRefreshToken();
-		}
-
-		await database.Users.update(userInfo.id, {
-			Connections: connections,
-		});
-
-		response = token;
-	} else {
-		await database.Users.create(
-			userInfo.display_name.replaceAll(" ", ""),
-			userInfo.id,
-			null,
-			userInfo.images[0].url,
-			new Date(),
-			[
-				{
-					service: "Spotify",
-					id: userInfo.id,
-					accessToken: SpotifyUsers.getAccessToken(),
-					refreshToken: SpotifyUsers.getRefreshToken(),
-				},
-			]
-		);
-
-		const token = crypto.randomUUID();
-		await database.Tokens.create(userInfo.id, token, "Discord");
-
-		response = token;
-	}
-
-	SpotifyUsers.resetAccessToken();
-	SpotifyUsers.resetRefreshToken();
-
-	const extraData = JSON.parse(req.query.state);
-
-	let url = extraData.redirect;
-	url += "?token=" + encodeURIComponent(response);
-
-	setTimeout(() => {
-		res.redirect(url);
-	}, 1000);
-});
-
-// Spotify Authentication Endpoints
-app.get("/spotify", async (req, res) => {
-	const url = Spotify.createAuthorizeURL(scopes, state);
-	res.redirect(url);
-});
-
-app.get("/spotify/callback", async (req, res) => {
-	const code = req.query.code;
-
-	if (!code || code === "")
-		return res.json({
-			err: "No authentication token was returned with request.",
-		});
-	else {
-		Spotify.authorizationCodeGrant(code).then(
-			(data) => {
-				Spotify.setAccessToken(data.body["access_token"]);
-				Spotify.setRefreshToken(data.body["refresh_token"]);
-
-				res.redirect("https://nightmarebot.tk/");
-			},
-			(err) => {
-				res.json({
-					error: err,
-				});
-			}
-		);
-	}
-});
-
-// Socket Events
-io.on("connection", (socket) => {
-	logger.debug("WS", "A new connection has been initalized.");
-
-	setTimeout(() => {
-		socket.emit(
-			"tts_say",
-			"Hello there! Welcome to your personalized DJ experience. My name is DJ Azido, and i am glad to serve you the best music!"
-		);
-	}, 3000);
-});
-
 // Start Server
-server.listen(process.env.PORT, async () => {
+app.listen(process.env.PORT, async () => {
 	logger.success("Server", `Hosting web server on port ${process.env.PORT}.`);
 });
