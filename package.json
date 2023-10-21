@@ -7,10 +7,10 @@
 	"keywords": [],
 	"scripts": {
 		"start": "node ./dist/index.js",
-        "tsc": "tsc",
-        "postinstall": "npm run tsc",
-        "dev": "ts-node-dev — respawn — pretty — transpile-only index.ts",
-		"format": "prettier --write --plugin-search-dir=src"
+		"tsc": "tsc",
+		"postinstall": "npm run tsc",
+		"dev": "ts-node-dev — respawn — pretty — transpile-only index.ts",
+		"format": "prettier --write --plugin-search-dir=src src"
 	},
 	"dependencies": {
 		"colors": "^1.4.0",
