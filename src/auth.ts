@@ -1,25 +1,24 @@
 // Packages
-const Discord = require("discord-oauth2");
-const crypto = require("node:crypto");
-const fetch = require("node-fetch");
-require("dotenv").config();
+import Discord from "discord-oauth2";
+import { randomUUID } from "crypto";
+import fetch from "node-fetch";
 
-// Initalize Discord Oauth2
-const discord = new Discord({
+// Initialize Discord OAuth2
+const discordCLI = new Discord({
 	clientId: process.env.DISCORD_CLIENT_ID,
 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
 	redirectUri: "https://api.azidoazide.xyz/auth/discord/callback",
 });
 
 // Discord
-class DiscordAuth {
+class discord {
 	// Get the Authorization URL
-	static async getAuthURL(redirect) {
+	static async getAuthURL(redirect: string): Promise<any> {
 		const state = JSON.stringify({
 			redirect: redirect,
 		});
 
-		const url = discord.generateAuthUrl({
+		const url = discordCLI.generateAuthUrl({
 			scope: ["identify"],
 			state: state,
 			responseType: "code",
@@ -29,14 +28,14 @@ class DiscordAuth {
 	}
 
 	// Get the Access Token
-	static async getAccessToken(code) {
-		const token = await discord
+	static async getAccessToken(code: string): Promise<any> {
+		const token = await discordCLI
 			.tokenRequest({
 				code: code,
 				scope: ["identify"],
 				grantType: "authorization_code",
 			})
-			.catch((err) => {
+			.catch((err: any) => {
 				return {
 					error: err,
 				};
@@ -46,14 +45,14 @@ class DiscordAuth {
 	}
 
 	// Get the Refresh Token
-	static async getRefreshToken(refreshToken) {
-		const token = await discord
+	static async getRefreshToken(refreshToken: string): Promise<any> {
+		const token = await discordCLI
 			.tokenRequest({
 				refreshToken: refreshToken,
 				grantType: "refresh_token",
 				scope: ["identify"],
 			})
-			.catch((err) => {
+			.catch((err: any) => {
 				return {
 					error: err,
 				};
@@ -63,12 +62,12 @@ class DiscordAuth {
 	}
 
 	// Revoke the Access Token
-	static async revokeAccessToken(accessToken) {
+	static async revokeAccessToken(accessToken: string): Promise<any> {
 		const credentials = Buffer.from(
 			`${process.env.DISCORD_CLIENT_ID}:${process.env.DISCORD_CLIENT_SECRET}`
 		).toString("base64");
 
-		discord.revokeToken(accessToken, credentials).catch((err) => {
+		discordCLI.revokeToken(accessToken, credentials).catch((err: any) => {
 			return {
 				error: err,
 			};
@@ -81,8 +80,8 @@ class DiscordAuth {
 	}
 
 	// Get the User Info
-	static async getUserInfo(accessToken) {
-		const user = await discord.getUser(accessToken).catch((err) => {
+	static async getUserInfo(accessToken: string): Promise<any> {
+		const user = await discordCLI.getUser(accessToken).catch((err: any) => {
 			return {
 				error: err,
 			};
@@ -93,17 +92,17 @@ class DiscordAuth {
 }
 
 // Github
-class GithubAuth {
-	static async getAuthURL(redirect) {
+class github {
+	static async getAuthURL(redirect: string) {
 		const state = JSON.stringify({
 			redirect,
-			uuid: crypto.randomUUID(),
+			uuid: randomUUID(),
 		});
 
 		return `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=user&state=${state}`;
 	}
 
-	static async getAccessToken(code) {
+	static async getAccessToken(code: string) {
 		const body = JSON.stringify({
 			client_id: process.env.GITHUB_CLIENT_ID,
 			client_secret: process.env.GITHUB_CLIENT_SECRET,
@@ -125,7 +124,7 @@ class GithubAuth {
 		return token;
 	}
 
-	static async getUserInfo(token) {
+	static async getUserInfo(token: string) {
 		const data = await fetch("https://api.github.com/user", {
 			headers: {
 				Accept: "application/vnd.github+json",
@@ -139,7 +138,4 @@ class GithubAuth {
 }
 
 // Expose Classes
-module.exports = {
-	discord: DiscordAuth,
-	github: GithubAuth,
-};
+export { discord, github };

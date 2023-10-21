@@ -14,4 +14,4 @@ module.exports = {
 				error: true,
 			});
 	},
-};
+}; // TODO: Rewrite all endpoints to use proper TS

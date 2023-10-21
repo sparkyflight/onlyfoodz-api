@@ -1,15 +1,14 @@
 // Packages
-const express = require("express"),
-	app = express();
-const logger = require("./logger");
-const fs = require("node:fs");
-const cookieParser = require("cookie-parser");
-const database = require("./database/handler");
-const auth = require("./auth");
-const crypto = require("node:crypto");
-const firebase = require("firebase-admin");
-const path = require("path");
-require("dotenv").config();
+import express, { Express, Request, Response } from "express";
+import fs from "fs";
+import cookieParser from "cookie-parser";
+import firebase from "firebase-admin";
+import path from "path";
+import { adjs, nouns } from "./words.js";
+import * as database from "./database/handler";
+import * as logger from "./logger";
+import * as auth from "./auth";
+import * as dotenv from "dotenv";
 
 // Initialize Firebase Admin
 const firebaseService = firebase.initializeApp({
@@ -19,34 +18,26 @@ const firebaseService = firebase.initializeApp({
 // Allowed Origins
 const allowedOrigins = [
 	{
-		url: "https://azidoazide.xyz",
-		name: "Azidoazide",
-		image: "https://azidoazide.xyz/logo.png",
-		verified: true,
-		description:
-			"Azidoazide is a personal assistant project that uses Artificial Intelligence and Machine Learning algorithms to solve problems.",
-		client_id: "website-0297",
-	},
-	{
 		url: "https://onlyfoodz.xyz",
 		name: "Onlyfoodz",
 		image: "https://onlyfoodz.xyz/logo.png",
 		verified: true,
 		description:
-			"Onlyfoodz is a social media platform by Azidoazide that allows people to share pictures and small videos of food.",
+			"Onlyfoodz is a social media platform that allows people to share pictures and small videos of food.",
 		client_id: "onlyfoodz-0091",
 	},
 ];
 
 // Middleware
+const app: Express = express();
 app.use(cookieParser());
 app.use(require("cors")());
 app.use(express.json());
 app.set("view engine", "ejs");
 
 // API Endpoints Map
-const getFilesInDirectory = (dir) => {
-	let files = [];
+const getFilesInDirectory = (dir: string): string[] => {
+	let files: string[] = [];
 	const filesInDir = fs.readdirSync(dir);
 
 	for (const file of filesInDir) {
@@ -61,9 +52,9 @@ const getFilesInDirectory = (dir) => {
 	return files;
 };
 
-const apiEndpoints = new Map();
-const apiEndpointsFiles = getFilesInDirectory("./endpoints").filter((file) =>
-	file.endsWith(".js")
+const apiEndpoints = new Map<string, any>();
+const apiEndpointsFiles: string[] = getFilesInDirectory("./endpoints").filter(
+	(file) => file.endsWith(".js")
 );
 
 for (const file of apiEndpointsFiles) {
@@ -75,7 +66,7 @@ for (const file of apiEndpointsFiles) {
 }
 
 // API Endpoints
-app.all(`/api/:category/:endpoint`, async (req, res) => {
+app.all(`/api/:category/:endpoint`, async (req: Request, res: Response) => {
 	const endpoint = `${req.params.category}/${
 		req.params.endpoint
 	}:${req.method.toLowerCase()}`;
@@ -104,17 +95,17 @@ app.all(`/api/:category/:endpoint`, async (req, res) => {
 });
 
 // Authentication Endpoints
-app.all("/auth/login", async (req, res) => {
+app.all("/auth/login", async (req: Request, res: Response) => {
 	if (!allowedOrigins.find((e) => e.client_id === req.query.client_id))
 		return res.status(403).json({
-			error: `\`${req.query.client_id}\` is a invalid client id`,
+			error: `\`${req.query.client_id}\` is an invalid client id`,
 		});
 
 	// Check request to see if there is a "method" query.
-	const method = req.query.method;
+	const method = req.query.method as string;
 
 	if (method || method != "") {
-		const client_id = req.query.client_id;
+		const client_id = req.query.client_id as string;
 
 		if (method === "discord") {
 			const url = await auth.discord.getAuthURL(
@@ -135,11 +126,11 @@ app.all("/auth/login", async (req, res) => {
 	});
 });
 
-app.all("/auth/email/callback", async (req, res) => {
+app.all("/auth/email/callback", async (req: Request, res: Response) => {
 	let response = null;
 
-	const client_id = req.query.client_id;
-	const token = req.query.token;
+	const client_id = req.query.client_id as string;
+	const token = req.query.token as string;
 	const websiteData = allowedOrigins.find((e) => e.client_id === client_id);
 
 	if (!client_id || client_id === "")
@@ -173,139 +164,6 @@ app.all("/auth/email/callback", async (req, res) => {
 
 			response = token;
 		} else {
-			const adjs = [
-					"autumn",
-					"hidden",
-					"bitter",
-					"misty",
-					"silent",
-					"empty",
-					"dry",
-					"dark",
-					"summer",
-					"icy",
-					"delicate",
-					"quiet",
-					"white",
-					"cool",
-					"spring",
-					"winter",
-					"patient",
-					"twilight",
-					"dawn",
-					"crimson",
-					"wispy",
-					"weathered",
-					"blue",
-					"billowing",
-					"broken",
-					"cold",
-					"damp",
-					"falling",
-					"frosty",
-					"green",
-					"long",
-					"late",
-					"lingering",
-					"bold",
-					"little",
-					"morning",
-					"muddy",
-					"old",
-					"red",
-					"rough",
-					"still",
-					"small",
-					"sparkling",
-					"throbbing",
-					"shy",
-					"wandering",
-					"withered",
-					"wild",
-					"black",
-					"young",
-					"holy",
-					"solitary",
-					"fragrant",
-					"aged",
-					"snowy",
-					"proud",
-					"floral",
-					"restless",
-					"divine",
-					"polished",
-					"ancient",
-					"purple",
-					"lively",
-					"nameless",
-				],
-				nouns = [
-					"waterfall",
-					"river",
-					"breeze",
-					"moon",
-					"rain",
-					"wind",
-					"sea",
-					"morning",
-					"snow",
-					"lake",
-					"sunset",
-					"pine",
-					"shadow",
-					"leaf",
-					"dawn",
-					"glitter",
-					"forest",
-					"hill",
-					"cloud",
-					"meadow",
-					"sun",
-					"glade",
-					"bird",
-					"brook",
-					"butterfly",
-					"bush",
-					"dew",
-					"dust",
-					"field",
-					"fire",
-					"flower",
-					"firefly",
-					"feather",
-					"grass",
-					"haze",
-					"mountain",
-					"night",
-					"pond",
-					"darkness",
-					"snowflake",
-					"silence",
-					"sound",
-					"sky",
-					"shape",
-					"surf",
-					"thunder",
-					"violet",
-					"water",
-					"wildflower",
-					"wave",
-					"water",
-					"resonance",
-					"sun",
-					"wood",
-					"dream",
-					"cherry",
-					"tree",
-					"fog",
-					"frost",
-					"voice",
-					"paper",
-					"frog",
-					"smoke",
-					"star",
-				];
-
 			await database.Users.create(
 				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
 					"_" +
@@ -342,7 +200,7 @@ app.all("/auth/email/callback", async (req, res) => {
 	}
 });
 
-app.all("/auth/discord/callback", async (req, res) => {
+app.all("/auth/discord/callback", async (req: Request, res: Response) => {
 	let response = null;
 
 	if (!req.query.code || req.query.code === "") {
@@ -354,14 +212,14 @@ app.all("/auth/discord/callback", async (req, res) => {
 				status: 400,
 			});
 		else {
-			const data = JSON.parse(req.query.state);
+			const data = JSON.parse(req.query.state as string);
 			const domain = new URL(data.redirect);
 
 			return res.redirect(`https://${domain.hostname}/`);
 		}
 	}
 
-	const discord = await auth.discord.getAccessToken(req.query.code, true);
+	const discord = await auth.discord.getAccessToken(req.query.code as string);
 	const userInfo = await auth.discord.getUserInfo(discord.access_token);
 	const dbUser = await database.Users.get({ UserID: userInfo.id });
 
@@ -398,7 +256,7 @@ app.all("/auth/discord/callback", async (req, res) => {
 		response = token;
 	}
 
-	const extraData = JSON.parse(req.query.state);
+	const extraData = JSON.parse(req.query.state as string);
 
 	let url = extraData.redirect;
 	url += "?token=" + encodeURIComponent(response);
