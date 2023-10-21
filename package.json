@@ -6,9 +6,11 @@
 	"license": "MIT",
 	"keywords": [],
 	"scripts": {
-		"start": "node index",
-		"format": "prettier --write --plugin-search-dir=. .",
-		"db:migrate": "node database/migrate"
+		"start": "node ./dist/index.js",
+        "tsc": "tsc",
+        "postinstall": "npm run tsc",
+        "dev": "ts-node-dev — respawn — pretty — transpile-only index.ts",
+		"format": "prettier --write --plugin-search-dir=src"
 	},
 	"dependencies": {
 		"colors": "^1.4.0",
