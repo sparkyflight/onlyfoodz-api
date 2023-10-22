@@ -1,3 +1,4 @@
 [submodule "src/database"]
 	path = src/database
 	url = https://github.com/nightmarebotdc/database
+    branch = development
