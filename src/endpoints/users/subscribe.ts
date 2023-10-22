@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "users/subscribe",
 	method: "PUT",
 	execute: async (req, res, database) => {

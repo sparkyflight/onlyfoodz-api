@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "users/@me",
 	method: "PATCH",
 	execute: async (req, res, database) => {

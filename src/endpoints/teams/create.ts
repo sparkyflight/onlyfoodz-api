@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "teams/create",
 	method: "POST",
 	execute: async (req, res, database) => {

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "teams/update",
 	method: "PATCH",
 	execute: async (req, res, database) => {

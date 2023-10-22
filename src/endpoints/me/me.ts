@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "users/@me",
 	method: "GET",
 	execute: async (req, res, database) => {
@@ -14,4 +14,4 @@ module.exports = {
 				error: true,
 			});
 	},
-}; // TODO: Rewrite all endpoints to use proper TS
+};

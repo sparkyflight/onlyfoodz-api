@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "posts/list",
 	method: "GET",
 	execute: async (req, res, database) => {

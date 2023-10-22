@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "posts/vote",
 	method: "PUT",
 	execute: async (req, res, database) => {

@@ -3,16 +3,20 @@ import express, { Express, Request, Response } from "express";
 import fs from "fs";
 import cookieParser from "cookie-parser";
 import firebase from "firebase-admin";
+import serviceAccount from "./firebaseService.js";
 import path from "path";
 import { adjs, nouns } from "./words.js";
-import * as database from "./database/handler";
-import * as logger from "./logger";
-import * as auth from "./auth";
-import * as dotenv from "dotenv";
+import * as database from "./database/handler.js";
+import * as logger from "./logger.js";
+import cors from "cors";
+import * as auth from "./auth.js";
+import "dotenv/config";
 
 // Initialize Firebase Admin
 const firebaseService = firebase.initializeApp({
-	credential: firebase.credential.cert(require("./firebaseService.json")),
+	credential: firebase.credential.cert(
+		serviceAccount as firebase.ServiceAccount
+	),
 });
 
 // Allowed Origins
@@ -31,13 +35,13 @@ const allowedOrigins = [
 // Middleware
 const app: Express = express();
 app.use(cookieParser());
-app.use(require("cors")());
+app.use(cors());
 app.use(express.json());
 app.set("view engine", "ejs");
 
 // API Endpoints Map
-const getFilesInDirectory = (dir: string): string[] => {
-	let files: string[] = [];
+const getFilesInDirectory = (dir) => {
+	let files = [];
 	const filesInDir = fs.readdirSync(dir);
 
 	for (const file of filesInDir) {
@@ -52,17 +56,23 @@ const getFilesInDirectory = (dir: string): string[] => {
 	return files;
 };
 
-const apiEndpoints = new Map<string, any>();
-const apiEndpointsFiles: string[] = getFilesInDirectory("./endpoints").filter(
+const apiEndpoints = new Map();
+const apiEndpointsFiles = getFilesInDirectory("./dist/endpoints").filter(
 	(file) => file.endsWith(".js")
 );
 
 for (const file of apiEndpointsFiles) {
-	const endpoint = require(`./${file}`);
-	apiEndpoints.set(
-		`${endpoint.name}:${endpoint.method.toLowerCase()}`,
-		endpoint
-	);
+	import(`../${file}`)
+		.then((module) => {
+			const endpoint = module.default;
+			apiEndpoints.set(
+				`${endpoint.name}:${endpoint.method.toLowerCase()}`,
+				endpoint
+			);
+		})
+		.catch((error) => {
+			console.error(`Error importing ${file}: ${error}`);
+		});
 }
 
 // API Endpoints

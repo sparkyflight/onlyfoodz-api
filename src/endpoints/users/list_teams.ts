@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "users/list_teams",
 	method: "GET",
 	execute: async (req, res, database) => {

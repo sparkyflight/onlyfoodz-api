@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "users/get",
 	method: "GET",
 	execute: async (req, res, database) => {

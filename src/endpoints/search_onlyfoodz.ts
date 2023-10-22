@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "onlyfoodz/search",
 	method: "GET",
 	execute: async (req, res, database) => {

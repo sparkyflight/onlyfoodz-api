@@ -104,4 +104,6 @@ dist
 .tern-port
 
 # Firebase Admin SDK (Service Accounts)
-firebaseService.json
+firebaseService.ts
+
+package-lock.json

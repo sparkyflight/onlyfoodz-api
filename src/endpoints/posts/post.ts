@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 	name: "posts/post",
 	method: "POST",
 	execute: async (req, res, database) => {
