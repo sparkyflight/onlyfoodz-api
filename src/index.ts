@@ -27,7 +27,7 @@ const allowedOrigins = [
 		image: "https://onlyfoodz.xyz/logo.png",
 		verified: true,
 		description:
-			"Onlyfoodz is a social media platform that allows people to share pictures and small videos of food.",
+			"Onlyfoodz, a social media platform that allows people to share pictures and small videos of food.",
 		client_id: "onlyfoodz-0091",
 	},
 ];

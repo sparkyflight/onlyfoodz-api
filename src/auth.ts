@@ -7,7 +7,7 @@ import fetch from "node-fetch";
 const discordCLI = new Discord({
 	clientId: process.env.DISCORD_CLIENT_ID,
 	clientSecret: process.env.DISCORD_CLIENT_SECRET,
-	redirectUri: "https://api.azidoazide.xyz/auth/discord/callback",
+	redirectUri: "https://api.onlyfoodz.xyz/auth/discord/callback",
 });
 
 // Discord
@@ -107,7 +107,7 @@ class github {
 			client_id: process.env.GITHUB_CLIENT_ID,
 			client_secret: process.env.GITHUB_CLIENT_SECRET,
 			code: code,
-			redirect_uri: "https://api.nightmarebot.tk/auth/github/callback",
+			redirect_uri: "https://api.onlyfoodz.xyz/auth/github/callback",
 		});
 
 		const token = await fetch(
