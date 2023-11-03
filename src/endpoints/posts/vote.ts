@@ -9,8 +9,8 @@ export default {
 			if (user) {
 				if (post) {
 					if (
-						post.post.Upvotes.includes(user.UserID) ||
-						post.post.Downvotes.includes(user.UserID)
+						post.post.Upvotes.includes(user.userid) ||
+						post.post.Downvotes.includes(user.userid)
 					)
 						return res.json({
 							error: "You cannot update your vote, for this post.",
@@ -18,7 +18,7 @@ export default {
 					else {
 						const update = await database.Posts.upvote(
 							req.query.PostID,
-							user.UserID
+							user.userid
 						);
 
 						if (update)
@@ -44,8 +44,8 @@ export default {
 			if (user) {
 				if (post) {
 					if (
-						post.post.Upvotes.includes(user.UserID) ||
-						post.post.Downvotes.includes(user.UserID)
+						post.post.Upvotes.includes(user.userid) ||
+						post.post.Downvotes.includes(user.userid)
 					)
 						return res.json({
 							error: "You cannot update your vote, for this post.",
@@ -53,7 +53,7 @@ export default {
 					else {
 						const update = await database.Posts.downvote(
 							req.query.PostID,
-							user.UserID
+							user.userid
 						);
 
 						if (update)

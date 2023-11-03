@@ -3,7 +3,7 @@ export default {
 	method: "GET",
 	execute: async (req, res, database) => {
 		const tag = req.query.tag;
-		let team = await database.Teams.get({ UserTag: tag });
+		let team = await database.Teams.get({ usertag: tag });
 
 		if (team || !team.error) res.send(team);
 		else

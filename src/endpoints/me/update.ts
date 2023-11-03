@@ -17,10 +17,10 @@ export default {
 
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;
 
-			await database.Users.update(user.UserID, {
-				Username: data["username"],
-				Avatar: data["avatar"],
-				Bio: data["bio"] || null,
+			await database.Users.updateTeam(user.UserID, {
+				username: data["username"],
+				avatar: data["avatar"],
+				bio: data["bio"] || null,
 			});
 
 			return res.json({

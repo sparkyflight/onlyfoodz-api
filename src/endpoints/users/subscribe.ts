@@ -3,19 +3,19 @@ export default {
 	method: "PUT",
 	execute: async (req, res, database) => {
 		const user = await database.Tokens.get(req.query.token);
-		const target = await database.Users.get({ Tag: req.query.target });
+		const target = await database.Users.get({ usertag: req.query.target });
 
 		if (req.query.type === "sub") {
 			if (user) {
 				if (target) {
-					if (target.Followers.includes(user.UserID))
+					if (target.Followers.includes(user.userid))
 						return res.json({
 							error: "You cannot subscribe to this user again.",
 						});
 					else {
 						const update = await database.Users.follow(
-							user.UserID,
-							target.UserID
+							user.userid,
+							target.userid
 						);
 
 						if (update)
@@ -40,14 +40,14 @@ export default {
 		if (req.query.type === "unsub") {
 			if (user) {
 				if (target) {
-					if (!target.Followers.includes(user.UserID))
+					if (!target.Followers.includes(user.userid))
 						return res.json({
 							error: "You cannot unsubcribe from this user. Reason: You are not subscribed to this user.",
 						});
 					else {
 						const update = await database.Users.unfollow(
-							user.UserID,
-							target.UserID
+							user.userid,
+							target.userid
 						);
 
 						if (update)

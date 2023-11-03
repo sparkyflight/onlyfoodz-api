@@ -170,11 +170,11 @@ app.all("/auth/email/callback", async (req: Request, res: Response) => {
 
 		if (dbUser) {
 			const token = crypto.randomUUID();
-			await database.Tokens.create(userInfo.uid, token, "Email");
+			await database.Tokens.createToken(userInfo.uid, token, "Email");
 
 			response = token;
 		} else {
-			await database.Users.create(
+			await database.Users.createUser(
 				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
 					"_" +
 					nouns[Math.floor(Math.random() * (nouns.length - 1))],
@@ -183,20 +183,11 @@ app.all("/auth/email/callback", async (req: Request, res: Response) => {
 					"_" +
 					nouns[Math.floor(Math.random() * (nouns.length - 1))],
 				null,
-				"",
-				new Date(),
-				[
-					{
-						service: "Email",
-						id: userInfo.uid,
-						accessToken: null,
-						refreshToken: null,
-					},
-				]
+				""
 			);
 
 			const token = crypto.randomUUID();
-			await database.Tokens.create(userInfo.uid, token, "Email");
+			await database.Tokens.createToken(userInfo.uid, token, "Email");
 
 			response = token;
 		}
@@ -235,11 +226,11 @@ app.all("/auth/discord/callback", async (req: Request, res: Response) => {
 
 	if (dbUser) {
 		const token = crypto.randomUUID();
-		await database.Tokens.create(userInfo.id, token, "Discord");
+		await database.Tokens.createToken(userInfo.id, token, "Discord");
 
 		response = token;
 	} else {
-		await database.Users.create(
+		await database.Users.createUser(
 			userInfo.username,
 			userInfo.id,
 			userInfo.username +
@@ -248,20 +239,11 @@ app.all("/auth/discord/callback", async (req: Request, res: Response) => {
 				"_" +
 				nouns[Math.floor(Math.random() * (nouns.length - 1))],
 			null,
-			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`,
-			new Date(),
-			[
-				{
-					service: "Discord",
-					id: userInfo.id,
-					accessToken: null,
-					refreshToken: null,
-				},
-			]
+			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`
 		);
 
 		const token = crypto.randomUUID();
-		await database.Tokens.create(userInfo.id, token, "Discord");
+		await database.Tokens.createToken(userInfo.id, token, "Discord");
 
 		response = token;
 	}

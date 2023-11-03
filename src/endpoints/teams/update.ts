@@ -17,30 +17,30 @@ export default {
 				});
 			else {
 				const team = await database.Teams.get({
-					UserID: data["team"],
+					userid: data["team"],
 				});
 
 				if (team || team.error) {
-					if (team.Members.find((i) => i.ID === user.UserID)) {
-						if (!data["Username"])
+					if (team.members.find((i) => i.ID === user.userid)) {
+						if (!data["username"])
 							return res.json({
 								error: "You must provide a valid username.",
 							});
 
-						if (!data["Bio"])
+						if (!data["bio"])
 							return res.json({
 								error: "You must provide a valid Bio/Description.",
 							});
 
-						if (!data["Avatar"])
+						if (!data["avatar"])
 							return res.json({
 								error: "You must provide a Profile Picture.",
 							});
 
-						await database.Teams.update(data["team"], {
-							Username: data["Username"],
-							Bio: data["Bio"],
-							Avatar: data["Avatar"],
+						await database.Teams.updateTeam(data["team"], {
+							Username: data["username"],
+							Bio: data["bio"],
+							Avatar: data["avatar"],
 						});
 
 						return res.json({

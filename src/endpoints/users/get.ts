@@ -3,18 +3,13 @@ export default {
 	method: "GET",
 	execute: async (req, res, database) => {
 		const tag = req.query.tag;
-		let user = await database.Users.get({ UserTag: tag });
+		let user = await database.Users.get({ usertag: tag });
 
-		user["team"] = false;
-		user["Connections"] = [];
+		if (user) user["team"] = false;
 
 		if (!user || user.error) {
-			user = await database.Teams.get({ UserTag: tag });
-
-			if (user || !user.error) {
-				user["team"] = true;
-				user["Connections"] = [];
-			}
+			user = await database.Teams.get({ usertag: tag });
+			if (user || !user.error) user["team"] = true;
 		}
 
 		if (user || !user.error) res.send(user);

@@ -43,7 +43,7 @@ export default {
 								error: "Sorry, a caption must be provided.",
 							});
 
-						await database.Posts.update(data["post_id"], {
+						await database.Posts.updatePost(data["post_id"], {
 							Caption: data["caption"],
 							Image: data["image"] || null,
 							Plugins: data["plugins"] || [],

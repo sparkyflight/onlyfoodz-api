@@ -14,7 +14,7 @@ export default {
 
 			if (data["user"].team) {
 				const team = await database.Teams.get({
-					UserID: data["user"].user,
+					userid: data["user"].user,
 				});
 				const poster = await database.Tokens.get(
 					data["user"].user_token
@@ -37,7 +37,7 @@ export default {
 					});
 
 				await database.Posts.create(
-					user.UserID,
+					user.userid,
 					data["caption"],
 					data["image"],
 					data["plugins"],

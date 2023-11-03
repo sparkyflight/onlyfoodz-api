@@ -36,13 +36,13 @@ export default {
 						error: "You must provide a Profile Picture.",
 					});
 
-				await database.Teams.create(
-					data["Username"],
+				await database.Teams.createTeam(
+					data["username"],
 					crypto.randomUUID(),
-					data["UserTag"],
-					data["Bio"],
-					data["Avatar"],
-					user.UserID
+					data["usertag"],
+					data["bio"],
+					data["avatar"],
+					user.userid
 				);
 
 				return res.json({ success: true });
