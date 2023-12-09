@@ -38,9 +38,9 @@ export default {
 							});
 
 						await database.Teams.updateTeam(data["team"], {
-							Username: data["username"],
-							Bio: data["bio"],
-							Avatar: data["avatar"],
+							username: data["username"],
+							bio: data["bio"],
+							avatar: data["avatar"],
 						});
 
 						return res.json({

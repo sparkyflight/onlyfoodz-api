@@ -16,22 +16,22 @@ export default {
 					error: "Uh oh, it seems that your User Token is invalid; or has expired. To fix this issue, simply relogin.",
 				});
 			else {
-				if (!data["Username"])
+				if (!data["username"])
 					return res.json({
 						error: "You must provide a valid username.",
 					});
 
-				if (!data["UserTag"])
+				if (!data["usertag"])
 					return res.json({
 						error: "You must provide a valid User Tag.",
 					});
 
-				if (!data["Bio"])
+				if (!data["bio"])
 					return res.json({
 						error: "You must provide a valid Bio/Description.",
 					});
 
-				if (!data["Avatar"])
+				if (!data["avatar"])
 					return res.json({
 						error: "You must provide a Profile Picture.",
 					});

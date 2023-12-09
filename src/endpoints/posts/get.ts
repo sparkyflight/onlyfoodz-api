@@ -6,7 +6,6 @@ export default {
 
 		if (postid || postid != "") {
 			const post = await database.Posts.get(postid);
-
 			return res.json(post);
 		} else
 			return res.status(404).json({

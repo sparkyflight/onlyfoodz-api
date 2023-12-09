@@ -8,7 +8,7 @@ export default {
 		if (req.query.type === "sub") {
 			if (user) {
 				if (target) {
-					if (target.Followers.includes(user.userid))
+					if (target.subscribed.includes(user.userid))
 						return res.json({
 							error: "You cannot subscribe to this user again.",
 						});
@@ -40,7 +40,7 @@ export default {
 		if (req.query.type === "unsub") {
 			if (user) {
 				if (target) {
-					if (!target.Followers.includes(user.userid))
+					if (!target.subscribed.includes(user.userid))
 						return res.json({
 							error: "You cannot unsubcribe from this user. Reason: You are not subscribed to this user.",
 						});
