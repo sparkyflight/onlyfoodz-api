@@ -10,9 +10,10 @@ export default {
 		if (user) {
 			if (post) {
 				const update = await database.Posts.comment(
-					post.postid,
-					user.userid,
-					data["Caption"]
+					post,
+					user,
+					data["Caption"],
+					data["Image"]
 				);
 
 				if (update) return res.json({ success: true });
