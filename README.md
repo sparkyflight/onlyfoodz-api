@@ -1,3 +1,3 @@
-# Azidoazide API
+# Onlyfoodz API
 
-This API is used for **ALL** of our services, including Onlyfoodz.
+Hello, there. This GitHub Repository is our API for Onlyfoodz, a social media platform that allows users to share images and videos of food.
