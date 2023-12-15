@@ -1,22 +1,26 @@
+import { OnlyfoodzPost, User } from "../../database/types.interface.js";
+
 export default {
 	name: "posts/vote",
 	method: "PUT",
 	execute: async (req, res, database) => {
-		const user = await database.Tokens.get(req.query.token);
-		const post = await database.Posts.get(req.query.PostID);
+		const user: User = await database.Tokens.get(req.query.token);
+		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
+			req.query.PostID
+		);
 
 		if (req.query.type === "up") {
 			if (user) {
 				if (post) {
 					if (
-						post.post.Upvotes.includes(user.userid) ||
-						post.post.Downvotes.includes(user.userid)
+						post.upvotes.includes(user.userid) ||
+						post.downvotes.includes(user.userid)
 					)
 						return res.json({
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database.Posts.upvote(
+						const update = await database.OnlyfoodzPosts.upvote(
 							req.query.PostID,
 							user.userid
 						);
@@ -44,14 +48,14 @@ export default {
 			if (user) {
 				if (post) {
 					if (
-						post.post.Upvotes.includes(user.userid) ||
-						post.post.Downvotes.includes(user.userid)
+						post.upvotes.includes(user.userid) ||
+						post.downvotes.includes(user.userid)
 					)
 						return res.json({
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database.Posts.downvote(
+						const update = await database.OnlyfoodzPosts.downvote(
 							req.query.PostID,
 							user.userid
 						);

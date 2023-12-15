@@ -1,9 +1,11 @@
+import { User } from "../../database/types.interface.js";
+
 export default {
 	name: "users/get",
 	method: "GET",
 	execute: async (req, res, database) => {
 		const tag = req.query.tag;
-		let user = await database.Users.get({ usertag: tag });
+		let user: User = await database.Users.get({ usertag: tag });
 
 		if (user) return res.send(user);
 		else

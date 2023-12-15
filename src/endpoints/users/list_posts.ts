@@ -1,15 +1,20 @@
+import { User, OnlyfoodzPost } from "../../database/types.interface.js";
+
 export default {
 	name: "posts/list_user",
 	method: "GET",
 	execute: async (req, res, database) => {
 		const tag = req.query.tag;
-		let posts;
+		let posts: OnlyfoodzPost[] | null;
 
 		if (tag || tag != "") {
-			let user = await database.Users.get({ usertag: tag });
+			let user: User = await database.Users.get({ usertag: tag });
 
 			if (user) {
-				posts = await database.Posts.getAllUserPosts(user.userid, 1);
+				posts = await database.OnlyfoodzPosts.getAllUserPosts(
+					user.userid,
+					1
+				);
 				posts.reverse();
 
 				return res.json(posts);

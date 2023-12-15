@@ -1,3 +1,5 @@
+import { OnlyfoodzPost } from "../../database/types.interface.js";
+
 export default {
 	name: "posts/get",
 	method: "GET",
@@ -5,7 +7,9 @@ export default {
 		const postid = req.query.post_id;
 
 		if (postid || postid != "") {
-			const post = await database.Posts.get(postid);
+			const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
+				postid
+			);
 			return res.json(post);
 		} else
 			return res.status(404).json({

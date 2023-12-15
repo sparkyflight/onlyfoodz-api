@@ -5,12 +5,11 @@ import cookieParser from "cookie-parser";
 import firebase from "firebase-admin";
 import serviceAccount from "./firebaseService.js";
 import path from "path";
-import { adjs, nouns } from "./words.js";
 import * as database from "./database/handler.js";
 import * as logger from "./logger.js";
 import cors from "cors";
-import * as auth from "./auth.js";
 import "dotenv/config";
+import { DecodedIdToken } from "firebase-admin/auth";
 
 // Initialize Firebase Admin
 const firebaseService = firebase.initializeApp({
@@ -19,25 +18,11 @@ const firebaseService = firebase.initializeApp({
 	),
 });
 
-// Allowed Origins
-const allowedOrigins = [
-	{
-		url: "https://onlyfoodz.xyz",
-		name: "Onlyfoodz",
-		image: "https://onlyfoodz.xyz/logo.png",
-		verified: true,
-		description:
-			"Onlyfoodz, a social media platform that allows people to share pictures and small videos of food.",
-		client_id: "onlyfoodz-0091",
-	},
-];
-
 // Middleware
 const app: Express = express();
 app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
-app.set("view engine", "ejs");
 
 // API Endpoints Map
 const getFilesInDirectory = (dir) => {
@@ -104,158 +89,33 @@ app.all(`/api/:category/:endpoint`, async (req: Request, res: Response) => {
 		});
 });
 
-// Authentication Endpoints
-app.all("/auth/login", async (req: Request, res: Response) => {
-	if (!allowedOrigins.find((e) => e.client_id === req.query.client_id))
-		return res.status(403).json({
-			error: `\`${req.query.client_id}\` is an invalid client id`,
-		});
+app.all("/auth/callback", async (req: Request, res: Response) => {
+	let response;
 
-	// Check request to see if there is a "method" query.
-	const method = req.query.method as string;
-
-	if (method || method != "") {
-		const client_id = req.query.client_id as string;
-
-		if (method === "discord") {
-			const url = await auth.discord.getAuthURL(
-				`${
-					allowedOrigins.find((e) => e.client_id === client_id).url
-				}/auth/callback`
-			);
-
-			return res.redirect(url);
-		}
-	}
-
-	return res.render("pages/login", {
-		page: req.query.page,
-		websiteData: allowedOrigins.find(
-			(e) => e.client_id === req.query.client_id
-		),
-	});
-});
-
-app.all("/auth/email/callback", async (req: Request, res: Response) => {
-	let response = null;
-
-	const client_id = req.query.client_id as string;
-	const token = req.query.token as string;
-	const websiteData = allowedOrigins.find((e) => e.client_id === client_id);
-
-	if (!client_id || client_id === "")
-		return res.status(400).json({
-			message: "There was no Client ID specified with this request.",
-			error: true,
-			status: 400,
-		});
-	if (!token || token === "")
+	if (!req.query.token || req.query.token === "")
 		return res.status(400).json({
 			message:
 				"There was no Authentication Token specified with this request.",
 		});
 
-	if (!websiteData)
-		return res.status(400).json({
-			message: "The provided Client ID is invalid.",
-			error: true,
-			status: 400,
-		});
-	else {
-		const userInfo = await firebaseService
-			.auth()
-			.verifyIdToken(token, true);
+	const userInfo: DecodedIdToken = await firebaseService
+		.auth()
+		.verifyIdToken(req.query.token as string, true);
 
-		const dbUser = await database.Users.get({ UserID: userInfo.uid });
-
-		if (dbUser) {
-			const token = crypto.randomUUID();
-			await database.Tokens.createToken(userInfo.uid, token, "Email");
-
-			response = token;
-		} else {
-			await database.Users.createUser(
-				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
-					"_" +
-					nouns[Math.floor(Math.random() * (nouns.length - 1))],
-				userInfo.uid,
-				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
-					"_" +
-					nouns[Math.floor(Math.random() * (nouns.length - 1))],
-				null,
-				""
-			);
-
-			const token = crypto.randomUUID();
-			await database.Tokens.createToken(userInfo.uid, token, "Email");
-
-			response = token;
-		}
-
-		let url = `${websiteData.url}/auth/callback`;
-		url += "?token=" + encodeURIComponent(response);
-
-		setTimeout(() => {
-			res.redirect(url);
-		}, 1000);
-	}
-});
-
-app.all("/auth/discord/callback", async (req: Request, res: Response) => {
-	let response = null;
-
-	if (!req.query.code || req.query.code === "") {
-		if (!req.query.state || req.query.state === "")
-			return res.status(400).json({
-				message:
-					"There was no code, and state provided with this request.",
-				error: true,
-				status: 400,
-			});
-		else {
-			const data = JSON.parse(req.query.state as string);
-			const domain = new URL(data.redirect);
-
-			return res.redirect(`https://${domain.hostname}/`);
-		}
-	}
-
-	const discord = await auth.discord.getAccessToken(req.query.code as string);
-	const userInfo = await auth.discord.getUserInfo(discord.access_token);
-	const dbUser = await database.Users.get({ UserID: userInfo.id });
+	const dbUser = await database.Users.get({ UserID: userInfo.uid });
+	const token = crypto.randomUUID();
 
 	if (dbUser) {
-		const token = crypto.randomUUID();
-		await database.Tokens.createToken(userInfo.id, token, "Discord");
+		await database.Tokens.createToken(
+			userInfo.uid,
+			token,
+			userInfo.firebase.sign_in_provider.replace(".com", "")
+		);
 
 		response = token;
 	} else {
-		await database.Users.createUser(
-			userInfo.username,
-			userInfo.id,
-			userInfo.username +
-				"_" +
-				adjs[Math.floor(Math.random() * (adjs.length - 1))] +
-				"_" +
-				nouns[Math.floor(Math.random() * (nouns.length - 1))],
-			null,
-			`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}`
-		);
-
-		const token = crypto.randomUUID();
-		await database.Tokens.createToken(userInfo.id, token, "Discord");
-
-		response = token;
+		response = { error: "User does not exist." };
 	}
-
-	const extraData = JSON.parse(req.query.state as string);
-
-	let url = extraData.redirect;
-	url += "?token=" + encodeURIComponent(response);
-
-	setTimeout(() => {
-		res.redirect(url);
-	}, 1000);
 });
 
 // Start Server

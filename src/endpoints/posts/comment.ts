@@ -1,15 +1,19 @@
+import { User, OnlyfoodzPost, Token } from "../../database/types.interface.js";
+
 export default {
 	name: "posts/comment",
 	method: "POST",
 	execute: async (req, res, database) => {
 		const data = req.body;
 
-		const user = await database.Tokens.get(req.query.token);
-		const post = await database.Posts.get(req.query.PostID);
+		let user: User = await database.Tokens.get(data["user"].user_token);
+		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
+			req.query.PostID
+		);
 
 		if (user) {
 			if (post) {
-				const update = await database.Posts.comment(
+				const update = await database.OnlyfoodzPosts.comment(
 					post,
 					user,
 					data["Caption"],

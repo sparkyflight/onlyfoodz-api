@@ -1,3 +1,5 @@
+import { OnlyfoodzPost, User } from "../../database/types.interface.js";
+
 export default {
 	name: "posts/post",
 	method: "PATCH",
@@ -13,41 +15,28 @@ export default {
 				error: "Oops, it seems that you did not pass the Post ID.",
 			});
 		else {
-			let user;
-
-			if (data["user"].team) {
-				const team = await database.Teams.get({
-					UserID: data["user"].user,
-				});
-				const poster = await database.Tokens.get(
-					data["user"].user_token
-				);
-
-				if (poster || !poster.error) {
-					if (team || team.error) {
-						if (team.Members.find((i) => i.ID === poster.UserID))
-							user = team;
-						else user = null;
-					} else user = null;
-				} else user = null;
-			} else user = await database.Tokens.get(data["user"].user_token);
+			let user: User = await database.Tokens.get(data["user"].user_token);
 
 			if (user) {
-				const origPost = await database.Posts.get(data["post_id"]);
+				const origPost: OnlyfoodzPost =
+					await database.OnlyfoodzPosts.get(data["post_id"]);
 
 				if (origPost) {
-					if (origPost.UserID === user.UserID) {
+					if (origPost.userid === user.userid) {
 						if (!data["caption"] || data["caption"].error)
 							return res.json({
 								success: false,
 								error: "Sorry, a caption must be provided.",
 							});
 
-						await database.Posts.updatePost(data["post_id"], {
-							Caption: data["caption"],
-							Image: data["image"] || null,
-							Plugins: data["plugins"] || [],
-						});
+						await database.OnlyfoodzPosts.updatePost(
+							data["post_id"],
+							{
+								Caption: data["caption"],
+								Image: data["image"] || null,
+								Plugins: data["plugins"] || [],
+							}
+						);
 
 						return res.json({ success: true });
 					} else

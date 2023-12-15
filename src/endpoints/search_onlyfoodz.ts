@@ -11,7 +11,7 @@ export default {
 			},
 		});
 
-		const posts = await database.Posts.find(
+		const posts = await database.OnlyfoodzPosts.find(
 			{
 				Caption: {
 					$regex: query,

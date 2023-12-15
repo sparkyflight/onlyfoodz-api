@@ -1,33 +1,17 @@
+import { User } from "../../database/types.interface.js";
+
 export default {
 	name: "posts/post",
 	method: "POST",
 	execute: async (req, res, database) => {
 		const data = req.body;
-		let response = {};
 
 		if (!data["user"])
 			return res.json({
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			let user;
-
-			if (data["user"].team) {
-				const team = await database.Teams.get({
-					userid: data["user"].user,
-				});
-				const poster = await database.Tokens.get(
-					data["user"].user_token
-				);
-
-				if (poster || !poster.error) {
-					if (team || team.error) {
-						if (team.Members.find((i) => i.ID === poster.UserID))
-							user = team;
-						else user = null;
-					} else user = null;
-				} else user = null;
-			} else user = await database.Tokens.get(data["user"].user_token);
+			let user: User = await database.Tokens.get(data["user"].user_token);
 
 			if (user) {
 				if (!data["caption"] || data["caption"].error)
@@ -36,7 +20,7 @@ export default {
 						error: "Sorry, a caption must be provided.",
 					});
 
-				await database.Posts.create(
+				await database.OnlyfoodzPosts.create(
 					user.userid,
 					data["caption"],
 					data["image"],

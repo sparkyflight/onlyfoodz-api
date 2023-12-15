@@ -1,9 +1,13 @@
+import { Token, User } from "../../database/types.interface.js";
+
 export default {
 	name: "users/subscribe",
 	method: "PUT",
 	execute: async (req, res, database) => {
-		const user = await database.Tokens.get(req.query.token);
-		const target = await database.Users.get({ usertag: req.query.target });
+		const user: User = await database.Tokens.get(req.query.token);
+		const target: User = await database.Users.get({
+			usertag: req.query.target,
+		});
 
 		if (req.query.type === "sub") {
 			if (user) {
