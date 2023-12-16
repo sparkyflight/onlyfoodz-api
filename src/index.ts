@@ -89,13 +89,51 @@ app.all(`/api/:category/:endpoint`, async (req: Request, res: Response) => {
 		});
 });
 
-app.all("/auth/callback", async (req: Request, res: Response) => {
-	let response;
+const check = (query: any): boolean | string => {
+	if (!query || query === "") return false;
+	else query;
+};
 
+app.all("/auth/signup", async (req: Request, res: Response) => {
+	if (!check(req.query.tag))
+		return res.status(400).json({
+			error: "Missing query: tag",
+		});
+	if (!check(req.query.uid))
+		return res.status(400).json({
+			error: "Missing query: uid",
+		});
+	if (!check(req.query.token))
+		return res.status(400).json({
+			error: "Missing query: token",
+		});
+
+	const userInfo: DecodedIdToken = await firebaseService
+		.auth()
+		.verifyIdToken(req.query.token as string, true);
+
+	const dbUser = await database.Users.get({ UserID: userInfo.uid });
+
+	if (dbUser)
+		return res.status(400).json({
+			error: "[Database Error] => User already exists.",
+		});
+	else {
+		const p = await database.Users.createUser(
+			req.query.tag as string,
+			userInfo.uid,
+			req.query.tag as string,
+			"None",
+			"/logo.png"
+		);
+		if (p === true) res.status(400).json({ message: "User Created." });
+	}
+});
+
+app.all("/auth/callback", async (req: Request, res: Response) => {
 	if (!req.query.token || req.query.token === "")
 		return res.status(400).json({
-			message:
-				"There was no Authentication Token specified with this request.",
+			error: "There was no Authentication Token specified with this request.",
 		});
 
 	const userInfo: DecodedIdToken = await firebaseService
@@ -107,14 +145,22 @@ app.all("/auth/callback", async (req: Request, res: Response) => {
 
 	if (dbUser) {
 		await database.Tokens.createToken(
-			userInfo.uid,
+			dbUser.userid,
 			token,
 			userInfo.firebase.sign_in_provider.replace(".com", "")
 		);
 
-		response = token;
+		return res.status(200).send(token);
 	} else {
-		response = { error: "User does not exist." };
+		await database.Tokens.createToken(
+			userInfo.userid,
+			token,
+			userInfo.firebase.sign_in_provider.replace(".com", "")
+		);
+
+		return res
+			.status(400)
+			.json({ token: token, error: "User does not exist." });
 	}
 });
 
