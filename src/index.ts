@@ -112,7 +112,7 @@ app.all("/auth/signup", async (req: Request, res: Response) => {
 		.auth()
 		.verifyIdToken(req.query.token as string, true);
 
-	const dbUser = await database.Users.get({ UserID: userInfo.uid });
+	const dbUser = await database.Users.get({ userid: userInfo.uid });
 
 	if (dbUser)
 		return res.status(400).json({
@@ -140,7 +140,7 @@ app.all("/auth/callback", async (req: Request, res: Response) => {
 		.auth()
 		.verifyIdToken(req.query.token as string, true);
 
-	const dbUser = await database.Users.get({ UserID: userInfo.uid });
+	const dbUser = await database.Users.get({ userid: userInfo.uid });
 	const token = crypto.randomUUID();
 
 	if (dbUser) {
