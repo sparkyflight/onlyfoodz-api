@@ -150,7 +150,7 @@ app.all("/auth/callback", async (req: Request, res: Response) => {
 			userInfo.firebase.sign_in_provider.replace(".com", "")
 		);
 
-		return res.status(200).send(token);
+		return res.status(200).json({ token: token });
 	} else {
 		await database.Tokens.createToken(
 			userInfo.userid,
