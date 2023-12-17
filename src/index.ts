@@ -89,21 +89,21 @@ app.all(`/api/:category/:endpoint`, async (req: Request, res: Response) => {
 		});
 });
 
-const check = (query: any): boolean | string => {
-	if (!query || query === "") return false;
-	else query;
+const check = (query: any): boolean => {
+	if (!query || query === "") return true; // empty
+	else return false; // has content
 };
 
 app.all("/auth/signup", async (req: Request, res: Response) => {
-	if (!check(req.query.tag))
+	if (check(req.query.tag))
 		return res.status(400).json({
 			error: "Missing query: tag",
 		});
-	if (!check(req.query.uid))
+	if (check(req.query.uid))
 		return res.status(400).json({
 			error: "Missing query: uid",
 		});
-	if (!check(req.query.token))
+	if (check(req.query.token))
 		return res.status(400).json({
 			error: "Missing query: token",
 		});
