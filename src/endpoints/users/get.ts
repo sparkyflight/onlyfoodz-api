@@ -3,7 +3,7 @@ import { User } from "../../database/types.interface.js";
 export default {
 	name: "users/get",
 	method: "GET",
-	execute: async (req, res, database) => {
+	execute: async (req, res, database, firebase) => {
 		const tag = req.query.tag;
 		let user: User = await database.Users.get({ usertag: tag });
 

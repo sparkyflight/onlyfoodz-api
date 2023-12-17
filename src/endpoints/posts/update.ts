@@ -1,9 +1,10 @@
+import { DecodedIdToken } from "firebase-admin/auth";
 import { OnlyfoodzPost, User } from "../../database/types.interface.js";
 
 export default {
 	name: "posts/post",
 	method: "PATCH",
-	execute: async (req, res, database) => {
+	execute: async (req, res, database, firebase) => {
 		const data = req.body;
 
 		if (!data["user"])
@@ -15,7 +16,10 @@ export default {
 				error: "Oops, it seems that you did not pass the Post ID.",
 			});
 		else {
-			let user: User = await database.Tokens.get(data["user"].user_token);
+			const token: DecodedIdToken = await firebase
+				.auth()
+				.verifyIdToken(data["user"].user_token, true);
+			const user: User = await database.Users.get({ userid: token.uid });
 
 			if (user) {
 				const origPost: OnlyfoodzPost =

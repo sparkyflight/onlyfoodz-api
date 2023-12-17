@@ -1,12 +1,16 @@
+import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
 
 export default {
 	name: "users/@me",
 	method: "PATCH",
-	execute: async (req, res, database) => {
+	execute: async (req, res, database, firebase) => {
 		let data = req.body;
 
-		const user: User = await database.Tokens.get(data["token"]);
+		const token: DecodedIdToken = await firebase
+			.auth()
+			.verifyIdToken(data["token"], true);
+		const user: User = await database.Users.get({ userid: token.uid });
 
 		if (user) {
 			if (!data["username"] || data["username"] === "")

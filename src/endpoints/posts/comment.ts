@@ -1,12 +1,17 @@
-import { User, OnlyfoodzPost, Token } from "../../database/types.interface.js";
+import { DecodedIdToken } from "firebase-admin/auth";
+import { User, OnlyfoodzPost } from "../../database/types.interface.js";
 
 export default {
 	name: "posts/comment",
 	method: "POST",
-	execute: async (req, res, database) => {
+	execute: async (req, res, database, firebase) => {
 		const data = req.body;
 
-		let user: User = await database.Tokens.get(data["user"].user_token);
+		const token: DecodedIdToken = await firebase
+			.auth()
+			.verifyIdToken(data["user"].user_token, true);
+		const user: User = await database.Users.get({ userid: token.uid });
+
 		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
 			req.query.PostID
 		);

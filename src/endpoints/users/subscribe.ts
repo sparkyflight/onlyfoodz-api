@@ -1,10 +1,14 @@
-import { Token, User } from "../../database/types.interface.js";
+import { DecodedIdToken } from "firebase-admin/auth";
+import { User } from "../../database/types.interface.js";
 
 export default {
 	name: "users/subscribe",
 	method: "PUT",
-	execute: async (req, res, database) => {
-		const user: User = await database.Tokens.get(req.query.token);
+	execute: async (req, res, database, firebase) => {
+		const token: DecodedIdToken = await firebase
+			.auth()
+			.verifyIdToken(req.query.token, true);
+		const user: User = await database.Users.get({ userid: token.uid });
 		const target: User = await database.Users.get({
 			usertag: req.query.target,
 		});

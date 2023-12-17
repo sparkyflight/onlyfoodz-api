@@ -3,7 +3,7 @@ import { User, OnlyfoodzPost } from "../../database/types.interface.js";
 export default {
 	name: "posts/list_user",
 	method: "GET",
-	execute: async (req, res, database) => {
+	execute: async (req, res, database, firebase) => {
 		const tag = req.query.tag;
 		let posts: OnlyfoodzPost[] | null;
 

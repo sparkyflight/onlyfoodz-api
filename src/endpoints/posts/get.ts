@@ -3,7 +3,7 @@ import { OnlyfoodzPost } from "../../database/types.interface.js";
 export default {
 	name: "posts/get",
 	method: "GET",
-	execute: async (req, res, database) => {
+	execute: async (req, res, database, firebase) => {
 		const postid = req.query.post_id;
 
 		if (postid || postid != "") {

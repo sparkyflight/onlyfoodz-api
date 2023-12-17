@@ -1,9 +1,10 @@
+import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
 
 export default {
 	name: "posts/post",
 	method: "POST",
-	execute: async (req, res, database) => {
+	execute: async (req, res, database, firebase) => {
 		const data = req.body;
 
 		if (!data["user"])
@@ -11,7 +12,10 @@ export default {
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			let user: User = await database.Tokens.get(data["user"].user_token);
+			const token: DecodedIdToken = await firebase
+				.auth()
+				.verifyIdToken(req.query.token, true);
+			let user: User = await database.Users.get({ userid: token.uid });
 
 			if (user) {
 				if (!data["caption"] || data["caption"].error)

@@ -74,7 +74,7 @@ app.all(`/api/:category/:endpoint`, async (req: Request, res: Response) => {
 			});
 
 		try {
-			await data.execute(req, res, database);
+			await data.execute(req, res, database, firebase);
 		} catch (error) {
 			res.status(500).json({
 				error: "Internal Server Error",
@@ -139,14 +139,15 @@ app.all("/auth/signup", async (req: Request, res: Response) => {
 				"/logo.png"
 			);
 
-			if (i === true) return res.json({ error: false, message: "User Created." });
-            else return res.json({ error: true, message: i });
+			if (i === true)
+				return res.json({ error: false, message: "User Created." });
+			else return res.json({ error: true, message: i });
 		}
 	}
 });
 
 app.all("/auth/callback", async (req: Request, res: Response) => {
-	if (!req.query.token || req.query.token === "")
+	if (check(req.query.token))
 		return res.json({
 			error: true,
 			message:
@@ -158,29 +159,14 @@ app.all("/auth/callback", async (req: Request, res: Response) => {
 		.verifyIdToken(req.query.token as string, true);
 
 	const dbUser = await database.Users.get({ userid: userInfo.uid });
-	const token = crypto.randomUUID();
 
-	if (dbUser) {
-		await database.Tokens.createToken(
-			dbUser.userid,
-			token,
-			userInfo.firebase.sign_in_provider.replace(".com", "")
-		);
-
-		return res.json({ token: token });
-	} else {
-		await database.Tokens.createToken(
-			userInfo.userid,
-			token,
-			userInfo.firebase.sign_in_provider.replace(".com", "")
-		);
-
+	if (dbUser) return res.json({ token: req.query.token });
+	else
 		return res.json({
-			token: token,
+			token: req.query.token,
 			error: true,
 			message: "User does not exist.",
 		});
-	}
 });
 
 // Start Server
