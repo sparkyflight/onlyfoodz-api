@@ -96,15 +96,15 @@ const check = (query: any): boolean => {
 
 app.all("/auth/signup", async (req: Request, res: Response) => {
 	if (check(req.query.tag))
-		return res.status(400).json({
+		return res.json({
 			error: "Missing query: tag",
 		});
 	if (check(req.query.uid))
-		return res.status(400).json({
+		return res.json({
 			error: "Missing query: uid",
 		});
 	if (check(req.query.token))
-		return res.status(400).json({
+		return res.json({
 			error: "Missing query: token",
 		});
 
@@ -115,25 +115,40 @@ app.all("/auth/signup", async (req: Request, res: Response) => {
 	const dbUser = await database.Users.get({ userid: userInfo.uid });
 
 	if (dbUser)
-		return res.status(400).json({
-			error: "[Database Error] => User already exists.",
+		return res.json({
+			error: true,
+			message: "[Database Error] => User already exists.",
 		});
 	else {
-		const p = await database.Users.createUser(
-			req.query.tag as string,
-			userInfo.uid,
-			req.query.tag as string,
-			"None",
-			"/logo.png"
-		);
-		if (p === true) res.status(400).json({ message: "User Created." });
+		const dwp = await database.Users.get({
+			usertag: req.query.tag as string,
+		});
+
+		if (dwp)
+			return res.json({
+				error: true,
+				message:
+					"That username is already in use. Please choose a new one.",
+			});
+		else {
+			await database.Users.createUser(
+				req.query.tag as string,
+				userInfo.uid,
+				req.query.tag as string,
+				"None",
+				"/logo.png"
+			);
+			return res.json({ error: true, message: "User Created." });
+		}
 	}
 });
 
 app.all("/auth/callback", async (req: Request, res: Response) => {
 	if (!req.query.token || req.query.token === "")
-		return res.status(400).json({
-			error: "There was no Authentication Token specified with this request.",
+		return res.json({
+			error: true,
+			message:
+				"There was no Authentication Token specified with this request.",
 		});
 
 	const userInfo: DecodedIdToken = await firebaseService
@@ -150,7 +165,7 @@ app.all("/auth/callback", async (req: Request, res: Response) => {
 			userInfo.firebase.sign_in_provider.replace(".com", "")
 		);
 
-		return res.status(200).json({ token: token });
+		return res.json({ token: token });
 	} else {
 		await database.Tokens.createToken(
 			userInfo.userid,
@@ -158,9 +173,11 @@ app.all("/auth/callback", async (req: Request, res: Response) => {
 			userInfo.firebase.sign_in_provider.replace(".com", "")
 		);
 
-		return res
-			.status(400)
-			.json({ token: token, error: "User does not exist." });
+		return res.json({
+			token: token,
+			error: true,
+			message: "User does not exist.",
+		});
 	}
 });
 
