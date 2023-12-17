@@ -131,14 +131,16 @@ app.all("/auth/signup", async (req: Request, res: Response) => {
 					"That username is already in use. Please choose a new one.",
 			});
 		else {
-			await database.Users.createUser(
+			const i = await database.Users.createUser(
 				req.query.tag as string,
 				userInfo.uid,
 				req.query.tag as string,
 				"None",
 				"/logo.png"
 			);
-			return res.json({ error: true, message: "User Created." });
+
+			if (i === true) return res.json({ error: false, message: "User Created." });
+            else return res.json({ error: true, message: i });
 		}
 	}
 });
