@@ -14,7 +14,7 @@ export default {
 		else {
 			const token: DecodedIdToken = await firebase
 				.auth()
-				.verifyIdToken(req.query.token, true);
+				.verifyIdToken(data["user"]["user_token"], true);
 			let user: User = await database.Users.get({ userid: token.uid });
 
 			if (user) {
@@ -24,7 +24,7 @@ export default {
 						error: "Sorry, a caption must be provided.",
 					});
 
-				await database.OnlyfoodzPosts.create(
+				await database.OnlyfoodzPosts.createPost(
 					user.userid,
 					data["caption"],
 					data["image"],
@@ -36,7 +36,7 @@ export default {
 			} else {
 				return res.json({
 					success: false,
-					error: "The user token was not passed with token.",
+					error: "The user does not exist.",
 				});
 			}
 		}

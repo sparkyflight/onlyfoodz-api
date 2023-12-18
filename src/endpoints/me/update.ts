@@ -13,9 +13,9 @@ export default {
 		const user: User = await database.Users.get({ userid: token.uid });
 
 		if (user) {
-			if (!data["username"] || data["username"] === "")
+			if (!data["name"] || data["name"] === "")
 				return res.json({
-					error: "A username is required.",
+					error: "A name is required.",
 				});
 			if (!data["avatar"] || data["avatar"] === "")
 				return res.json({
@@ -25,7 +25,7 @@ export default {
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;
 
 			await database.Users.updateUser(user.userid, {
-				username: data["username"],
+				name: data["name"],
 				avatar: data["avatar"],
 				bio: data["bio"] || null,
 			});

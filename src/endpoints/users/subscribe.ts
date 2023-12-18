@@ -10,7 +10,7 @@ export default {
 			.verifyIdToken(req.query.token, true);
 		const user: User = await database.Users.get({ userid: token.uid });
 		const target: User = await database.Users.get({
-			usertag: req.query.target,
+			userid: req.query.target,
 		});
 
 		if (req.query.type === "sub") {
@@ -48,7 +48,7 @@ export default {
 		if (req.query.type === "unsub") {
 			if (user) {
 				if (target) {
-					if (!target.subscribed.includes(user.userid))
+					if (!target.subscribers.includes(user.userid))
 						return res.json({
 							error: "You cannot unsubcribe from this user. Reason: You are not subscribed to this user.",
 						});

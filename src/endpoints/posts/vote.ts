@@ -10,16 +10,15 @@ export default {
 			.verifyIdToken(req.query.token, true);
 		const user: User = await database.Users.get({ userid: token.uid });
 
-		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
-			req.query.PostID
-		);
+		const post: { user: User; post: OnlyfoodzPost } =
+			await database.OnlyfoodzPosts.get(req.query.PostID);
 
 		if (req.query.type === "up") {
 			if (user) {
 				if (post) {
 					if (
-						post.upvotes.includes(user.userid) ||
-						post.downvotes.includes(user.userid)
+						post.post.upvotes.includes(user.userid) ||
+						post.post.downvotes.includes(user.userid)
 					)
 						return res.json({
 							error: "You cannot update your vote, for this post.",
@@ -53,8 +52,8 @@ export default {
 			if (user) {
 				if (post) {
 					if (
-						post.upvotes.includes(user.userid) ||
-						post.downvotes.includes(user.userid)
+						post.post.upvotes.includes(user.userid) ||
+						post.post.downvotes.includes(user.userid)
 					)
 						return res.json({
 							error: "You cannot update your vote, for this post.",
