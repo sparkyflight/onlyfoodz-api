@@ -2,7 +2,7 @@ import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
 
 export default {
-	name: "users/subscribe",
+	name: "users/follow",
 	method: "PUT",
 	execute: async (req, res, database, firebase) => {
 		const token: DecodedIdToken = await firebase
@@ -13,12 +13,12 @@ export default {
 			userid: req.query.target,
 		});
 
-		if (req.query.type === "sub") {
+		if (req.query.type === "follow") {
 			if (user) {
 				if (target) {
-					if (target.subscribed.includes(user.userid))
+					if (target.following.includes(user.userid))
 						return res.json({
-							error: "You cannot subscribe to this user again.",
+							error: "You cannot follow this user again.",
 						});
 					else {
 						const update = await database.Users.follow(
@@ -45,12 +45,12 @@ export default {
 				});
 		}
 
-		if (req.query.type === "unsub") {
+		if (req.query.type === "unfollow") {
 			if (user) {
 				if (target) {
-					if (!target.subscribers.includes(user.userid))
+					if (!target.followers.includes(user.userid))
 						return res.json({
-							error: "You cannot unsubcribe from this user. Reason: You are not subscribed to this user.",
+							error: "You cannot unfollow this user. Reason: You are not following to this user.",
 						});
 					else {
 						const update = await database.Users.unfollow(
