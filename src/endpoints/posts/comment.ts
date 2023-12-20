@@ -13,16 +13,22 @@ export default {
 		const user: User = await database.Users.get({ userid: token.uid });
 
 		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
-			req.query.PostID
+			req.query.id
 		);
+
+		if (!data["caption"] || data["caption"].error)
+			return res.json({
+				success: false,
+				error: "Sorry, a caption must be provided.",
+			});
 
 		if (user) {
 			if (post) {
 				const update = await database.OnlyfoodzPosts.comment(
 					post,
 					user,
-					data["Caption"],
-					data["Image"]
+					data["caption"],
+					data["image"]
 				);
 
 				if (update) return res.json({ success: true });
