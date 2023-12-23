@@ -18,6 +18,8 @@
 		"cors": "^2.8.5",
 		"dotenv": "^16.0.3",
 		"express": "^4.18.2",
+		"fastify": "^4.25.1",
+		"fastify-cors": "^6.1.0",
 		"firebase-admin": "^11.8.0",
 		"fs": "^0.0.1-security",
 		"node-fetch": "^2.6.7",
