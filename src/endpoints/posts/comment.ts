@@ -1,26 +1,42 @@
 import { DecodedIdToken } from "firebase-admin/auth";
 import { User, OnlyfoodzPost } from "../../database/types.interface.js";
+import { FastifyReply, FastifyRequest } from "fastify";
+import * as database from "../../database/handler.js";
+import firebase from "firebase-admin";
 
 export default {
-	name: "posts/comment",
+	name: "/posts/comment",
 	method: "POST",
-	execute: async (req, res, database, firebase) => {
-		const data = req.body;
+	schema: {
+		querystring: {
+			type: "object",
+			properties: {
+				id: { type: "string" },
+			},
+			required: ["id"],
+		},
+		body: {
+			type: "object",
+			properties: {
+				caption: { type: "string" },
+				image: { type: "string" },
+				user: {
+					user_token: { type: "string" },
+				},
+			},
+			required: ["caption", "image", "user.user_token"],
+		},
+	},
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		const data = request.body;
+		const { id }: any = request.params;
 
 		const token: DecodedIdToken = await firebase
 			.auth()
 			.verifyIdToken(data["user"].user_token, true);
 		const user: User = await database.Users.get({ userid: token.uid });
 
-		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
-			req.query.id
-		);
-
-		if (!data["caption"] || data["caption"].error)
-			return res.json({
-				success: false,
-				error: "Sorry, a caption must be provided.",
-			});
+		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(id);
 
 		if (user) {
 			if (post) {
@@ -31,17 +47,17 @@ export default {
 					data["image"]
 				);
 
-				if (update) return res.json({ success: true });
+				if (update) return reply.send({ success: true });
 				else
-					return res.json({
+					return reply.send({
 						error: "Something went wrong with processing your request.",
 					});
 			} else
-				return res.json({
+				return reply.send({
 					error: "The provided post id is invalid.",
 				});
 		} else
-			return res.json({
+			return reply.send({
 				error: "The provided user token is invalid, or the user does not exist.",
 			});
 	},

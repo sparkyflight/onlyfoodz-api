@@ -6,11 +6,7 @@ import path from "path";
 import * as database from "./database/handler.js";
 import * as logger from "./logger.js";
 import "dotenv/config";
-import Fastify, {
-	FastifyInstance,
-	RouteOptions,
-} from "fastify";
-import fastifyCors from "fastify-cors";
+import Fastify, { FastifyInstance, RouteOptions } from "fastify";
 
 // Initialize Firebase Admin
 const firebaseService = firebase.initializeApp({
@@ -24,8 +20,22 @@ const app: FastifyInstance = Fastify({
 	logger: true,
 });
 
-app.register(fastifyCors, {
-	origin: true,
+app.setErrorHandler(async (error: any, reply: any) => {
+	await console.log(error.stack);
+
+	if (error.validation) {
+		return reply.code(400).send({
+			statusCode: 400,
+			error: "Bad Request",
+			message: error.message,
+		});
+	}
+
+	return reply.code(500).send({
+		statusCode: 500,
+		error: "Internal Server Error",
+		message: error.message,
+	});
 });
 
 // API Endpoints Map
@@ -165,7 +175,7 @@ for (const file of apiEndpointsFiles) {
 	import(`../${file}`)
 		.then((module) => {
 			const endpoint = module.default;
-			Routes.push(endpoint);
+			if (endpoint.handler) Routes.push(endpoint);
 		})
 		.catch((error) => {
 			console.error(`Error importing ${file}: ${error}`);
@@ -173,13 +183,12 @@ for (const file of apiEndpointsFiles) {
 }
 
 setTimeout(() => {
-	if (Routes.length === apiEndpointsFiles.length + 2)
+	if (Routes.length === apiEndpointsFiles.length + 2) {
 		Routes.forEach((route) => app.route(route));
-}, 2000);
 
-// Start Server
-try {
-	app.listen(process.env.PORT);
-} catch (err) {
-	throw new Error(err);
-}
+		// Start Server
+		app.listen({ port: Number(process.env.PORT) }, (err) => {
+			if (err) throw err;
+		});
+	}
+}, 4000);

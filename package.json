@@ -13,6 +13,7 @@
 		"format": "prettier --write --plugin-search-dir=src src"
 	},
 	"dependencies": {
+		"@fastify/cors": "^8.5.0",
 		"colors": "^1.4.0",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
