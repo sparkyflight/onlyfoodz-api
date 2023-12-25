@@ -15,7 +15,7 @@ export default {
 		},
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
-		const { post_id }: any = request.params;
+		const { post_id }: any = request.query;
 
 		if (post_id || post_id != "") {
 			const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(

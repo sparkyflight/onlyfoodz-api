@@ -19,7 +19,7 @@ export default {
 		},
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
-		const data: any = request.params;
+		const data: any = request.query;
 
 		const token: DecodedIdToken = await firebase
 			.auth()

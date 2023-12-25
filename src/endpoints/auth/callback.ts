@@ -17,7 +17,7 @@ export default {
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		try {
-			const { token }: any = request.params;
+			const { token }: any = request.query;
 
 			const userInfo = await firebase.auth().verifyIdToken(token, true);
 			const dbUser = await database.Users.get({

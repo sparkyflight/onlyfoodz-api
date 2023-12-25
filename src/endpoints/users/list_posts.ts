@@ -15,7 +15,7 @@ export default {
 		},
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
-		const data: any = request.params;
+		const data: any = request.query;
 
 		const tag = data.tag;
 		let posts: OnlyfoodzPost[] | null;
