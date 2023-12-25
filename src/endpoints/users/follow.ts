@@ -1,23 +1,39 @@
 import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
+import { FastifyReply, FastifyRequest } from "fastify";
+import * as database from "../../database/handler.js";
+import firebase from "firebase-admin";
 
 export default {
-	name: "users/follow",
+	url: "/users/follow",
 	method: "PUT",
-	execute: async (req, res, database, firebase) => {
+	schema: {
+		querystring: {
+			type: "object",
+			properties: {
+				token: { type: "string" },
+				target: { type: "string" },
+				type: { type: "string" },
+			},
+			required: ["token", "target", "type"],
+		},
+	},
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		const data: any = request.params;
+
 		const token: DecodedIdToken = await firebase
 			.auth()
-			.verifyIdToken(req.query.token, true);
+			.verifyIdToken(data.token, true);
 		const user: User = await database.Users.get({ userid: token.uid });
 		const target: User = await database.Users.get({
-			userid: req.query.target,
+			userid: data.target,
 		});
 
-		if (req.query.type === "follow") {
+		if (data.type === "follow") {
 			if (user) {
 				if (target) {
 					if (target.following.includes(user.userid))
-						return res.json({
+						return reply.send({
 							error: "You cannot follow this user again.",
 						});
 					else {
@@ -27,29 +43,29 @@ export default {
 						);
 
 						if (update)
-							return res.json({
+							return reply.send({
 								success: true,
 							});
 						else
-							return res.json({
+							return reply.send({
 								error: "An unexpected error has occured while trying to complete your request.",
 							});
 					}
 				} else
-					return res.json({
+					return reply.send({
 						error: "The provided target user tag is invalid.",
 					});
 			} else
-				return res.json({
+				return reply.send({
 					error: "The provided user token is invalid, or the user does not exist.",
 				});
 		}
 
-		if (req.query.type === "unfollow") {
+		if (data.type === "unfollow") {
 			if (user) {
 				if (target) {
 					if (!target.followers.includes(user.userid))
-						return res.json({
+						return reply.send({
 							error: "You cannot unfollow this user. Reason: You are not following to this user.",
 						});
 					else {
@@ -59,20 +75,20 @@ export default {
 						);
 
 						if (update)
-							return res.json({
+							return reply.send({
 								success: true,
 							});
 						else
-							return res.json({
+							return reply.send({
 								error: "An unexpected error has occured while trying to complete your request.",
 							});
 					}
 				} else
-					return res.json({
+					return reply.send({
 						error: "The provided target user id is invalid.",
 					});
 			} else
-				return res.json({
+				return reply.send({
 					error: "The provided user token is invalid, or the user does not exist.",
 				});
 		}

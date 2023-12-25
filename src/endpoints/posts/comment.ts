@@ -5,7 +5,7 @@ import * as database from "../../database/handler.js";
 import firebase from "firebase-admin";
 
 export default {
-	name: "/posts/comment",
+	url: "/posts/comment",
 	method: "POST",
 	schema: {
 		querystring: {
@@ -21,10 +21,14 @@ export default {
 				caption: { type: "string" },
 				image: { type: "string" },
 				user: {
-					user_token: { type: "string" },
+					type: "object",
+					properties: {
+						user_token: { type: "string" },
+					},
+					required: ["user_token"],
 				},
 			},
-			required: ["caption", "image", "user.user_token"],
+			required: ["caption"],
 		},
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {

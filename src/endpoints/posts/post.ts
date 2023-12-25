@@ -1,14 +1,35 @@
 import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
+import { FastifyReply, FastifyRequest } from "fastify";
+import * as database from "../../database/handler.js";
+import firebase from "firebase-admin";
 
 export default {
-	name: "posts/post",
+	url: "/posts/post",
 	method: "POST",
-	execute: async (req, res, database, firebase) => {
-		const data = req.body;
+	schema: {
+		body: {
+			type: "object",
+			properties: {
+				caption: { type: "string" },
+				image: { type: "string" },
+				plugins: { type: "object" },
+				user: {
+					type: "object",
+					properties: {
+						user_token: { type: "string" },
+					},
+					required: ["user_token"],
+				},
+			},
+			required: ["caption"],
+		},
+	},
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		const data = request.body;
 
-		if (!data["user"])
-			return res.json({
+		if (!data["user"]["user_token"])
+			return reply.status(401).send({
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
@@ -18,12 +39,6 @@ export default {
 			let user: User = await database.Users.get({ userid: token.uid });
 
 			if (user) {
-				if (!data["caption"] || data["caption"].error)
-					return res.json({
-						success: false,
-						error: "Sorry, a caption must be provided.",
-					});
-
 				await database.OnlyfoodzPosts.createPost(
 					user.userid,
 					data["caption"],
@@ -32,9 +47,9 @@ export default {
 					1
 				);
 
-				return res.json({ success: true });
+				return reply.send({ success: true });
 			} else {
-				return res.json({
+				return reply.send({
 					success: false,
 					error: "The user does not exist.",
 				});

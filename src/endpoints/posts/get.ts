@@ -1,18 +1,29 @@
+import { FastifyReply, FastifyRequest } from "fastify";
 import { OnlyfoodzPost } from "../../database/types.interface.js";
+import * as database from "../../database/handler.js";
 
 export default {
-	name: "posts/get",
+	url: "/posts/get",
 	method: "GET",
-	execute: async (req, res, database, firebase) => {
-		const postid = req.query.post_id;
+	schema: {
+		querystring: {
+			type: "object",
+			properties: {
+				post_id: { type: "string" },
+			},
+			required: ["post_id"],
+		},
+	},
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		const { post_id }: any = request.params;
 
-		if (postid || postid != "") {
+		if (post_id || post_id != "") {
 			const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
-				postid
+				post_id
 			);
-			return res.json(post);
+			return reply.send(post);
 		} else
-			return res.status(404).json({
+			return reply.status(404).send({
 				error: "You did not provide a valid Post ID.",
 			});
 	},
