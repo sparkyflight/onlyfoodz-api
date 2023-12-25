@@ -1,5 +1,5 @@
 // Packages
-import fs from "fs";
+import fs from "node:fs";
 import firebase from "firebase-admin";
 import serviceAccount from "./firebaseService.js";
 import path from "path";
