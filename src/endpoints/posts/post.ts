@@ -13,7 +13,7 @@ export default {
 			properties: {
 				caption: { type: "string" },
 				image: { type: "string" },
-				plugins: { type: "object" },
+				plugins: { type: "array" },
 				user: {
 					type: "object",
 					properties: {
