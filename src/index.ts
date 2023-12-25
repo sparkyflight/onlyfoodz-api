@@ -4,6 +4,9 @@ import firebase from "firebase-admin";
 import serviceAccount from "./firebaseService.js";
 import path from "path";
 import * as database from "./database/handler.js";
+import cors from "@fastify/cors";
+import swagger from "@fastify/swagger";
+import ui from "@fastify/swagger-ui";
 import "dotenv/config";
 import Fastify, { FastifyInstance, RouteOptions } from "fastify";
 
@@ -19,21 +22,53 @@ const app: FastifyInstance = Fastify({
 	logger: true,
 });
 
-app.setErrorHandler(async (error: any, reply: any) => {
-	console.log(error.stack);
+app.register(cors, {
+	origin: true,
+});
 
-	if (error.validation)
-		return reply.code(400).send({
-			statusCode: 400,
-			error: "Bad Request",
-			message: error.message,
-		});
-	else
-		return reply.code(500).send({
-			statusCode: 500,
-			error: "Internal Server Error",
-			message: error.message,
-		});
+app.register(swagger, {
+	swagger: {
+		info: {
+			title: "Sparkyflight",
+			description:
+				"Welcome to Sparkyflight, the future of Social Media designed for the neurodiverse community, with a primary focus on individuals on the Autism Spectrum. Sparkyflight aims to provide a safe and inclusive space for people to connect, learn, and communicate about their special interests. Our platform utilizes a machine learning algorithm to match users based on their unique passions, creating a supportive network for shared education.",
+			version: "2.0.0",
+		},
+		externalDocs: {
+			url: "https://docs.sparkyflight.xyz",
+			description:
+				"You can possibly find more information about our infrastructure/api here.",
+		},
+		host:
+			process.env.ENV === "production"
+				? "api.onlyfoodz.xyz"
+				: "localhost",
+		schemes: ["http"],
+		consumes: ["application/json"],
+		produces: ["application/json"],
+	},
+});
+
+app.register(ui, {
+	routePrefix: "/docs",
+	uiConfig: {
+		docExpansion: "full",
+		deepLinking: false,
+	},
+	uiHooks: {
+		onRequest: (request, reply, next) => {
+			next();
+		},
+		preHandler: (request, reply, next) => {
+			next();
+		},
+	},
+	staticCSP: true,
+	transformStaticCSP: (header) => header,
+	transformSpecification: (swaggerObject, request, reply) => {
+		return swaggerObject;
+	},
+	transformSpecificationClone: true,
 });
 
 // API Endpoints Map
@@ -55,7 +90,6 @@ const getFilesInDirectory = (dir: string) => {
 
 // API Endpoints
 let Routes: RouteOptions[] = [];
-
 const apiEndpointsFiles = getFilesInDirectory("./dist/endpoints").filter(
 	(file) => file.endsWith(".js")
 );
