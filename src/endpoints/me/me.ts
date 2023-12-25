@@ -1,21 +1,35 @@
+import firebase from "firebase-admin";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
+import { FastifyReply, FastifyRequest } from "fastify";
+import * as database from "../../database/handler.js";
 
 export default {
-	name: "users/@me",
 	method: "GET",
-	execute: async (req, res, database, firebase) => {
-		const token: DecodedIdToken = await firebase
-			.auth()
-			.verifyIdToken(req.query.token, true);
-		const user: User = await database.Users.get({ userid: token.uid });
+	url: "/users/@me",
+	schema: {
+		querystring: {
+			type: "object",
+			properties: {
+				token: { type: "string" },
+			},
+			required: ["token"],
+		},
+	},
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		const { token }: any = request.query;
 
-		if (user) return res.send(user);
+		const p: DecodedIdToken = await firebase
+			.auth()
+			.verifyIdToken(token, true);
+		const user: User = await database.Users.get({ userid: p.uid });
+
+		if (user) return reply.send(user);
 		else
-			return res.status(404).send({
+			return reply.status(404).send({
 				message:
 					"We couldn't fetch any information about you in our database",
-				token: req.query.token,
+				token: token,
 				error: true,
 			});
 	},

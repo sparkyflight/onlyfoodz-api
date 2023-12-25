@@ -1,32 +1,79 @@
 // Packages
-import express, { Express, Request, Response } from "express";
-import fs from "fs";
-import cookieParser from "cookie-parser";
+import fs from "node:fs";
 import firebase from "firebase-admin";
 import serviceAccount from "./firebaseService.js";
 import path from "path";
 import * as database from "./database/handler.js";
-import * as logger from "./logger.js";
-import cors from "cors";
+import cors from "@fastify/cors";
+import swagger from "@fastify/swagger";
+import ui from "@fastify/swagger-ui";
 import "dotenv/config";
-import { DecodedIdToken } from "firebase-admin/auth";
+import Fastify, { FastifyInstance, RouteOptions } from "fastify";
 
 // Initialize Firebase Admin
-const firebaseService = firebase.initializeApp({
+firebase.initializeApp({
 	credential: firebase.credential.cert(
 		serviceAccount as firebase.ServiceAccount
 	),
 });
 
 // Middleware
-const app: Express = express();
-app.use(cookieParser());
-app.use(cors());
-app.use(express.json());
+const app: FastifyInstance = Fastify({
+	logger: true,
+});
+
+app.register(cors, {
+	origin: true,
+});
+
+app.register(swagger, {
+	swagger: {
+		info: {
+			title: "Sparkyflight",
+			description:
+				"Welcome to Sparkyflight, the future of Social Media designed for the neurodiverse community, with a primary focus on individuals on the Autism Spectrum. Sparkyflight aims to provide a safe and inclusive space for people to connect, learn, and communicate about their special interests. Our platform utilizes a machine learning algorithm to match users based on their unique passions, creating a supportive network for shared education.",
+			version: "2.0.0",
+		},
+		externalDocs: {
+			url: "https://docs.sparkyflight.xyz",
+			description:
+				"You can possibly find more information about our infrastructure/api here.",
+		},
+		host:
+			process.env.ENV === "production"
+				? "api.onlyfoodz.xyz"
+				: "localhost",
+		schemes: ["http"],
+		consumes: ["application/json"],
+		produces: ["application/json"],
+	},
+});
+
+app.register(ui, {
+	routePrefix: "/docs",
+	uiConfig: {
+		docExpansion: "full",
+		deepLinking: false,
+	},
+	uiHooks: {
+		onRequest: (request, reply, next) => {
+			next();
+		},
+		preHandler: (request, reply, next) => {
+			next();
+		},
+	},
+	staticCSP: true,
+	transformStaticCSP: (header) => header,
+	transformSpecification: (swaggerObject, request, reply) => {
+		return swaggerObject;
+	},
+	transformSpecificationClone: true,
+});
 
 // API Endpoints Map
-const getFilesInDirectory = (dir) => {
-	let files = [];
+const getFilesInDirectory = (dir: string) => {
+	let files: string[] = [];
 	const filesInDir = fs.readdirSync(dir);
 
 	for (const file of filesInDir) {
@@ -41,7 +88,8 @@ const getFilesInDirectory = (dir) => {
 	return files;
 };
 
-const apiEndpoints = new Map();
+// API Endpoints
+let Routes: RouteOptions[] = [];
 const apiEndpointsFiles = getFilesInDirectory("./dist/endpoints").filter(
 	(file) => file.endsWith(".js")
 );
@@ -49,127 +97,17 @@ const apiEndpointsFiles = getFilesInDirectory("./dist/endpoints").filter(
 for (const file of apiEndpointsFiles) {
 	import(`../${file}`)
 		.then((module) => {
-			const endpoint = module.default;
-			apiEndpoints.set(
-				`${endpoint.name}:${endpoint.method.toLowerCase()}`,
-				endpoint
-			);
+			Routes.push(module.default);
+			app.route(module.default);
 		})
 		.catch((error) => {
 			console.error(`Error importing ${file}: ${error}`);
 		});
 }
 
-// API Endpoints
-app.all(`/api/:category/:endpoint`, async (req: Request, res: Response) => {
-	const endpoint = `${req.params.category}/${
-		req.params.endpoint
-	}:${req.method.toLowerCase()}`;
-	const data = apiEndpoints.get(endpoint);
-
-	if (data) {
-		if (data.method != req.method)
-			return res.status(405).json({
-				error: `Method "${data.method}" is not allowed for endpoint "${endpoint}"`,
-			});
-
-		try {
-			await data.execute(req, res, database, firebase);
-		} catch (error) {
-			res.status(500).json({
-				error: "Internal Server Error",
-				message: "An error occurred while processing your request.",
-			});
-
-			logger.error(`API (${endpoint})`, error);
-		}
-	} else
-		return res.status(404).json({
-			error: "This endpoint does not exist.",
-		});
-});
-
-const check = (query: any): boolean => {
-	if (!query || query === "") return true; // empty
-	else return false; // has content
-};
-
-app.all("/auth/signup", async (req: Request, res: Response) => {
-	if (check(req.query.tag))
-		return res.json({
-			error: "Missing query: tag",
-		});
-	if (check(req.query.uid))
-		return res.json({
-			error: "Missing query: uid",
-		});
-	if (check(req.query.token))
-		return res.json({
-			error: "Missing query: token",
-		});
-
-	const userInfo: DecodedIdToken = await firebaseService
-		.auth()
-		.verifyIdToken(req.query.token as string, true);
-
-	const dbUser = await database.Users.get({ userid: userInfo.uid });
-
-	if (dbUser)
-		return res.json({
-			error: true,
-			message: "[Database Error] => User already exists.",
-		});
-	else {
-		const dwp = await database.Users.get({
-			usertag: req.query.tag as string,
-		});
-
-		if (dwp)
-			return res.json({
-				error: true,
-				message:
-					"That username is already in use. Please choose a new one.",
-			});
-		else {
-			const i = await database.Users.createUser(
-				req.query.tag as string,
-				userInfo.uid,
-				req.query.tag as string,
-				"None",
-				"/logo.png"
-			);
-
-			if (i === true)
-				return res.json({ error: false, message: "User Created." });
-			else return res.json({ error: true, message: i });
-		}
-	}
-});
-
-app.all("/auth/callback", async (req: Request, res: Response) => {
-	if (check(req.query.token))
-		return res.json({
-			error: true,
-			message:
-				"There was no Authentication Token specified with this request.",
-		});
-
-	const userInfo: DecodedIdToken = await firebaseService
-		.auth()
-		.verifyIdToken(req.query.token as string, true);
-
-	const dbUser = await database.Users.get({ userid: userInfo.uid });
-
-	if (dbUser) return res.json({ token: req.query.token });
-	else
-		return res.json({
-			token: req.query.token,
-			error: true,
-			message: "User does not exist.",
-		});
-});
-
-// Start Server
-app.listen(process.env.PORT, async () => {
-	logger.success("Server", `Hosting web server on port ${process.env.PORT}.`);
-});
+setTimeout(() => {
+	// Start Server
+	app.listen({ port: Number(process.env.PORT) }, (err) => {
+		if (err) throw err;
+	});
+}, 4000);

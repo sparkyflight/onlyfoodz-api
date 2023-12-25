@@ -1,10 +1,23 @@
 import { User, OnlyfoodzPost } from "../../database/types.interface.js";
+import { FastifyReply, FastifyRequest } from "fastify";
+import * as database from "../../database/handler.js";
 
 export default {
-	name: "posts/list_user",
+	url: "/posts/list_user",
 	method: "GET",
-	execute: async (req, res, database, firebase) => {
-		const tag = req.query.tag;
+	schema: {
+		querystring: {
+			type: "object",
+			properties: {
+				tag: { type: "string" },
+			},
+			required: ["tag"],
+		},
+	},
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		const data: any = request.query;
+
+		const tag = data.tag;
 		let posts: OnlyfoodzPost[] | null;
 
 		if (tag || tag != "") {
@@ -13,19 +26,19 @@ export default {
 			if (user) {
 				posts = await database.OnlyfoodzPosts.getAllUserPosts(
 					user.userid,
-					1
+					String(1)
 				);
 				posts.reverse();
 
-				return res.json(posts);
+				return reply.send(posts);
 			} else
-				return res.status(404).send({
+				return reply.status(404).send({
 					message:
 						"We couldn't fetch any information about this user in our database",
 					error: true,
 				});
 		} else
-			return res.status(404).json({
+			return reply.status(404).send({
 				error: "There was no user tag specified with the request.",
 			});
 	},

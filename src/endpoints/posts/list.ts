@@ -1,14 +1,15 @@
 import { OnlyfoodzPost } from "../../database/types.interface.js";
+import * as database from "../../database/handler.js";
+import { FastifyReply, FastifyRequest } from "fastify";
 
 export default {
-	name: "posts/list",
+	url: "/posts/list",
 	method: "GET",
-	execute: async (req, res, database, firebase) => {
-		let posts: OnlyfoodzPost[] = await database.OnlyfoodzPosts.listAllPosts(
-			1
-		);
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		let posts: OnlyfoodzPost[] | object[] =
+			await database.OnlyfoodzPosts.listAllPosts(String(1));
 		posts.reverse();
 
-		return res.json(posts);
+		return reply.send(posts);
 	},
 };

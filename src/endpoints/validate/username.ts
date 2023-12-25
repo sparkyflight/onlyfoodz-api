@@ -1,19 +1,32 @@
 import { User } from "../../database/types.interface.js";
+import { FastifyReply, FastifyRequest } from "fastify";
+import * as database from "../../database/handler.js";
 
 export default {
-	name: "validate/username",
+	url: "/validate/username",
 	method: "GET",
-	execute: async (req, res, database, firebase) => {
-		const tag = req.query.tag;
+	schema: {
+		querystring: {
+			type: "object",
+			properties: {
+				tag: { type: "string" },
+			},
+			required: ["tag"],
+		},
+	},
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		const data: any = request.query;
+
+		const tag = data.tag;
 		let user: User = await database.Users.get({ usertag: tag });
 
 		if (user)
-			return res.json({
+			return reply.send({
 				exists: true,
 			});
 		// it do be existing
 		else
-			return res.json({
+			return reply.send({
 				exists: false,
 			}); // it do not be existing
 	},
