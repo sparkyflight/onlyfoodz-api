@@ -1,8 +1,7 @@
-import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
-import firebase from "firebase-admin";
+import { getAuth } from "../../auth.js";
 
 export default {
 	url: "/posts/post",
@@ -33,10 +32,7 @@ export default {
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			const token: DecodedIdToken = await firebase
-				.auth()
-				.verifyIdToken(data["user"]["user_token"], true);
-			let user: User = await database.Users.get({ userid: token.uid });
+			const user: User | null = await getAuth(data["user"]["user_token"]);
 
 			if (user) {
 				await database.OnlyfoodzPosts.createPost(
