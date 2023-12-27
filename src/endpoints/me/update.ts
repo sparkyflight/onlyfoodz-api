@@ -1,8 +1,7 @@
-import { DecodedIdToken } from "firebase-admin/auth";
 import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import firebase from "firebase-admin";
 import * as database from "../../database/handler.js";
+import { getAuth } from "../../auth.js";
 
 export default {
 	url: "/users/@me",
@@ -22,10 +21,7 @@ export default {
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		let data = request.body;
 
-		const token: DecodedIdToken = await firebase
-			.auth()
-			.verifyIdToken(data["token"], true);
-		const user: User = await database.Users.get({ userid: token.uid });
+		const user: User | null = await getAuth(data["token"]);
 
 		if (user) {
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;

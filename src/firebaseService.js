@@ -1,0 +1,16 @@
+export default {
+	type: "service_account",
+	project_id: "sparkyflight-e3694",
+	private_key_id: "6b96c6e9cb484e6d3971df4211f25deb50f26473",
+	private_key:
+		"-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCg4pntgrCIkUKS\nZW3/wNZOPOAyZSkthI9lrp0okZso4tF6qP+ntJHEjPD7ODrfRtP6MqWzal7f9IdV\npSAN+o5OZ24QNKlA/0asX5mb8J3HLF/ecvHNUMTITWSGaOxACVzskSIRaFSmP8I9\ngYCVwgdRRVourGnkximLqWipu4Jr+IBhdHfx8Fbt5BpZpSCngJOGLg0LprnYMN/Q\n7Wgm7FTVE6hidMbGcEa9Rz7CsBFePKqRWYwPpoVI+PGmDvHa9QRpQMjnBcoPuyE+\nRCfucrhoFX4VPiSY6XeeN0TP/cTLziuGEtnpojghHdvejlLMasQmwapSYRVlvkQl\nUsYmM+qlAgMBAAECggEAAtBpNYX/Wn7X9ZbqmU+hMAB77MW84PvxmitiD69EUdnD\nJOxx1Fgh40M9L9e9nTba8a8TG5P1EYvFwOdrgR3B1s3pAfA53wDYFp8cIRB7YgbS\nV8zA6ADNVbJCMOEC840hCqObP0deO641J+hCUdxGo9LyZItFgD1AcB3yzmKQ7HHc\nNPSH6tSoemUehlQ6s+/dpCDeSEYGuKgLm7Myy4BMirapsPVT+op0GYgEd8dKoFl8\ncXgUgzY/PL4KL+c2rjlTfXMS84SZQAi9IGKXfZ/zdrfCsPwW/42NDsqYyFKdGF01\n9FRqSIs3EB7ItPbiUKPbz5oqzHNln6FEk802giNfHQKBgQDSd3LQs/ok28NR5RyY\nju1JPuaG7L2ViNx+klCNCa3vEgLMEQ3zwCx5YsIjVktw0RBCOTwQg4Lt3LT0rt/o\nPGmci450L7B5YAwfv2ae80vuq73RuFpPAUl25CrtVdl7hfApCgv6Y+LvvQecXYmY\npJbkzJ66+DIUEd2Y1ba1U0mAowKBgQDDsR5ETfyaWYgfv3mi7onbI/SUh81zgr7Y\nQchK/ZXt/B2l/JwjOdRyBNAkoAitb3JabxMjt5dlB3xt+oS8n/UZre3LKtDwEgWL\nQb0ITMnK2hGInS5HRJNvV8ovXy4q+w+XGGruyrdnzeaSCjqPPEKJ8M7ziCTdXfOH\n3KVzTer0FwKBgFUp3nzTBvpZLtz5n6uf0iacXD3mmARlQAu7evrHGumtWRJoKEQk\n1Bo+Ox5/ccFx52lUrZhlDtrfPx3vkUzw/S9KTVd4YKmMkvtZwNW6z1QBjKrLNUfY\n1nhUdYZaAcn49ag1l4k3WAH4dJbyRpZMq35jyisP+Xujiw6oE+mljQ2PAoGAWbUp\nFdDWWn9uindBMHK/WWj7Jte2VBx8ljBZvB7Riz5G7R+HCBLrk7UnIZMHR1JOjqxa\njsYLrfGnldcA4GNHfZUg7EDddSAd0H+7Q0HIQ6iB3ymG3H7QQ3twIRU12dgrhm1Y\nH81oFDrsVsg/ngfWzNtKU5N2qs/14rNAWUI/0dMCgYEAxCCGDEiOgODG+VbOqrVr\nWtZRYFLeacMSN4C9guJw9QOvJhPFjDnpbRd5zF1BwK5kYxmYldcEuvVXz2z4NXJs\nqZmZ0bBqkJZ+jZJwoeoBosLEtPm020SvWiXKFegLnx27aAfYuehUmqCaO6gJLcGc\nOTGfzJfAnNgYqk81DMq3cn8=\n-----END PRIVATE KEY-----\n",
+	client_email:
+		"firebase-adminsdk-hddk9@sparkyflight-e3694.iam.gserviceaccount.com",
+	client_id: "104858348881150023426",
+	auth_uri: "https://accounts.google.com/o/oauth2/auth",
+	token_uri: "https://oauth2.googleapis.com/token",
+	auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+	client_x509_cert_url:
+		"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-hddk9%40sparkyflight-e3694.iam.gserviceaccount.com",
+	universe_domain: "googleapis.com",
+};

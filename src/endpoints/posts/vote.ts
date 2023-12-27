@@ -1,8 +1,7 @@
-import { DecodedIdToken } from "firebase-admin/auth";
 import { OnlyfoodzPost, User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
-import firebase from "firebase-admin";
+import { getAuth } from "../../auth.js";
 
 export default {
 	url: "/posts/vote",
@@ -20,10 +19,7 @@ export default {
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const { token, PostID, type }: any = request.query;
-		const p: DecodedIdToken = await firebase
-			.auth()
-			.verifyIdToken(token, true);
-		const user: User = await database.Users.get({ userid: p.uid });
+		const user: User | null = await getAuth(token);
 
 		const post: { user: User; post: OnlyfoodzPost } =
 			await database.OnlyfoodzPosts.get(PostID);

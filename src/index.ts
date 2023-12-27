@@ -4,6 +4,7 @@ import firebase from "firebase-admin";
 import serviceAccount from "./firebaseService.js";
 import path from "path";
 import * as database from "./database/handler.js";
+import * as auth from "./auth.js";
 import cors from "@fastify/cors";
 import swagger from "@fastify/swagger";
 import ui from "@fastify/swagger-ui";
