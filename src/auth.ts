@@ -7,7 +7,7 @@ const getAuth = async (token: string): Promise<User | null> => {
 	const firebaseAuth: DecodedIdToken = await firebase
 		.auth()
 		.verifyIdToken(token, true);
-	const apiToken: Token | Error | null = await database.Tokens.get(
+	const apiToken: Token | null = await database.Tokens.get(
 		token
 	).then((i) => {
 		if (i) return i;
