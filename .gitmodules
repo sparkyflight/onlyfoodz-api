@@ -1,0 +1,4 @@
+[submodule "src/database"]
+	path = src/database
+	url = https://github.com/sparkyflight/database
+    branch = development
