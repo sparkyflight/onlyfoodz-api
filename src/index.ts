@@ -110,5 +110,6 @@ setTimeout(() => {
 	// Start Server
 	app.listen({ port: Number(process.env.PORT) }, (err) => {
 		if (err) throw err;
+		app.swagger();
 	});
 }, 4000);
