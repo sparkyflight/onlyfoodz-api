@@ -13,26 +13,25 @@ export default {
 				caption: { type: "string" },
 				image: { type: "string" },
 				plugins: { type: "array" },
-				user: {
-					type: "object",
-					properties: {
-						user_token: { type: "string" },
-					},
-					required: ["user_token"],
-				},
 			},
 			required: ["caption"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const data = request.body;
+		const Authorization: any = request.headers.authorization;
 
-		if (!data["user"]["user_token"])
+		if (!Authorization)
 			return reply.status(401).send({
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			const user: User | null = await getAuth(data["user"]["user_token"]);
+			const user: User | null = await getAuth(Authorization);
 
 			if (user) {
 				await database.OnlyfoodzPosts.createPost(

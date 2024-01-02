@@ -19,23 +19,21 @@ export default {
 			properties: {
 				caption: { type: "string" },
 				image: { type: "string" },
-				user: {
-					type: "object",
-					properties: {
-						user_token: { type: "string" },
-					},
-					required: ["user_token"],
-				},
 			},
 			required: ["caption"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const data = request.body;
 		const { id }: any = request.query;
+		const Authorization: any = request.headers.authorization;
 
-		const user: User | null = await getAuth(data["user"].user_token);
-
+		const user: User | null = await getAuth(Authorization);
 		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(id);
 
 		if (user) {

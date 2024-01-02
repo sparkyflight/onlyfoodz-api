@@ -6,24 +6,26 @@ export default {
 	method: "GET",
 	url: "/users/@me",
 	schema: {
-		querystring: {
-			type: "object",
-			properties: {
-				token: { type: "string" },
+		summary: "Get @me information",
+		description:
+			"Returns all information about an user based on the token.",
+		tags: ["user"],
+		security: [
+			{
+				apiKey: [],
 			},
-			required: ["token"],
-		},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
-		const { token }: any = request.query;
-		const user: User | null = await getAuth(token);
+		const Authorization: any = request.headers.authorization;
+		const user: User | null = await getAuth(Authorization);
 
 		if (user) return reply.send(user);
 		else
 			return reply.status(404).send({
 				message:
 					"We couldn't fetch any information about you in our database",
-				token: token,
+				token: Authorization,
 				error: true,
 			});
 	},

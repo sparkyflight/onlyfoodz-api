@@ -10,17 +10,21 @@ export default {
 		querystring: {
 			type: "object",
 			properties: {
-				token: { type: "string" },
 				target: { type: "string" },
 				type: { type: "string" },
 			},
-			required: ["token", "target", "type"],
+			required: ["target", "type"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const data: any = request.query;
-
-		const user: User | null = await getAuth(data.token);
+		const Authorization: any = request.headers.authorization;
+		const user: User | null = await getAuth(Authorization);
 		const target: User = await database.Users.get({
 			userid: data.target,
 		});

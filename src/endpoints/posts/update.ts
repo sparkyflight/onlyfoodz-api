@@ -14,21 +14,20 @@ export default {
 				image: { type: "string" },
 				plugins: { type: "object" },
 				post_id: { type: "string" },
-				user: {
-					type: "object",
-					properties: {
-						user_token: { type: "string" },
-					},
-					required: ["user_token"],
-				},
 			},
 			required: ["caption", "post_id"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const data = request.body;
+		const Authorization: any = request.headers.authorization;
 
-		if (!data["user"])
+		if (!Authorization)
 			return reply.send({
 				error: "Oops, it seems that you are not logged in.",
 			});
@@ -37,7 +36,7 @@ export default {
 				error: "Oops, it seems that you did not pass the Post ID.",
 			});
 		else {
-			const user: User | null = await getAuth(data["user"].user_token);
+			const user: User | null = await getAuth(Authorization);
 
 			if (user) {
 				const origPost: OnlyfoodzPost =

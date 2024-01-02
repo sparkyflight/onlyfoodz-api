@@ -17,17 +17,19 @@ export default {
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		try {
-			const { token }: any = request.query;
+			const Authorization: any = request.headers.authorization;
 
-			const userInfo = await firebase.auth().verifyIdToken(token, true);
+			const userInfo = await firebase
+				.auth()
+				.verifyIdToken(Authorization, true);
 			const dbUser = await database.Users.get({
 				userid: userInfo.uid,
 			});
 
-			if (dbUser) return reply.send({ token: token });
+			if (dbUser) return reply.send({ token: Authorization });
 			else
 				return reply.send({
-					token: token,
+					token: Authorization,
 					error: true,
 					message: "User does not exist.",
 				});

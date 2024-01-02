@@ -9,7 +9,7 @@ import cors from "@fastify/cors";
 import swagger from "@fastify/swagger";
 import ui from "@fastify/swagger-ui";
 import "dotenv/config";
-import Fastify, { FastifyInstance, RouteOptions } from "fastify";
+import Fastify, { FastifyInstance } from "fastify";
 
 // Initialize Firebase Admin
 firebase.initializeApp({
@@ -24,7 +24,21 @@ const app: FastifyInstance = Fastify({
 });
 
 app.register(cors, {
-	origin: true,
+	origin: "*",
+	allowedHeaders: [
+		"secret",
+		"userid",
+		"Authorization",
+		"Authorization",
+		"Content-Type",
+		"Content-Disposition",
+		"Content-Length",
+	],
+	methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+	credentials: true,
+	optionsSuccessStatus: 200,
+	preflight: false,
+	strictPreflight: false,
 });
 
 app.register(swagger, {
@@ -33,28 +47,35 @@ app.register(swagger, {
 			title: "Sparkyflight",
 			description:
 				"Welcome to Sparkyflight, the future of Social Media designed for the neurodiverse community, with a primary focus on individuals on the Autism Spectrum. Sparkyflight aims to provide a safe and inclusive space for people to connect, learn, and communicate about their special interests. Our platform utilizes a machine learning algorithm to match users based on their unique passions, creating a supportive network for shared education.",
-			version: "2.0.0",
-		},
-		externalDocs: {
-			url: "https://docs.sparkyflight.xyz",
-			description:
-				"You can possibly find more information about our infrastructure/api here.",
+			version: "2.0.1",
 		},
 		host:
 			process.env.ENV === "production"
 				? "api.onlyfoodz.xyz"
-				: "localhost",
+				: `localhost:${process.env.PORT}`,
 		schemes: ["http"],
 		consumes: ["application/json"],
 		produces: ["application/json"],
+		tags: [
+			{ name: "user", description: "User related end-points" },
+			{ name: "code", description: "Code related end-points" },
+		],
+		securityDefinitions: {
+			apiKey: {
+				type: "apiKey",
+				name: "Authorization",
+				in: "header",
+			},
+		},
 	},
+	hideUntagged: false,
 });
 
 app.register(ui, {
 	routePrefix: "/docs",
 	uiConfig: {
 		docExpansion: "full",
-		deepLinking: false,
+		deepLinking: true,
 	},
 	uiHooks: {
 		onRequest: (request, reply, next) => {
@@ -70,6 +91,12 @@ app.register(ui, {
 		return swaggerObject;
 	},
 	transformSpecificationClone: true,
+});
+
+app.addHook("preHandler", (req, res, done) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "*");
+	done();
 });
 
 // API Endpoints Map
@@ -90,7 +117,6 @@ const getFilesInDirectory = (dir: string) => {
 };
 
 // API Endpoints
-let Routes: RouteOptions[] = [];
 const apiEndpointsFiles = getFilesInDirectory("./dist/endpoints").filter(
 	(file) => file.endsWith(".js")
 );
@@ -98,7 +124,6 @@ const apiEndpointsFiles = getFilesInDirectory("./dist/endpoints").filter(
 for (const file of apiEndpointsFiles) {
 	import(`../${file}`)
 		.then((module) => {
-			Routes.push(module.default);
 			app.route(module.default);
 		})
 		.catch((error) => {
@@ -107,9 +132,12 @@ for (const file of apiEndpointsFiles) {
 }
 
 setTimeout(() => {
+	app.ready(() => {
+		app.swagger();
+	});
+
 	// Start Server
 	app.listen({ port: Number(process.env.PORT) }, (err) => {
 		if (err) throw err;
-		app.swagger();
 	});
-}, 4000);
+}, 5000);
