@@ -37,7 +37,7 @@ app.register(cors, {
 	methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 	credentials: true,
 	optionsSuccessStatus: 200,
-	preflight: false,
+	preflight: true,
 	strictPreflight: false,
 });
 
