@@ -12,10 +12,14 @@ export default {
 			properties: {
 				tag: { type: "string" },
 				uid: { type: "string" },
-				token: { type: "string" },
 			},
-			required: ["tag", "uid", "token"],
+			required: ["tag", "uid"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		try {

@@ -7,13 +7,11 @@ export default {
 	method: ["GET", "POST", "PATCH", "HEAD", "OPTIONS", "DELETE"],
 	url: "/auth/callback",
 	schema: {
-		querystring: {
-			type: "object",
-			properties: {
-				token: { type: "string" },
+		security: [
+			{
+				apiKey: [],
 			},
-			required: ["token"],
-		},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		try {
