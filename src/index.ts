@@ -5,9 +5,11 @@ import serviceAccount from "./firebaseService.js";
 import path from "path";
 import * as database from "./database/handler.js";
 import * as auth from "./auth.js";
+import * as perms from "./perms.js";
 import cors from "@fastify/cors";
 import swagger from "@fastify/swagger";
 import ui from "@fastify/swagger-ui";
+import ratelimit from "@fastify/rate-limit";
 import "dotenv/config";
 import Fastify, { FastifyInstance } from "fastify";
 
@@ -93,9 +95,18 @@ app.register(ui, {
 	transformSpecificationClone: true,
 });
 
+app.register(ratelimit, {
+	global: true,
+	max: 50,
+	timeWindow: 1000,
+});
+
 app.addHook("preHandler", (req, res, done) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "*");
+	res.header("Access-Control-Allow-Methods", "*");
+	res.header("Access-Control-Allow-Credentials", "true");
+
 	done();
 });
 
