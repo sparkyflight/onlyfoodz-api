@@ -23,9 +23,13 @@ const getAuth = async (token: string): Promise<User | null> => {
 		};
 
 		if (firebaseAuth) return getUser(firebaseAuth.uid) || null;
-		else if (apiToken && "creatorid" in apiToken)
-			return getUser(apiToken.creatorid) || null;
-		else return null;
+		else if (apiToken && "creatorid" in apiToken) {
+			if (apiToken.active) return getUser(apiToken.creatorid) || null;
+			else
+				throw new Error(
+					"Unauthorized. This token is not accepting requests, at this time. To continue allowing requests, re-enable the token on our Developer Portal."
+				);
+		} else return null;
 	}
 };
 
