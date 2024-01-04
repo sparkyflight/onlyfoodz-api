@@ -24,7 +24,7 @@ export default {
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const data: any = request.query;
 		const Authorization: any = request.headers.authorization;
-		const user: User | null = await getAuth(Authorization);
+		const user: User | null = await getAuth(Authorization, "users.follow");
 		const target: User = await database.Users.get({
 			userid: data.target,
 		});

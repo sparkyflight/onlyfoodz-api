@@ -31,7 +31,10 @@ export default {
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			const user: User | null = await getAuth(Authorization);
+			const user: User | null = await getAuth(
+				Authorization,
+				"posts.write"
+			);
 
 			if (user) {
 				await database.OnlyfoodzPosts.createPost(

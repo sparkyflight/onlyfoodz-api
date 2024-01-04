@@ -24,7 +24,7 @@ export default {
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const { PostID, type }: any = request.query;
 		const Authorization: any = request.headers.authorization;
-		const user: User | null = await getAuth(Authorization);
+		const user: User | null = await getAuth(Authorization, "posts.vote");
 
 		const post: { user: User; post: OnlyfoodzPost } =
 			await database.OnlyfoodzPosts.get(PostID);

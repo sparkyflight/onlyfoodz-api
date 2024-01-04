@@ -18,7 +18,7 @@ export default {
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const Authorization: any = request.headers.authorization;
-		const user: User | null = await getAuth(Authorization);
+		const user: User | null = await getAuth(Authorization, "profile.read");
 
 		if (user) return reply.send(user);
 		else

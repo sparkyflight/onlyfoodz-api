@@ -36,7 +36,10 @@ export default {
 				error: "Oops, it seems that you did not pass the Post ID.",
 			});
 		else {
-			const user: User | null = await getAuth(Authorization);
+			const user: User | null = await getAuth(
+				Authorization,
+				"posts.update"
+			);
 
 			if (user) {
 				const origPost: OnlyfoodzPost =
