@@ -1,12 +1,15 @@
-import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 import firebase from "firebase-admin";
-import * as logger from "../../logger.js";
+import { FastifyReply, FastifyRequest } from "fastify";
 
 export default {
-	method: ["GET", "POST", "PATCH", "HEAD", "OPTIONS", "DELETE"],
-	url: "/auth/callback",
+	method: "GET",
+	url: "/users/get_apps",
 	schema: {
+		summary: "Get list of Developer Applications",
+		description:
+			"Returns all information about your Developer Applications.",
+		tags: ["@me"],
 		security: [
 			{
 				apiKey: [],
@@ -24,8 +27,20 @@ export default {
 				userid: userInfo.uid,
 			});
 
-			if (dbUser) return reply.send({ token: Authorization });
-			else
+			if (dbUser) {
+				const apps = await database.Applications.getAllApplications(
+					dbUser?.userid
+				);
+
+				if (apps) return reply.send(apps);
+				else
+					return reply.status(404).send({
+						message:
+							"We couldn't fetch any Developer Applications under your profile. Please create one, and try again!",
+						token: Authorization,
+						error: true,
+					});
+			} else
 				return reply.send({
 					token: Authorization,
 					error: true,
@@ -34,10 +49,8 @@ export default {
 		} catch (error) {
 			reply.status(500).send({
 				error: "Internal Server Error",
-				message: "An error occurred while processing your request.",
+				message: error.errorInfo.message,
 			});
-
-			logger.error("Error during authentication callback", error);
 		}
 	},
 };

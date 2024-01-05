@@ -7,6 +7,10 @@ export default {
 	url: "/posts/comment",
 	method: "POST",
 	schema: {
+		summary: "Add a comment to a post",
+		description:
+			"Returns boolean value indicating whether the comment was successful or not.",
+		tags: ["posts"],
 		querystring: {
 			type: "object",
 			properties: {
@@ -19,23 +23,21 @@ export default {
 			properties: {
 				caption: { type: "string" },
 				image: { type: "string" },
-				user: {
-					type: "object",
-					properties: {
-						user_token: { type: "string" },
-					},
-					required: ["user_token"],
-				},
 			},
 			required: ["caption"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const data = request.body;
 		const { id }: any = request.query;
+		const Authorization: any = request.headers.authorization;
 
-		const user: User | null = await getAuth(data["user"].user_token);
-
+		const user: User | null = await getAuth(Authorization, "posts.comment");
 		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(id);
 
 		if (user) {

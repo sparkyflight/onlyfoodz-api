@@ -7,21 +7,30 @@ export default {
 	url: "/users/@me",
 	method: "PATCH",
 	schema: {
+		summary: "Update @me information",
+		description:
+			"Returns boolean value indicating whether the update was successful or not.",
+		tags: ["@me"],
 		body: {
 			type: "object",
 			properties: {
 				name: { type: "string" },
 				avatar: { type: "string" },
 				bio: { type: "string" },
-				token: { type: "string" },
 			},
-			required: ["name", "avatar", "token"],
+			required: ["name", "avatar"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		let data = request.body;
+		const Authorization: any = request.headers.authorization;
 
-		const user: User | null = await getAuth(data["token"]);
+		const user: User | null = await getAuth(Authorization, "profile.write");
 
 		if (user) {
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;
@@ -39,7 +48,7 @@ export default {
 			reply.status(404).send({
 				message:
 					"We couldn't fetch any information about you in our database",
-				token: data["token"],
+				token: Authorization,
 				error: true,
 			});
 	},

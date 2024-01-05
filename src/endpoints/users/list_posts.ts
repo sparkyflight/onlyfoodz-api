@@ -6,6 +6,9 @@ export default {
 	url: "/posts/list_user",
 	method: "GET",
 	schema: {
+		summary: "Get user posts",
+		description: "Gets a user's posts.",
+		tags: ["users"],
 		querystring: {
 			type: "object",
 			properties: {

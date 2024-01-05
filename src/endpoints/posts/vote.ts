@@ -7,19 +7,27 @@ export default {
 	url: "/posts/vote",
 	method: "PUT",
 	schema: {
+		summary: "Vote on post",
+		description: "Votes on a post.",
+		tags: ["posts"],
 		querystring: {
 			type: "object",
 			properties: {
-				token: { type: "string" },
 				PostID: { type: "string" },
 				type: { type: "string" },
 			},
-			required: ["token", "PostID", "type"],
+			required: ["PostID", "type"],
 		},
+		security: [
+			{
+				apiKey: [],
+			},
+		],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
-		const { token, PostID, type }: any = request.query;
-		const user: User | null = await getAuth(token);
+		const { PostID, type }: any = request.query;
+		const Authorization: any = request.headers.authorization;
+		const user: User | null = await getAuth(Authorization, "posts.vote");
 
 		const post: { user: User; post: OnlyfoodzPost } =
 			await database.OnlyfoodzPosts.get(PostID);

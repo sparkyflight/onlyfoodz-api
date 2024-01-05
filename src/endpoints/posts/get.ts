@@ -6,6 +6,9 @@ export default {
 	url: "/posts/get",
 	method: "GET",
 	schema: {
+		summary: "Get post",
+		description: "Returns a post.",
+		tags: ["posts"],
 		querystring: {
 			type: "object",
 			properties: {

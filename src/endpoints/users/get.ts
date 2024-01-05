@@ -6,6 +6,9 @@ export default {
 	url: "/users/get",
 	method: "GET",
 	schema: {
+		summary: "Get user",
+		description: "Gets a user.",
+		tags: ["users"],
 		querystring: {
 			type: "object",
 			properties: {
