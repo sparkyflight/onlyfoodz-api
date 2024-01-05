@@ -7,6 +7,9 @@ export default {
 	url: "/users/follow",
 	method: "PUT",
 	schema: {
+		summary: "Follow user",
+		description: "Follows a user.",
+		tags: ["users"],
 		querystring: {
 			type: "object",
 			properties: {

@@ -7,6 +7,10 @@ export default {
 	url: "/posts/comment",
 	method: "POST",
 	schema: {
+		summary: "Add a comment to a post",
+		description:
+			"Returns boolean value indicating whether the comment was successful or not.",
+		tags: ["posts"],
 		querystring: {
 			type: "object",
 			properties: {

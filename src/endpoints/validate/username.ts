@@ -6,6 +6,9 @@ export default {
 	url: "/validate/username",
 	method: "GET",
 	schema: {
+		summary: "Validate username",
+		description: "Validates a username.",
+		tags: ["validate"],
 		querystring: {
 			type: "object",
 			properties: {

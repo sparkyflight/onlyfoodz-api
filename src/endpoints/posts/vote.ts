@@ -7,6 +7,9 @@ export default {
 	url: "/posts/vote",
 	method: "PUT",
 	schema: {
+		summary: "Vote on post",
+		description: "Votes on a post.",
+		tags: ["posts"],
 		querystring: {
 			type: "object",
 			properties: {

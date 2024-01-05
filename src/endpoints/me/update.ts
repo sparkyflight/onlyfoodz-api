@@ -7,6 +7,10 @@ export default {
 	url: "/users/@me",
 	method: "PATCH",
 	schema: {
+		summary: "Update @me information",
+		description:
+			"Returns boolean value indicating whether the update was successful or not.",
+		tags: ["@me"],
 		body: {
 			type: "object",
 			properties: {

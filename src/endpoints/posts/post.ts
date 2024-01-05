@@ -7,6 +7,9 @@ export default {
 	url: "/posts/post",
 	method: "POST",
 	schema: {
+		summary: "Create post",
+		description: "Creates a post.",
+		tags: ["posts"],
 		body: {
 			type: "object",
 			properties: {

@@ -9,7 +9,7 @@ export default {
 		summary: "Get @me information",
 		description:
 			"Returns all information about an user based on the token.",
-		tags: ["user"],
+		tags: ["@me"],
 		security: [
 			{
 				apiKey: [],

@@ -7,6 +7,9 @@ export default {
 	url: "/posts/update",
 	method: "PATCH",
 	schema: {
+		summary: "Update post",
+		description: "Updates a post.",
+		tags: ["posts"],
 		body: {
 			type: "object",
 			properties: {

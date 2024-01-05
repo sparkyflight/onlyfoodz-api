@@ -11,7 +11,11 @@ import swagger from "@fastify/swagger";
 import ui from "@fastify/swagger-ui";
 import ratelimit from "@fastify/rate-limit";
 import "dotenv/config";
-import Fastify, { FastifyInstance } from "fastify";
+import Fastify, {
+	FastifyInstance,
+	FastifyReply,
+	FastifyRequest,
+} from "fastify";
 
 // Initialize Firebase Admin
 firebase.initializeApp({
@@ -24,6 +28,7 @@ firebase.initializeApp({
 const app: FastifyInstance = Fastify({
 	logger: true,
 });
+let Routes = [];
 
 app.register(cors, {
 	origin: "*",
@@ -53,14 +58,30 @@ app.register(swagger, {
 		},
 		host:
 			process.env.ENV === "production"
-				? "api.onlyfoodz.xyz"
+				? "api.sparkyflight.xyz"
 				: `localhost:${process.env.PORT}`,
 		schemes: ["http"],
 		consumes: ["application/json"],
 		produces: ["application/json"],
 		tags: [
-			{ name: "user", description: "User related end-points" },
-			{ name: "code", description: "Code related end-points" },
+			{
+				name: "users",
+				description: "Endpoints for accessing our User database.",
+			},
+			{
+				name: "posts",
+				description: "Endpoints for accessing our Posts database.",
+			},
+			{
+				name: "@me",
+				description:
+					"Endpoints for accessing your own personal information.",
+			},
+			{
+				name: "validate",
+				description:
+					"Endpoints for validating user data before continuing API Use.",
+			},
 		],
 		securityDefinitions: {
 			apiKey: {
@@ -110,6 +131,15 @@ app.addHook("preHandler", (req, res, done) => {
 	done();
 });
 
+// Endpoint for getting Routes
+app.route({
+	method: "GET",
+	url: "/routes",
+	handler: async (request: FastifyRequest, reply: FastifyReply) => {
+		return reply.send(Routes);
+	},
+});
+
 // API Endpoints Map
 const getFilesInDirectory = (dir: string) => {
 	let files: string[] = [];
@@ -136,6 +166,7 @@ for (const file of apiEndpointsFiles) {
 	import(`../${file}`)
 		.then((module) => {
 			app.route(module.default);
+			Routes.push(module.default);
 		})
 		.catch((error) => {
 			console.error(`Error importing ${file}: ${error}`);

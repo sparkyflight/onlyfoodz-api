@@ -1,12 +1,12 @@
 import * as database from "./database/handler.js";
 import firebase from "firebase-admin";
-import { Token, User } from "./database/types.interface.js";
+import { Application, User } from "./database/types.interface.js";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { hasPerm } from "./perms.js";
 
 const getAuth = async (token: string, perm: string): Promise<User | null> => {
 	let firebaseAuth: DecodedIdToken;
-	let apiToken: Token | null;
+	let apiToken: Application | null;
 
 	if (token === "" || token === null || token === undefined)
 		throw new Error(
@@ -16,7 +16,7 @@ const getAuth = async (token: string, perm: string): Promise<User | null> => {
 		try {
 			firebaseAuth = await firebase.auth().verifyIdToken(token, true);
 		} catch (error) {
-			apiToken = await database.Tokens.get(token);
+			apiToken = await database.Applications.get(token);
 		}
 
 		const getUser = async (user_id: string): Promise<User | null> => {
