@@ -1,10 +1,10 @@
-import { User, Post } from "../../database/types.interface.js";
+import { User, OnlyfoodzPost } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
 
 export default {
-	url: "/sparkyflight/posts/comment",
+	url: "/onlyfoodz/posts/comment",
 	method: "POST",
 	schema: {
 		summary: "Add a comment to a post",
@@ -38,11 +38,11 @@ export default {
 		const Authorization: any = request.headers.authorization;
 
 		const user: User | null = await getAuth(Authorization, "posts.comment");
-		const post: Post = await database.OnlyfoodzPosts.get(id);
+		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(id);
 
 		if (user) {
 			if (post) {
-				const update = await database.Posts.comment(
+				const update = await database.OnlyfoodzPosts.comment(
 					post,
 					user,
 					data["caption"],

@@ -1,10 +1,10 @@
-import { Post, User } from "../../database/types.interface.js";
+import { OnlyfoodzPost, User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
 
 export default {
-	url: "/sparkyflight/posts/update",
+	url: "/onlyfoodz/posts/update",
 	method: "PATCH",
 	schema: {
 		summary: "Update post",
@@ -45,9 +45,8 @@ export default {
 			);
 
 			if (user) {
-				const origPost: Post = await database.Posts.get(
-					data["post_id"]
-				);
+				const origPost: OnlyfoodzPost =
+					await database.OnlyfoodzPosts.get(data["post_id"]);
 
 				if (origPost) {
 					if (origPost.userid === user.userid) {
@@ -57,11 +56,14 @@ export default {
 								error: "Sorry, a caption must be provided.",
 							});
 
-						await database.Posts.updatePost(data["post_id"], {
-							Caption: data["caption"],
-							Image: data["image"] || null,
-							Plugins: data["plugins"] || [],
-						});
+						await database.OnlyfoodzPosts.updatePost(
+							data["post_id"],
+							{
+								Caption: data["caption"],
+								Image: data["image"] || null,
+								Plugins: data["plugins"] || [],
+							}
+						);
 
 						return reply.send({ success: true });
 					} else

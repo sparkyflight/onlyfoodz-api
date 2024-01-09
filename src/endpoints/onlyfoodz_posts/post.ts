@@ -4,7 +4,7 @@ import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
 
 export default {
-	url: "/sparkyflight/posts/post",
+	url: "/onlyfoodz/posts/post",
 	method: "POST",
 	schema: {
 		summary: "Create post",
@@ -40,7 +40,7 @@ export default {
 			);
 
 			if (user) {
-				await database.Posts.createPost(
+				await database.OnlyfoodzPosts.createPost(
 					user.userid,
 					data["caption"],
 					data["image"],

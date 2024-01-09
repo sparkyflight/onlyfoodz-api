@@ -1,10 +1,10 @@
-import { Post, User } from "../../database/types.interface.js";
+import { OnlyfoodzPost, User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
 
 export default {
-	url: "/sparkyflight/posts/vote",
+	url: "/onlyfoodz/posts/vote",
 	method: "PUT",
 	schema: {
 		summary: "Vote on post",
@@ -29,9 +29,8 @@ export default {
 		const Authorization: any = request.headers.authorization;
 		const user: User | null = await getAuth(Authorization, "posts.vote");
 
-		const post: { user: User; post: Post } = await database.Posts.get(
-			PostID
-		);
+		const post: { user: User; post: OnlyfoodzPost } =
+			await database.OnlyfoodzPosts.get(PostID);
 
 		if (type === "up") {
 			if (user) {
@@ -44,7 +43,7 @@ export default {
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database.Posts.upvote(
+						const update = await database.OnlyfoodzPosts.upvote(
 							PostID,
 							user.userid
 						);
@@ -79,7 +78,7 @@ export default {
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database.Posts.downvote(
+						const update = await database.OnlyfoodzPosts.downvote(
 							PostID,
 							user.userid
 						);
