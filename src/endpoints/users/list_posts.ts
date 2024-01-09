@@ -22,7 +22,7 @@ export default {
 
 		const tag = data.tag;
 		let onlyfoodz: OnlyfoodzPost[] | null;
-		let posts: Post[] | null;
+		let sparkyflight: Post[] | null;
 
 		if (tag || tag != "") {
 			let user: User = await database.Users.get({ usertag: tag });
@@ -33,12 +33,12 @@ export default {
 				);
 				onlyfoodz.reverse();
 
-				posts = await database.Posts.getAllUserPosts(user.userid);
-				posts.reverse();
+				sparkyflight = await database.Posts.getAllUserPosts(user.userid);
+				sparkyflight.reverse();
 
 				return reply.send({
 					onlyfoodz,
-					posts,
+					sparkyflight,
 				});
 			} else
 				return reply.status(404).send({
