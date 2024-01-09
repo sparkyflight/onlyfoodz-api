@@ -3,7 +3,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 
 export default {
-	url: "/user/list_posts",
+	url: "/users/list_posts",
 	method: "GET",
 	schema: {
 		summary: "Get user posts",
