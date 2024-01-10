@@ -1,21 +1,22 @@
 import * as database from "../../database/handler.js";
 import firebase from "firebase-admin";
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Application } from "../../database/types.interface.js";
 
 export default {
-	method: "GET",
+	method: "POST",
 	url: "/users/applications",
 	schema: {
-		summary: "Get list of Developer Applications",
+		summary: "Create an Developer Application",
 		description:
-			"Returns all information about your Developer Applications.",
+			"Returns boolean value indicating whether the creation was successful or not.",
 		tags: ["@me"],
 		body: {
 			type: "object",
 			properties: {
-				token: { type: "string" },
+				name: { type: "string" },
+				logo: { type: "string" },
 			},
+			required: ["name", "logo"],
 		},
 		security: [
 			{
@@ -25,8 +26,8 @@ export default {
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		try {
+			const { name, logo }: any = request.body;
 			const Authorization: any = request.headers.authorization;
-			const { token }: any = request.body;
 
 			const userInfo = await firebase
 				.auth()
@@ -36,24 +37,13 @@ export default {
 			});
 
 			if (dbUser) {
-				let apps = await database.Applications.getAllApplications(
-					dbUser?.userid
+				const apps = await database.Applications.createApp(
+					dbUser?.userid,
+					name,
+					logo
 				);
 
-				if (apps) {
-					if (token)
-						apps = (apps as any).find(
-							(app: Application) => app.token === token
-						);
-
-					return reply.send(apps);
-				} else
-					return reply.status(404).send({
-						message:
-							"We couldn't fetch any Developer Applications under your profile. Please create one, and try again!",
-						token: Authorization,
-						error: true,
-					});
+				return reply.send(apps);
 			} else
 				return reply.send({
 					token: Authorization,
