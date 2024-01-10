@@ -33,7 +33,9 @@ export default {
 				);
 				onlyfoodz.reverse();
 
-				sparkyflight = await database.Posts.getAllUserPosts(user.userid);
+				sparkyflight = await database.Posts.getAllUserPosts(
+					user.userid
+				);
 				sparkyflight.reverse();
 
 				return reply.send({
