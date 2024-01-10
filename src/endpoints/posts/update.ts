@@ -4,7 +4,7 @@ import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
 
 export default {
-	url: "/sparkyflight/posts/update",
+	url: "/posts/update",
 	method: "PATCH",
 	schema: {
 		summary: "Update post",
@@ -45,9 +45,16 @@ export default {
 			);
 
 			if (user) {
-				const origPost: Post = await database.Posts.get(
-					data["post_id"]
-				);
+				let postType: string = "Posts";
+				let origPost: Post = await database.Posts.get(data["post_id"]);
+
+				if (!origPost) {
+					origPost = await database.OnlyfoodzPosts.get(
+						data["post_id"]
+					);
+
+					postType = "OnlyfoodzPosts";
+				}
 
 				if (origPost) {
 					if (origPost.userid === user.userid) {
@@ -57,7 +64,7 @@ export default {
 								error: "Sorry, a caption must be provided.",
 							});
 
-						await database.Posts.updatePost(data["post_id"], {
+						await database[postType].updatePost(data["post_id"], {
 							Caption: data["caption"],
 							Image: data["image"] || null,
 							Plugins: data["plugins"] || [],
