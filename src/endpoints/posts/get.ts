@@ -21,8 +21,9 @@ export default {
 		const { post_id }: any = request.query;
 
 		if (post_id || post_id != "") {
-			let post: Post | OnlyfoodzPost = await database.Posts.get(post_id);
-			if (!post) post = await database.OnlyfoodzPosts.get(post_id);
+			let post: Post | OnlyfoodzPost | null =
+				(await database.Posts.get(post_id)) ||
+				(await database.OnlyfoodzPosts.get(post_id));
 
 			return reply.send(post);
 		} else
