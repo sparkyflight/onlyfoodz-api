@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { OnlyfoodzPost } from "../../database/types.interface.js";
+import { OnlyfoodzPost, Post } from "../../database/types.interface.js";
 import * as database from "../../database/handler.js";
 
 export default {
@@ -21,9 +21,10 @@ export default {
 		const { post_id }: any = request.query;
 
 		if (post_id || post_id != "") {
-			const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(
-				post_id
-			);
+			let post: Post | OnlyfoodzPost | null =
+				(await database.Posts.get(post_id)) ||
+				(await database.OnlyfoodzPosts.get(post_id));
+
 			return reply.send(post);
 		} else
 			return reply.status(404).send({

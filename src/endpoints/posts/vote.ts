@@ -1,4 +1,4 @@
-import { OnlyfoodzPost, User } from "../../database/types.interface.js";
+import { OnlyfoodzPost, Post, User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
@@ -29,8 +29,15 @@ export default {
 		const Authorization: any = request.headers.authorization;
 		const user: User | null = await getAuth(Authorization, "posts.vote");
 
-		const post: { user: User; post: OnlyfoodzPost } =
-			await database.OnlyfoodzPosts.get(PostID);
+		let postType: string = "Posts";
+		let post: { user: User; post: Post | OnlyfoodzPost } =
+			await database.Posts.get(PostID);
+
+		if (!post) {
+			post = await database.OnlyfoodzPosts.get(PostID);
+
+			postType = "OnlyfoodzPosts";
+		}
 
 		if (type === "up") {
 			if (user) {
@@ -43,7 +50,7 @@ export default {
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database.OnlyfoodzPosts.upvote(
+						const update = await database[postType].upvote(
 							PostID,
 							user.userid
 						);
@@ -78,7 +85,7 @@ export default {
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database.OnlyfoodzPosts.downvote(
+						const update = await database[postType].downvote(
 							PostID,
 							user.userid
 						);

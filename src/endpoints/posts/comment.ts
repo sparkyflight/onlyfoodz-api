@@ -1,4 +1,4 @@
-import { User, OnlyfoodzPost } from "../../database/types.interface.js";
+import { User, Post, OnlyfoodzPost } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
@@ -38,11 +38,17 @@ export default {
 		const Authorization: any = request.headers.authorization;
 
 		const user: User | null = await getAuth(Authorization, "posts.comment");
-		const post: OnlyfoodzPost = await database.OnlyfoodzPosts.get(id);
+		let postType = "Posts";
+		let post: Post | OnlyfoodzPost = await database.Posts.get(id);
+
+		if (!post) {
+			post = await database.OnlyfoodzPosts.get(id);
+			postType = "OnlyfoodzPosts";
+		}
 
 		if (user) {
 			if (post) {
-				const update = await database.OnlyfoodzPosts.comment(
+				const update = await database[postType].comment(
 					post,
 					user,
 					data["caption"],

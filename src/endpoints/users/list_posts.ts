@@ -1,9 +1,9 @@
-import { User, OnlyfoodzPost } from "../../database/types.interface.js";
+import { User, OnlyfoodzPost, Post } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 
 export default {
-	url: "/posts/list_user",
+	url: "/users/list_posts",
 	method: "GET",
 	schema: {
 		summary: "Get user posts",
@@ -21,19 +21,27 @@ export default {
 		const data: any = request.query;
 
 		const tag = data.tag;
-		let posts: OnlyfoodzPost[] | null;
+		let onlyfoodz: OnlyfoodzPost[] | null;
+		let sparkyflight: Post[] | null;
 
 		if (tag || tag != "") {
 			let user: User = await database.Users.get({ usertag: tag });
 
 			if (user) {
-				posts = await database.OnlyfoodzPosts.getAllUserPosts(
-					user.userid,
-					String(1)
+				onlyfoodz = await database.OnlyfoodzPosts.getAllUserPosts(
+					user.userid
 				);
-				posts.reverse();
+				onlyfoodz.reverse();
 
-				return reply.send(posts);
+				sparkyflight = await database.Posts.getAllUserPosts(
+					user.userid
+				);
+				sparkyflight.reverse();
+
+				return reply.send({
+					onlyfoodz,
+					sparkyflight,
+				});
 			} else
 				return reply.status(404).send({
 					message:
