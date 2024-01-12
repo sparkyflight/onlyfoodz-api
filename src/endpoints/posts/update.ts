@@ -1,4 +1,4 @@
-import { Post, User } from "../../database/types.interface.js";
+import { OnlyfoodzPost, Post, User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../database/handler.js";
 import { getAuth } from "../../auth.js";
@@ -46,7 +46,8 @@ export default {
 
 			if (user) {
 				let postType: string = "Posts";
-				let origPost: Post = await database.Posts.get(data["post_id"]);
+				let origPost: { user: User; post: Post | OnlyfoodzPost } =
+					await database.Posts.get(data["post_id"]);
 
 				if (!origPost) {
 					origPost = await database.OnlyfoodzPosts.get(
@@ -57,7 +58,7 @@ export default {
 				}
 
 				if (origPost) {
-					if (origPost.userid === user.userid) {
+					if (origPost.post.userid === user.userid) {
 						if (!data["caption"] || data["caption"].error)
 							return reply.send({
 								success: false,

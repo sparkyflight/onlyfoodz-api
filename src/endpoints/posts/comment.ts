@@ -39,7 +39,8 @@ export default {
 
 		const user: User | null = await getAuth(Authorization, "posts.comment");
 		let postType = "Posts";
-		let post: Post | OnlyfoodzPost = await database.Posts.get(id);
+		let post: { user: User; post: Post | OnlyfoodzPost } =
+			await database.Posts.get(id);
 
 		if (!post) {
 			post = await database.OnlyfoodzPosts.get(id);
@@ -49,7 +50,7 @@ export default {
 		if (user) {
 			if (post) {
 				const update = await database[postType].comment(
-					post,
+					post.post.postid,
 					user,
 					data["caption"],
 					data["image"]
