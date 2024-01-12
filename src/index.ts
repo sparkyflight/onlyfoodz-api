@@ -26,7 +26,7 @@ firebase.initializeApp({
 
 // Middleware
 const app: FastifyInstance = Fastify({
-	logger: false,
+	logger: true,
 });
 let Routes = [];
 
