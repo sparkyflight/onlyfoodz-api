@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import firebase from "firebase-admin";
 import * as logger from "../../logger.js";
 

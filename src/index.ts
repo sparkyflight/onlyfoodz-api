@@ -3,7 +3,7 @@ import fs from "node:fs";
 import firebase from "firebase-admin";
 import serviceAccount from "./firebaseService.js";
 import path from "path";
-import * as database from "./database/handler.js";
+import * as database from "./v2-database/prisma.js";
 import * as auth from "./auth.js";
 import * as perms from "./perms.js";
 import cors from "@fastify/cors";

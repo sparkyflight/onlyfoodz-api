@@ -1,6 +1,5 @@
-import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
@@ -27,8 +26,8 @@ export default {
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const data: any = request.query;
 		const Authorization: any = request.headers.authorization;
-		const user: User | null = await getAuth(Authorization, "users.follow");
-		const target: User = await database.Users.get({
+		const user = await getAuth(Authorization, "users.follow");
+		const target = await database.Users.get({
 			userid: data.target,
 		});
 

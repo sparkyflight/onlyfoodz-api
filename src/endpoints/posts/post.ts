@@ -1,10 +1,9 @@
-import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
-	url: "/sparkyflight/posts/post",
+	url: "/posts/post",
 	method: "POST",
 	schema: {
 		summary: "Create post",
@@ -14,10 +13,11 @@ export default {
 			type: "object",
 			properties: {
 				caption: { type: "string" },
+				type: { type: "number" },
 				image: { type: "string" },
 				plugins: { type: "array" },
 			},
-			required: ["caption"],
+			required: ["caption", "type"],
 		},
 		security: [
 			{
@@ -34,15 +34,13 @@ export default {
 				error: "Oops, it seems that you are not logged in.",
 			});
 		else {
-			const user: User | null = await getAuth(
-				Authorization,
-				"posts.write"
-			);
+			const user = await getAuth(Authorization, "posts.write");
 
 			if (user) {
 				await database.Posts.createPost(
 					user.userid,
 					data["caption"],
+					data["type"],
 					data["image"],
 					data["plugins"]
 				);

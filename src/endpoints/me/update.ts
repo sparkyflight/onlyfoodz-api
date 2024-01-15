@@ -1,6 +1,6 @@
 import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {

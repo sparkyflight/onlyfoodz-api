@@ -1,4 +1,4 @@
-import * as database from "./database/handler.js";
+import * as database from "./v2-database/prisma.js";
 import firebase from "firebase-admin";
 import { Application, User } from "./database/types.interface.js";
 import { DecodedIdToken } from "firebase-admin/auth";
