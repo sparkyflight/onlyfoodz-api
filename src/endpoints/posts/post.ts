@@ -41,8 +41,7 @@ export default {
 					user.userid,
 					data["caption"],
 					data["type"],
-					data["image"],
-					data["plugins"]
+					data["image"]
 				);
 
 				return reply.send({ success: true });

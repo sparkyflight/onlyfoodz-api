@@ -1,4 +1,3 @@
-import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { getAuth } from "../../auth.js";
 
@@ -18,7 +17,7 @@ export default {
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const Authorization: any = request.headers.authorization;
-		const user: User | null = await getAuth(Authorization, "profile.read");
+		const user = await getAuth(Authorization, "profile.read");
 
 		if (user) return reply.send(user);
 		else

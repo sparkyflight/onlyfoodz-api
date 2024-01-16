@@ -1,4 +1,3 @@
-import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 import * as database from "../../v2-database/prisma.js";
 import { getAuth } from "../../auth.js";
@@ -30,7 +29,7 @@ export default {
 		let data = request.body;
 		const Authorization: any = request.headers.authorization;
 
-		const user: User | null = await getAuth(Authorization, "profile.write");
+		const user = await getAuth(Authorization, "profile.write");
 
 		if (user) {
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;

@@ -1,6 +1,6 @@
 {
 	"name": "api",
-	"version": "2.0.0",
+	"version": "2.0.3",
 	"description": "",
 	"author": "Sparkyflight",
 	"license": "MIT",
@@ -9,25 +9,20 @@
 	"scripts": {
 		"start": "node ./dist/index",
 		"tsc": "tsc",
-		"dev": "ts-node-dev — respawn — pretty — transpile-only index.ts",
-		"format": "prettier --write --plugin-search-dir=src src",
-		"test": "jest"
+		"format": "prettier --write .",
+		"test": "jest",
+		"database:typegen": "npx @kalissaac/prisma-typegen ./src/v2-database/types/prismaTypes.ts ./src/v2-database/schema.prisma"
 	},
 	"dependencies": {
 		"@fastify/cors": "^8.5.0",
 		"@fastify/rate-limit": "^9.1.0",
-		"@fastify/swagger": "^8.12.1",
-		"@fastify/swagger-ui": "^2.0.1",
 		"@prisma/client": "^5.8.0",
 		"colors": "^1.4.0",
 		"dotenv": "^16.0.3",
 		"fastify": "^4.25.1",
 		"firebase-admin": "^11.8.0",
 		"path": "^0.12.7",
-		"pg": "^8.11.3",
-		"prettier": "^2.7.1",
-		"sequelize": "^6.33.0",
-		"sequelize-typescript": "^2.1.6"
+		"prettier": "^2.7.1"
 	},
 	"devDependencies": {
 		"@types/jest": "^29.5.11",
