@@ -87,14 +87,14 @@ setTimeout(async () => {
 				);
 			});
 
-            oldPost.comments.forEach(async (comment) => {
+			oldPost.comments.forEach(async (comment) => {
 				await prisma.comments.create({
 					data: {
 						postid: oldPost.postid,
 						commentid: crypto.randomUUID().toString(),
-                        creatorid: comment.user.userid,
-                        caption: comment.comment.caption,
-                        image: comment.comment.image,
+						creatorid: comment.user.userid,
+						caption: comment.comment.caption,
+						image: comment.comment.image,
 					},
 				});
 
@@ -138,14 +138,14 @@ setTimeout(async () => {
 				);
 			});
 
-            oldOnlyfoodzPost.comments.forEach(async (comment) => {
+			oldOnlyfoodzPost.comments.forEach(async (comment) => {
 				await prisma.comments.create({
 					data: {
 						postid: oldOnlyfoodzPost.postid,
 						commentid: crypto.randomUUID().toString(),
-                        creatorid: comment.user.userid,
-                        caption: comment.comment.caption,
-                        image: comment.comment.image,
+						creatorid: comment.user.userid,
+						caption: comment.comment.caption,
+						image: comment.comment.image,
 					},
 				});
 
