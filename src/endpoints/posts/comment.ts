@@ -41,18 +41,19 @@ export default {
 
 		if (user) {
 			if (post) {
-				/*const update = await database.Posts.comment(
+				const update = await database.Posts.comment(
 					post.postid,
-					user,
+					user.userid,
 					data["caption"],
-					data["image"]
+					data["image"],
+                    []
 				);
 
 				if (update) return reply.send({ success: true });
 				else
 					return reply.send({
 						error: "Something went wrong with processing your request.",
-					});*/
+					});
 			} else
 				return reply.send({
 					error: "The provided post id is invalid.",
