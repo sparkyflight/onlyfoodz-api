@@ -1,6 +1,7 @@
 import * as v1 from "./v1-database/handler.js";
 import { prisma } from "./v2-database/prisma.js";
 import * as logger from "./logger.js";
+import * as crypto from "crypto";
 
 logger.info("Database V1", "Initializing...");
 logger.info("Database V2", "Initializing...");
@@ -71,6 +72,38 @@ setTimeout(async () => {
 				},
 			});
 
+			oldPost.plugins.forEach(async (plugin) => {
+				await prisma.plugins.create({
+					data: {
+						postid: oldPost.postid,
+						type: plugin.type,
+						href: plugin.url,
+					},
+				});
+
+				logger.success(
+					"Plugins",
+					`Migrated Post Plugins: ${oldPost.postid}`
+				);
+			});
+
+            oldPost.comments.forEach(async (comment) => {
+				await prisma.comments.create({
+					data: {
+						postid: oldPost.postid,
+						commentid: crypto.randomUUID().toString(),
+                        creatorid: comment.user.userid,
+                        caption: comment.comment.caption,
+                        image: comment.comment.image,
+					},
+				});
+
+				logger.success(
+					"Comments",
+					`Migrated Post Comment: ${oldPost.postid}`
+				);
+			});
+
 			logger.success(
 				"Posts",
 				`Migrated Sparkyflight Post: ${oldPost.postid}`
@@ -88,6 +121,38 @@ setTimeout(async () => {
 					upvotes: oldOnlyfoodzPost.upvotes,
 					downvotes: oldOnlyfoodzPost.downvotes,
 				},
+			});
+
+			oldOnlyfoodzPost.plugins.forEach(async (plugin) => {
+				await prisma.plugins.create({
+					data: {
+						postid: oldOnlyfoodzPost.postid,
+						type: plugin.type,
+						href: plugin.url,
+					},
+				});
+
+				logger.success(
+					"Plugins",
+					`Migrated Post Plugins: ${oldOnlyfoodzPost.postid}`
+				);
+			});
+
+            oldOnlyfoodzPost.comments.forEach(async (comment) => {
+				await prisma.comments.create({
+					data: {
+						postid: oldOnlyfoodzPost.postid,
+						commentid: crypto.randomUUID().toString(),
+                        creatorid: comment.user.userid,
+                        caption: comment.comment.caption,
+                        image: comment.comment.image,
+					},
+				});
+
+				logger.success(
+					"Comments",
+					`Migrated Post Comment: ${oldOnlyfoodzPost.postid}`
+				);
 			});
 
 			logger.success(
