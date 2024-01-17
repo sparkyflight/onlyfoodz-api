@@ -1,6 +1,5 @@
-import { User, Post, OnlyfoodzPost } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
@@ -37,21 +36,14 @@ export default {
 		const { id }: any = request.query;
 		const Authorization: any = request.headers.authorization;
 
-		const user: User | null = await getAuth(Authorization, "posts.comment");
-		let postType = "Posts";
-		let post: { user: User; post: Post | OnlyfoodzPost } =
-			await database.Posts.get(id);
-
-		if (!post) {
-			post = await database.OnlyfoodzPosts.get(id);
-			postType = "OnlyfoodzPosts";
-		}
+		const user = await getAuth(Authorization, "posts.comment");
+		let post = await database.Posts.get(id);
 
 		if (user) {
 			if (post) {
-				const update = await database[postType].comment(
-					post.post.postid,
-					user,
+				const update = await database.Posts.comment(
+					post.postid,
+					user.userid,
 					data["caption"],
 					data["image"]
 				);

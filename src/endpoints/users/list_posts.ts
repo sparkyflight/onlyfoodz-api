@@ -1,6 +1,5 @@
-import { User, OnlyfoodzPost, Post } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 
 export default {
 	url: "/users/list_posts",
@@ -21,27 +20,16 @@ export default {
 		const data: any = request.query;
 
 		const tag = data.tag;
-		let onlyfoodz: OnlyfoodzPost[] | null;
-		let sparkyflight: Post[] | null;
+		let posts;
 
 		if (tag || tag != "") {
-			let user: User = await database.Users.get({ usertag: tag });
+			let user = await database.Users.get({ usertag: tag });
 
 			if (user) {
-				onlyfoodz = await database.OnlyfoodzPosts.getAllUserPosts(
-					user.userid
-				);
-				onlyfoodz.reverse();
+				posts = await database.Posts.getAllUserPosts(user.userid);
+				posts.reverse();
 
-				sparkyflight = await database.Posts.getAllUserPosts(
-					user.userid
-				);
-				sparkyflight.reverse();
-
-				return reply.send({
-					onlyfoodz,
-					sparkyflight,
-				});
+				return reply.send(posts);
 			} else
 				return reply.status(404).send({
 					message:

@@ -1,6 +1,5 @@
-import { OnlyfoodzPost, Post, User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
@@ -27,30 +26,22 @@ export default {
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		const { PostID, type }: any = request.query;
 		const Authorization: any = request.headers.authorization;
-		const user: User | null = await getAuth(Authorization, "posts.vote");
+		const user = await getAuth(Authorization, "posts.vote");
 
-		let postType: string = "Posts";
-		let post: { user: User; post: Post | OnlyfoodzPost } =
-			await database.Posts.get(PostID);
-
-		if (!post) {
-			post = await database.OnlyfoodzPosts.get(PostID);
-
-			postType = "OnlyfoodzPosts";
-		}
+		let post = await database.Posts.get(PostID);
 
 		if (type === "up") {
 			if (user) {
 				if (post) {
 					if (
-						post.post.upvotes.includes(user.userid) ||
-						post.post.downvotes.includes(user.userid)
+						post.upvotes.includes(user.userid) ||
+						post.downvotes.includes(user.userid)
 					)
 						return reply.send({
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database[postType].upvote(
+						const update = await database.Posts.upvote(
 							PostID,
 							user.userid
 						);
@@ -78,14 +69,14 @@ export default {
 			if (user) {
 				if (post) {
 					if (
-						post.post.upvotes.includes(user.userid) ||
-						post.post.downvotes.includes(user.userid)
+						post.upvotes.includes(user.userid) ||
+						post.downvotes.includes(user.userid)
 					)
 						return reply.send({
 							error: "You cannot update your vote, for this post.",
 						});
 					else {
-						const update = await database[postType].downvote(
+						const update = await database.Posts.downvote(
 							PostID,
 							user.userid
 						);

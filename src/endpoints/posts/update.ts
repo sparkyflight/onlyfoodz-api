@@ -1,6 +1,5 @@
-import { OnlyfoodzPost, Post, User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
@@ -39,36 +38,23 @@ export default {
 				error: "Oops, it seems that you did not pass the Post ID.",
 			});
 		else {
-			const user: User | null = await getAuth(
-				Authorization,
-				"posts.update"
-			);
+			const user = await getAuth(Authorization, "posts.update");
 
 			if (user) {
-				let postType: string = "Posts";
-				let origPost: { user: User; post: Post | OnlyfoodzPost } =
-					await database.Posts.get(data["post_id"]);
-
-				if (!origPost) {
-					origPost = await database.OnlyfoodzPosts.get(
-						data["post_id"]
-					);
-
-					postType = "OnlyfoodzPosts";
-				}
+				let origPost = await database.Posts.get(data["post_id"]);
 
 				if (origPost) {
-					if (origPost.post.userid === user.userid) {
+					if (origPost.userid === user.userid) {
 						if (!data["caption"] || data["caption"].error)
 							return reply.send({
 								success: false,
 								error: "Sorry, a caption must be provided.",
 							});
 
-						await database[postType].updatePost(data["post_id"], {
-							Caption: data["caption"],
-							Image: data["image"] || null,
-							Plugins: data["plugins"] || [],
+						await database.Posts.updatePost(data["post_id"], {
+							caption: data["caption"],
+							image: data["image"] || null,
+							plugins: data["plugins"] || [],
 						});
 
 						return reply.send({ success: true });

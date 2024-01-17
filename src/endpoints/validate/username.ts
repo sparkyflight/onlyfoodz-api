@@ -1,6 +1,5 @@
-import { User } from "../../database/types.interface.js";
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 
 export default {
 	url: "/validate/username",
@@ -21,7 +20,7 @@ export default {
 		const data: any = request.query;
 
 		const tag = data.tag;
-		let user: User = await database.Users.get({ usertag: tag });
+		let user = await database.Users.get({ usertag: tag });
 
 		if (user)
 			return reply.send({

@@ -1,5 +1,4 @@
-import { OnlyfoodzPost, Post } from "../../database/types.interface.js";
-import * as database from "../../database/handler.js";
+import * as database from "../../v2-database/prisma.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export default {
@@ -11,17 +10,9 @@ export default {
 		tags: ["posts"],
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
-		let sparkyflight: Post[] | object[] =
-			await database.Posts.listAllPosts();
-		sparkyflight.reverse();
+		let posts = await database.Posts.listAllPosts();
+		posts.reverse();
 
-		let onlyfoodz: OnlyfoodzPost[] | object[] =
-			await database.OnlyfoodzPosts.listAllPosts();
-		onlyfoodz.reverse();
-
-		return reply.send({
-			sparkyflight: sparkyflight,
-			onlyfoodz: onlyfoodz,
-		});
+		return reply.send(posts);
 	},
 };
