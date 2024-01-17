@@ -42,7 +42,7 @@ export default {
 					data["caption"],
 					data["type"],
 					data["image"],
-                    data["plugins"]
+					data["plugins"]
 				);
 
 				return reply.send({ success: true });
