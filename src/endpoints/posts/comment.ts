@@ -45,8 +45,7 @@ export default {
 					post.postid,
 					user.userid,
 					data["caption"],
-					data["image"],
-                    []
+					data["image"]
 				);
 
 				if (update) return reply.send({ success: true });

@@ -10,7 +10,6 @@ logger.info("Database Migration", "Getting Started...");
 // Nuke all of the new database tables
 Promise.all([
 	prisma.plugins.deleteMany({}),
-	prisma.commentPlugins.deleteMany({}),
 	prisma.comments.deleteMany({}),
 	prisma.posts.deleteMany({}),
 	prisma.applications.deleteMany({}),
