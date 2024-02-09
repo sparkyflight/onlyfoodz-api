@@ -21,8 +21,8 @@ export default {
 
 		if (id || id != "") {
 			const partner = await database.Partners.get({
-                id: id
-            });
+				id: id,
+			});
 			return reply.send(partner);
 		} else
 			return reply.status(404).send({

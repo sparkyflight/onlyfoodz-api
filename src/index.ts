@@ -67,10 +67,9 @@ app.register(swagger, {
 				name: "posts",
 				description: "Endpoints for accessing our Posts database.",
 			},
-            {
+			{
 				name: "partners",
-				description:
-					"Endpoints for accessing partner data.",
+				description: "Endpoints for accessing partner data.",
 			},
 			{
 				name: "@me",
