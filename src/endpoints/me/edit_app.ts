@@ -16,10 +16,10 @@ export default {
 				token: { type: "string" },
 				name: { type: "string" },
 				logo: { type: "string" },
-				permissions: { type: "object" },
+				permissions: { type: "array" },
 				active: { type: "boolean" },
 			},
-			required: ["token", "name", "logo", "permissions"],
+			required: ["token", "name", "logo", "permissions", "active"],
 		},
 		security: [
 			{
