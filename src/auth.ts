@@ -19,7 +19,16 @@ const getAuth = async (token: string, perm: string) => {
 		}
 
 		const getUser = async (user_id: string) => {
-			return database.Users.get({ userid: user_id });
+			return await database.prisma.users.findUnique({
+				where: {
+					userid: user_id,
+				},
+				include: {
+					posts: true,
+					applications: false,
+					fcm_keys: true,
+				},
+			});
 		};
 
 		if (firebaseAuth) return getUser(firebaseAuth.uid) || null;
