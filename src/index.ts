@@ -172,4 +172,4 @@ setTimeout(() => {
 	app.listen({ port: Number(process.env.PORT) }, (err) => {
 		if (err) throw err;
 	});
-}, 5000);
+}, 8000);
