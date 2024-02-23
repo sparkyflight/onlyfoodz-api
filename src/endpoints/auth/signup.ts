@@ -46,7 +46,7 @@ export default {
 					return reply.send({
 						error: true,
 						message:
-							"That username is already in use. Please choose a new one.",
+							"That usertag is already in use. Please choose a new one.",
 					});
 				} else {
 					const result = await database.Users.createUser(
