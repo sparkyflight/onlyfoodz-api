@@ -1,4 +1,4 @@
-import * as database from "../../v2-database/prisma.js";
+import * as database from "../../Serendipy/prisma.js";
 import firebase from "firebase-admin";
 import { FastifyReply, FastifyRequest } from "fastify";
 

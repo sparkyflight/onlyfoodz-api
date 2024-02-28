@@ -1,4 +1,4 @@
-import * as database from "../../v2-database/prisma.js";
+import * as database from "../../Serendipy/prisma.js";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export default {
