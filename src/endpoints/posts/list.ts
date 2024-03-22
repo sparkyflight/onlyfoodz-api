@@ -11,8 +11,7 @@ export default {
 	},
 	handler: async (request: FastifyRequest, reply: FastifyReply) => {
 		let posts = await database.Posts.listAllPosts();
-		posts.reverse();
-
+		
 		return reply.send(posts);
 	},
 };
