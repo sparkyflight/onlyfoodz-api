@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../v2-database/prisma.js";
+import * as database from "../../Serendipy/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
@@ -34,8 +34,8 @@ export default {
 			if (user) {
 				if (post) {
 					if (
-						post.upvotes.includes(user.userid) ||
-						post.downvotes.includes(user.userid)
+						post.upvotes.find((a) => a.userid === user.userid) ||
+						post.downvotes.find((a) => a.userid === user.userid)
 					)
 						return reply.send({
 							error: "You cannot update your vote, for this post.",
@@ -69,8 +69,8 @@ export default {
 			if (user) {
 				if (post) {
 					if (
-						post.upvotes.includes(user.userid) ||
-						post.downvotes.includes(user.userid)
+						post.upvotes.find((a) => a.userid === user.userid) ||
+						post.downvotes.find((a) => a.userid === user.userid)
 					)
 						return reply.send({
 							error: "You cannot update your vote, for this post.",

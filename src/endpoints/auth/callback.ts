@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../v2-database/prisma.js";
+import * as database from "../../Serendipy/prisma.js";
 import firebase from "firebase-admin";
 import * as logger from "../../logger.js";
 
@@ -20,8 +20,27 @@ export default {
 			const userInfo = await firebase
 				.auth()
 				.verifyIdToken(Authorization, true);
-			const dbUser = await database.Users.get({
-				userid: userInfo.uid,
+			const dbUser = await database.prisma.users.findUnique({
+				where: {
+					userid: userInfo.uid,
+				},
+				include: {
+					posts: true,
+					applications: false,
+					fcm_keys: true,
+					followers: {
+						include: {
+							user: false,
+							target: true,
+						},
+					},
+					following: {
+						include: {
+							user: false,
+							target: true,
+						},
+					},
+				},
 			});
 
 			if (dbUser) return reply.send({ token: Authorization });

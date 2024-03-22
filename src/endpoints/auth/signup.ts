@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../v2-database/prisma.js";
+import * as database from "../../Serendipy/prisma.js";
 import firebase from "firebase-admin";
 import * as logger from "../../logger.js";
 
@@ -46,7 +46,7 @@ export default {
 					return reply.send({
 						error: true,
 						message:
-							"That username is already in use. Please choose a new one.",
+							"That usertag is already in use. Please choose a new one.",
 					});
 				} else {
 					const result = await database.Users.createUser(

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../v2-database/prisma.js";
+import * as database from "../../Serendipy/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
@@ -14,6 +14,7 @@ export default {
 			type: "object",
 			properties: {
 				name: { type: "string" },
+				tag: { type: "string" },
 				avatar: { type: "string" },
 				bio: { type: "string" },
 			},
@@ -33,16 +34,54 @@ export default {
 
 		if (user) {
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;
+			if (!data["tag"] || data["tag"] === "") data["tag"] = null;
 
-			await database.Users.updateUser(user.userid, {
-				name: data["name"],
-				avatar: data["avatar"],
-				bio: data["bio"] || null,
-			});
+			if (data["tag"]) {
+				if (user.usertag != data["tag"]) {
+					const existingUser = await database.Users.get({
+						usertag: data["tag"],
+					});
 
-			return reply.send({
-				success: true,
-			});
+					if (existingUser) {
+						return reply.send({
+							success: false,
+							message:
+								"That usertag is already in use. Please choose a new one.",
+						});
+					} else {
+						await database.Users.updateUser(user.userid, {
+							name: data["name"],
+							usertag: data["tag"],
+							avatar: data["avatar"],
+							bio: data["bio"] || null,
+						});
+
+						return reply.send({
+							success: true,
+						});
+					}
+				} else {
+					await database.Users.updateUser(user.userid, {
+						name: data["name"],
+						avatar: data["avatar"],
+						bio: data["bio"] || null,
+					});
+
+					return reply.send({
+						success: true,
+					});
+				}
+			} else {
+				await database.Users.updateUser(user.userid, {
+					name: data["name"],
+					avatar: data["avatar"],
+					bio: data["bio"] || null,
+				});
+
+				return reply.send({
+					success: true,
+				});
+			}
 		} else
 			reply.status(404).send({
 				message:

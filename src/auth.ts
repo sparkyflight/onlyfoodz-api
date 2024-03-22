@@ -1,4 +1,4 @@
-import * as database from "./v2-database/prisma.js";
+import * as database from "./Serendipy/prisma.js";
 import firebase from "firebase-admin";
 import { DecodedIdToken } from "firebase-admin/auth";
 import { hasPerm } from "./perms.js";
@@ -27,6 +27,18 @@ const getAuth = async (token: string, perm: string) => {
 					posts: true,
 					applications: false,
 					fcm_keys: true,
+					followers: {
+						include: {
+							user: false,
+							target: true,
+						},
+					},
+					following: {
+						include: {
+							user: false,
+							target: true,
+						},
+					},
 				},
 			});
 		};

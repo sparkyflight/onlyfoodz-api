@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import * as database from "../../v2-database/prisma.js";
+import * as database from "../../Serendipy/prisma.js";
 import { getAuth } from "../../auth.js";
 
 export default {
@@ -34,7 +34,9 @@ export default {
 		if (data.type === "follow") {
 			if (user) {
 				if (target) {
-					if (target.following.includes(user.userid))
+					if (
+						user.following.find((p) => p.targetid === target.userid)
+					)
 						return reply.send({
 							error: "You cannot follow this user again.",
 						});
@@ -66,7 +68,11 @@ export default {
 		if (data.type === "unfollow") {
 			if (user) {
 				if (target) {
-					if (!target.followers.includes(user.userid))
+					if (
+						!user.following.find(
+							(a) => a.targetid === target.userid
+						)
+					)
 						return reply.send({
 							error: "You cannot unfollow this user. Reason: You are not following to this user.",
 						});

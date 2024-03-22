@@ -1,4 +1,4 @@
-[submodule "src/v2-database"]
-	path = src/v2-database
-	url = https://github.com/sparkyflight/v2-database
+[submodule "src/Serendipy"]
+	path = src/Serendipy
+	url = https://github.com/sparkyflight/Serendipy
     branch = production
