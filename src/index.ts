@@ -50,7 +50,7 @@ app.register(swagger, {
 			title: "Sparkyflight",
 			description:
 				"Welcome to Sparkyflight, the future of Social Media designed for the neurodiverse community, with a primary focus on individuals on the Autism Spectrum. Sparkyflight aims to provide a safe and inclusive space for people to connect, learn, and communicate about their special interests. Our platform utilizes a machine learning algorithm to match users based on their unique passions, creating a supportive network for shared education.",
-			version: "2.0.3",
+			version: "2.0.4",
 		},
 		host:
 			process.env.ENV === "production"
@@ -95,7 +95,7 @@ app.register(swagger, {
 });
 
 app.register(ui, {
-	routePrefix: "/docs",
+	routePrefix: "/",
 	uiConfig: {
 		docExpansion: "full",
 		deepLinking: true,
