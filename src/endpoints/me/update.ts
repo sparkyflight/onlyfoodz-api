@@ -17,7 +17,7 @@ export default {
 				tag: { type: "string" },
 				avatar: { type: "string" },
 				bio: { type: "string" },
-                discord: { type: "string" }
+				discord: { type: "string" },
 			},
 			required: ["name", "avatar", "tag"],
 		},
@@ -36,7 +36,8 @@ export default {
 		if (user) {
 			if (!data["bio"] || data["bio"] === "") data["bio"] = null;
 			if (!data["tag"] || data["tag"] === "") data["tag"] = null;
-            if (!data["discord"] || data["discord"] === "") data["discord"] = null;
+			if (!data["discord"] || data["discord"] === "")
+				data["discord"] = null;
 
 			if (data["tag"]) {
 				if (user.usertag != data["tag"]) {
@@ -56,7 +57,7 @@ export default {
 							usertag: data["tag"],
 							avatar: data["avatar"],
 							bio: data["bio"] || null,
-                            discord_id: data["discord"] || null
+							discord_id: data["discord"] || null,
 						});
 
 						return reply.send({
@@ -68,7 +69,7 @@ export default {
 						name: data["name"],
 						avatar: data["avatar"],
 						bio: data["bio"] || null,
-                        discord_id: data["discord"] || null
+						discord_id: data["discord"] || null,
 					});
 
 					return reply.send({
@@ -80,7 +81,7 @@ export default {
 					name: data["name"],
 					avatar: data["avatar"],
 					bio: data["bio"] || null,
-                    discord_id: data["discord"] || null
+					discord_id: data["discord"] || null,
 				});
 
 				return reply.send({
