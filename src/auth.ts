@@ -26,7 +26,6 @@ const getAuth = async (token: string, perm: string) => {
 				include: {
 					posts: true,
 					applications: false,
-					fcm_keys: true,
 					followers: {
 						include: {
 							user: false,
