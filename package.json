@@ -1,8 +1,8 @@
 {
-	"name": "api",
-	"version": "2.0.4",
+	"name": "forums--api",
+	"version": "0.0.1",
 	"description": "",
-	"author": "Sparkyflight",
+	"author": "AntiRaid",
 	"license": "MIT",
 	"keywords": [],
 	"type": "module",

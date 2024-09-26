@@ -47,14 +47,14 @@ app.register(cors, {
 app.register(swagger, {
 	swagger: {
 		info: {
-			title: "Sparkyflight",
+			title: "AntiRaid Forums",
 			description:
-				"Welcome to Sparkyflight, the future of Social Media designed for the neurodiverse community, with a primary focus on individuals on the Autism Spectrum. Sparkyflight aims to provide a safe and inclusive space for people to connect, learn, and communicate about their special interests. Our platform utilizes a machine learning algorithm to match users based on their unique passions, creating a supportive network for shared education.",
-			version: "2.0.4",
+				"AntiRaid Forums is an official support community that helps each other with using our services.",
+			version: "0.0.1",
 		},
 		host:
 			process.env.ENV === "production"
-				? "api.sparkyflight.xyz"
+				? "potsypaw.antiraid.xyz"
 				: `localhost:${process.env.PORT}`,
 		schemes: ["http"],
 		consumes: ["application/json"],
