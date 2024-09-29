@@ -54,7 +54,7 @@ export default {
 						userInfo.uid,
 						tag,
 						"None",
-						"/logo.png"
+						"/logo.webp"
 					);
 
 					if (result === true)
